@@ -11,10 +11,10 @@ WORKDIR /app
 # Install turbo globally
 RUN npm install -g turbo
 
-# Copy the entire monorepo
+# Copy the full monorepo and prune for ws-server
 COPY . .
 
-# Prune the repo to only include ws-server and its dependencies
+# Prune the repo to only include ws-server and its deps
 RUN turbo prune ws-server --docker
 
 
@@ -24,6 +24,8 @@ WORKDIR /app
 
 # Copy pruned package manifests
 COPY --from=prune /app/out/json/ ./
+# ✅ Copy package-lock.json for npm to work and for Turbo to detect npm
+COPY --from=prune /app/package-lock.json ./package-lock.json
 
 # Install all dependencies (used for building)
 RUN npm install
@@ -33,10 +35,10 @@ RUN npm install
 FROM base AS installer-production
 WORKDIR /app
 
-# Copy pruned package manifests
 COPY --from=prune /app/out/json/ ./
+# ✅ Also copy lockfile here
+COPY --from=prune /app/package-lock.json ./package-lock.json
 
-# Install only production dependencies
 RUN npm install --omit=dev
 
 
@@ -44,11 +46,10 @@ RUN npm install --omit=dev
 FROM base AS builder
 WORKDIR /app
 
-# Copy full source and node_modules
 COPY --from=installer /app/node_modules ./node_modules
 COPY --from=prune /app/out/full/ .
 
-# Build ws-server (creates apps/ws-server/dist)
+# ✅ Build ws-server (Turbo will now find npm)
 RUN npx turbo run build --filter=ws-server...
 
 
@@ -56,7 +57,7 @@ RUN npx turbo run build --filter=ws-server...
 FROM base AS runner
 WORKDIR /app
 
-# Create non-root user for security
+# Create non-root user
 RUN addgroup --system --gid 1001 ws-group \
   && adduser --system --uid 1001 ws-user
 USER ws-user
