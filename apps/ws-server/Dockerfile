@@ -7,7 +7,7 @@ RUN corepack enable && corepack prepare pnpm@latest --activate
 
 # ---- Dependencies ----
 COPY package.json ./
-RUN pnpm install --frozen-lockfile
+RUN pnpm install
 
 # ---- App code ----
 COPY . .
