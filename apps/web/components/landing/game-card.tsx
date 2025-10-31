@@ -28,17 +28,19 @@ const gameCardVariants = cva(
 
 
 function GameCard({
+  title,
   className,
   variant,
   size,
   ...props
 }: React.ComponentProps<"div"> & VariantProps<typeof gameCardVariants> & {
+  title: string;
 }) {
   return (
     <div className={cn(gameCardVariants({ variant, size,  className }))} {...props}>
       <div className="flex items-start justify-between gap-4">
         <div className="">
-          <h2 className="text-3xl font-bold">Game Title</h2>
+          <h2 className="text-3xl font-bold">{title}</h2>
           <p className="">Multiplayer</p>
         </div>
         <div className="bg-black/30 rounded-lg flex items-center justify-center p-1 gap-1 text-white">

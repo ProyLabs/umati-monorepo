@@ -2,11 +2,12 @@
 
 datasource db {
   provider = "postgresql"
-  url      = env("DB_CONNECTION")
+  url      = env("DATABASE_URL")
 }
 
 generator client {
   provider = "prisma-client-js"
+  // output   = "../../../node_modules/.prisma/client"
 }
 
 model User {
@@ -17,7 +18,6 @@ model User {
   createdAt DateTime @default(now())
 
   hostedLobbies Lobby[]       @relation("UserHost")
-  lobbyPlayers  LobbyPlayer[]
 }
 
 model Guest {
@@ -27,7 +27,6 @@ model Guest {
   createdAt   DateTime @default(now())
 
   hostedLobbies Lobby[]       @relation("GuestHost")
-  lobbyPlayers  LobbyPlayer[]
 }
 
 // ------------------------------------------------------------------
@@ -50,8 +49,6 @@ model Lobby {
   hostGuest Guest? @relation("GuestHost", fields: [hostGuestId], references: [id])
 
   // Removed hostId and hostType as they are no longer necessary for the relations
-
-  players       LobbyPlayer[]
   leaderboardId String? // optional future link
   activeGameId  String? // optional current game reference
 
@@ -62,32 +59,3 @@ model Lobby {
   @@index([hostUserId])
   @@index([hostGuestId])
 }
-
-// ------------------------------------------------------------------
-
-model LobbyPlayer {
-  id      String @id @default(uuid())
-  lobbyId String
-  lobby   Lobby  @relation(fields: [lobbyId], references: [id])
-
-  userId  String?
-  user    User?   @relation(fields: [userId], references: [id])
-  guestId String?
-  guest   Guest?  @relation(fields: [guestId], references: [id])
-
-  displayName String
-  avatar      String?
-  score       Int     @default(0)
-
-  joinedAt DateTime  @default(now())
-  leftAt   DateTime?
-
-  // Added a constraint to enforce that *either* userId or guestId is present
-  @@unique([lobbyId, userId])
-  @@unique([lobbyId, guestId]) // This ensures a guest can only join a specific lobby once
-  @@index([userId])
-  @@index([guestId])
-}
-
-// Removed the HostType enum as it's not strictly necessary with this approach, 
-// as the presence of hostUserId or hostGuestId indicates the host type.

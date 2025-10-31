@@ -178,6 +178,7 @@ export const Latency = ({ ms }: { ms: number }) => {
 };
 
 export const BeforeWeBegin = () => {
+  const {startGame} = useLobbyHost()
   return (
     <div className="max-w-screen-2xl mx-auto w-full py-4 flex flex-col gap-8 px-4 items-center justify-center h-full">
       <h3 className="text-5xl font-bold text-center">Before We Begin</h3>
@@ -190,7 +191,7 @@ export const BeforeWeBegin = () => {
         <li className="">Answer using the device you've joined with!</li>
         <li className="">The faster you answer, the more points you'll get!</li>
       </ul>
-      <Fbutton className="max-w-xs mx-auto w-full" variant="secondary">
+      <Fbutton className="max-w-xs mx-auto w-full" variant="secondary" onClick={startGame}>
         Let's Play
       </Fbutton>
       <Fbutton size="sm" variant="outline" className="max-w-xs mx-auto w-full">
@@ -201,7 +202,7 @@ export const BeforeWeBegin = () => {
 };
 
 export const HostLobbyFooter = () => {
-  const { loading, uiState } = useLobbyHost();
+  const { loading, uiState, closeLobby } = useLobbyHost();
   return (
     <div className="fixed bottom-0 px-4 md:px-8 py-4 w-screen">
       <div className="flex items-center justify-between w-full ">
@@ -209,7 +210,7 @@ export const HostLobbyFooter = () => {
           <SettingsBar />
           {/* <Latency ms={34} /> */}
           {!loading && uiState === "LOBBY" && (
-            <Fbutton variant="outline" className="w-60">
+            <Fbutton variant="outline" className="w-60" onClick={closeLobby}>
               Close Lobby
             </Fbutton>
           )}
@@ -237,7 +238,7 @@ export const JoinLobbyCode = ({
   className?: string;
   vertical?: boolean;
 }) => {
-  const { lobby, joinUrl } = useLobbyHost();
+  const { lobby, joinUrl, changeUiState } = useLobbyHost();
   return (
     <div
       className={cn(
@@ -252,7 +253,7 @@ export const JoinLobbyCode = ({
           <Button
             variant="ghost"
             size="icon"
-            // onClick={() => setLobbyState("WAITING")}
+            onClick={() => changeUiState("INIT")}
           >
             {" "}
             <Maximize2Icon />
@@ -299,7 +300,7 @@ export const WaitingForPlayers = ({ className }: { className?: string }) => {
 
       <div className="relative w-full  h-fit overflow-visible rounded-xl flex flex-wrap gap-3 justify-center">
         {players.map((player, i) => (
-          <div key={player.playerId} className="flex flex-col w-fit">
+          <div key={player.id} className="flex flex-col w-fit">
             <Avatar className="size-16 sm:size-16 ring-2 ring-background shadow-md hover:scale-110 transition-transform">
               <AvatarImage src={player.avatar} alt={player.displayName} />
               <AvatarFallback>{player.displayName?.[0]}</AvatarFallback>

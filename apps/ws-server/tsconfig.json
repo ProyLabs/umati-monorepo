@@ -1,5 +1,5 @@
 {
-  "extends": "@crowdparty/typescript-config/react-library.json",
+  "extends": "@umati/typescript-config/base.json",
   "compilerOptions": {
     "outDir": "dist"
   },

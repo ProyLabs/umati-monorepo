@@ -3,7 +3,7 @@ import { Fbutton } from "../ui/fancy-button";
 import { useLobbyHost } from "../../providers/lobby-host-provider";
 
 export default function HostWaitingLobby() {
-  const { lobby, setUiState } = useLobbyHost();
+  const { lobby, changeUiState, closeLobby } = useLobbyHost();
 
   return (
     <div className="max-w-screen-2xl mx-auto w-full py-4 flex flex-col gap-8 px-4 items-center justify-center h-full">
@@ -17,8 +17,8 @@ export default function HostWaitingLobby() {
       </div>
 
       <div className="pt-8 pb-16 gap-4 flex items-center">
-        <Fbutton variant="secondary" className="w-60" onClick={()=>setUiState("LOBBY")}>Show Lobby</Fbutton>
-        <Fbutton variant="outline" className="w-60">Close Lobby</Fbutton>
+        <Fbutton variant="secondary" className="w-60" onClick={()=>changeUiState("LOBBY")}>Show Lobby</Fbutton>
+        <Fbutton variant="outline" className="w-60" onClick={closeLobby}>Close Lobby</Fbutton>
       </div>
     </div>
   );

@@ -18,9 +18,9 @@ This Turborepo includes the following packages/apps:
 
 - `docs`: a [Next.js](https://nextjs.org/) app
 - `web`: another [Next.js](https://nextjs.org/) app
-- `@crowdparty/ui`: a stub React component library shared by both `web` and `docs` applications
-- `@crowdparty/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
-- `@crowdparty/typescript-config`: `tsconfig.json`s used throughout the monorepo
+- `@umati/ui`: a stub React component library shared by both `web` and `docs` applications
+- `@umati/eslint-config`: `eslint` configurations (includes `eslint-config-next` and `eslint-config-prettier`)
+- `@umati/typescript-config`: `tsconfig.json`s used throughout the monorepo
 
 Each package/app is 100% [TypeScript](https://www.typescriptlang.org/).
 

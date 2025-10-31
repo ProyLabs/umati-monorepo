@@ -2,14 +2,20 @@ import React from "react";
 import { Fbutton } from "./fancy-button";
 import { cn } from "../../lib/utils";
 
-type Option = { label: string; value: string | number };
+type Option<T extends string | number = string | number> = {
+  label: string;
+  value: T;
+};
 
-interface ButtonOptionsProps {
-  value?: string | number;
-  options?: Option[] | string[] | number[];
-  onChange?: (value: string | number) => void;
+type PrimitiveOption<T extends string | number> = T | Option<T>;
+
+interface ButtonOptionsProps<T extends string | number = string | number> {
+  value?: T;
+  options?: PrimitiveOption<T>[];
+  onChange?: (value: T) => void;
   className?: string;
 }
+
 
 const ButtonOptions: React.FC<ButtonOptionsProps> = ({
   options = [],

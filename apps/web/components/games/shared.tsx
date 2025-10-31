@@ -4,8 +4,11 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion, useAnimation } from "motion/react";
 import confetti from "canvas-confetti";
 import { cn } from "../../lib/utils";
+import { useLobbyHost } from "@/providers/lobby-host-provider";
 
 export const Leaderboard = () => {
+  const {game} = useLobbyHost();
+  const scores = game?.scores;
   const players = [
     { name: "Alice", points: 1500 },
     { name: "Bob", points: 1200 },
@@ -251,43 +254,37 @@ export const PodiumItem = ({
 };
 
 export const Rankings = () => {
-  const players = [
-    { name: "Alice", gold: 3, silver: 1, bronze: 0 },
-    { name: "Bob", gold: 1, silver: 3, bronze: 2 },
-    { name: "Charlie", gold: 4, silver: 2, bronze: 1 },
-    { name: "David", gold: 2, silver: 2, bronze: 3 },
-    { name: "Eve", gold: 5, silver: 1, bronze: 0 },
-    { name: "Frank", gold: 1, silver: 0, bronze: 4 },
-    { name: "Grace", gold: 0, silver: 3, bronze: 2 },
-    { name: "Heidi", gold: 3, silver: 2, bronze: 1 },
-    { name: "Ivan", gold: 2, silver: 1, bronze: 3 },
-    { name: "Judy", gold: 6, silver: 0, bronze: 1 },
-  ];
+const {rankings} = useLobbyHost();
 
   // Sort by gold > silver > bronze
-  const sortedPlayers = useMemo(() => {
-    return [...players].sort((a, b) => {
+  const sortedRankings = useMemo(() => {
+    return [...rankings].sort((a, b) => {
       if (b.gold !== a.gold) return b.gold - a.gold;
       if (b.silver !== a.silver) return b.silver - a.silver;
       return b.bronze - a.bronze;
     });
-  }, [players]);
+  }, [rankings]);
 
   return (
     <div className="flex flex-col items-center w-full h-full max-h-70">
       <h2 className="text-2xl font-bold text-left w-full">🏅 Rankings</h2>
 
-      <div className="relative w-full max-w-5xl overflow-x-auto scrollbar-thin scrollbar-thumb-foreground/30 scrollbar-track-transparent">
+     {rankings.length > 0 ? <div className="relative w-full max-w-5xl overflow-x-auto scrollbar-thin scrollbar-thumb-foreground/30 scrollbar-track-transparent">
         <RankingHeader className="rounded-none" />
 
         <div className="flex flex-col gap-2 pb-4">
           <AnimatePresence>
-            {sortedPlayers.map((player, index) => (
-              <RankingRow key={player.name} position={index + 1} {...player} />
+            {sortedRankings.map((rankings, index) => (
+              <RankingRow key={rankings.id} position={index + 1} name={rankings.displayName} {...rankings} />
             ))}
           </AnimatePresence>
         </div>
-      </div>
+      </div> :  
+        <p className="m-auto">
+                No Rankings yet
+        </p>
+            
+      }
     </div>
   );
 };

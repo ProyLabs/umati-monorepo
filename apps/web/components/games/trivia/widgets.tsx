@@ -12,7 +12,7 @@ export const Question = ({ text }: { text: string }) => {
   );
 };
 
-type OptionLetter = "A" | "B" | "C" | "D";
+export type OptionLetter = "A" | "B" | "C" | "D";
 
 export const Option = ({
   letter,

@@ -14,6 +14,7 @@ import { ArrowRightIcon, ChevronLeftIcon, ChevronRightIcon } from 'lucide-react'
 import { useModal } from '../../providers/modal-provider'
 import GameConfig from './game-configs'
 import { cn } from '../../lib/utils'
+import { useLobbyHost } from '@/providers/lobby-host-provider'
 
 const Games = [
   {id: "trivia", title: 'Trivia', color: 'red', className: 'from-[#FE566B] to-[var(--umati-red)]' },
@@ -39,8 +40,8 @@ const GameCarousel: React.FC<EmblaCarouselPropType> = (props) => {
     onNextButtonClick
   } = usePrevNextButtons(emblaApi)
 
-  const {openModal} = useModal();
-  
+  const {openModal, closeModal} = useModal();
+   const { setupGame } = useLobbyHost();
 
   return (
     <section className="embla relative">
@@ -52,7 +53,10 @@ const GameCarousel: React.FC<EmblaCarouselPropType> = (props) => {
             title={game.title} onClick={()=> {
               openModal({
                 title: `Configure ${game.title}`,
-                body: <GameConfig game={game} />,
+                body: <GameConfig game={game} action={(gameId: string, options: any)=> {
+                  setupGame(gameId, options);
+                  closeModal()
+                }} />,
                 containerClass: cn('bg-gradient-to-b', game.className),
               })
             }}

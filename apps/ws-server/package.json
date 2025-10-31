@@ -1,0 +1,24 @@
+{
+  "name": "ws-server",
+  "private": true,
+  "main": "src/index.ts",
+  "scripts": {
+    "dev": "tsx --watch src/index.ts",
+    "start": "node dist/index.js",
+    "build": "tsc -p tsconfig.json"
+  },
+  "dependencies": {
+    "@umati/prisma": "workspace:*",
+    "@umati/ws": "workspace:*",
+    "dotenv": "^16.4.1",
+    "js-randomize": "^2.0.1",
+    "nanoid": "^5.1.6",
+    "ws": "^8.18.0"
+  },
+  "devDependencies": {
+    "@types/ws": "^8.18.1",
+    "@umati/typescript-config": "workspace:*",
+    "ts-node-dev": "^2.0.0",
+    "tsx": "^4.20.6"
+  }
+}

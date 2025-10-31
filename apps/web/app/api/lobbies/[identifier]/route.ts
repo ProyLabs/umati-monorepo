@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { prisma } from "@/lib/prisma";
+import { prisma } from "@umati/prisma";
 import { auth } from "@/lib/auth"; // Better Auth
 import type { PlayerType } from "@/lib/types/lobby-shared";
 

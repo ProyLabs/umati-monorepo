@@ -1,0 +1,11 @@
+{
+  "name": "@umati/env",
+  "version": "0.1.0",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
+  "private": true,
+  "dependencies": {
+    "zennv": "0.1.1",
+    "zod": "^3.23.8"
+  }
+}

@@ -1,20 +1,28 @@
 "use client";
 
-import React, {
-  createContext,
-  useContext,
-  useState,
-  useEffect,
-  useCallback,
-  useMemo,
-  ReactNode,
-  useRef,
-} from "react";
+import {
+  Game,
+  getWsUrl,
+  Lobby,
+  Player,
+  Ranking,
+  RoomState,
+  WSClient,
+  WSEvent,
+  WSPayloads,
+} from "@umati/ws";
 import { useParams, useRouter } from "next/navigation";
+import {
+  createContext,
+  ReactNode,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { toast } from "sonner";
-import type { Lobby, Player, LobbyUIState } from "@/lib/types/lobby-shared";
-import { WSEvent } from "@/lib/ws/events";
-import WSClient, { getWsUrl } from "@/lib/ws/client";
 
 /**
  * 🎮 Host Lobby Context
@@ -24,14 +32,18 @@ interface LobbyHostContextType {
   players: Player[];
   reactions: Record<string, string | null>; // playerId → emoji
   loading: boolean;
-  uiState: LobbyUIState;
+  uiState: RoomState["uiState"];
+  gameState: RoomState["gameState"];
   joinUrl: string;
+  rankings: Ranking[];
+  game: Game|null;
 
-  refetchLobby: () => Promise<void>;
-  setUiState: (state: LobbyUIState) => void;
+  changeUiState: (state: RoomState["uiState"]) => void;
   sendAnnouncement: (message: string) => void;
   kickPlayer: (playerId: string, reason?: string) => void;
   closeLobby: () => void;
+  startGame: () => void;
+  setupGame: (gameId: string, options: any) => void;
 }
 
 /**
@@ -52,85 +64,45 @@ export function LobbyHostProvider({ children }: { children: ReactNode }) {
   const [players, setPlayers] = useState<Player[]>([]);
   const [loading, setLoading] = useState(true);
   const [reactions, setReactions] = useState<Record<string, string | null>>({});
-  const [uiState, setUiState] = useState<LobbyUIState>("WAITING");
+  const [uiState, setUiState] = useState<RoomState["uiState"]>("INIT");
+  const [gameState, setGameState] = useState<RoomState["gameState"]>("BEFORE");
+  const [rankings, setRankings] = useState<Ranking[]>([]);
+  const [game, setGame] = useState<Game|null>(null);
 
   const wsRef = useRef<WSClient | null>(null);
 
-  // --------------------------------------------------------------------------
-  // 🧭 Fetch Lobby Details
-  // --------------------------------------------------------------------------
-
-  const fetchLobby = useCallback(async () => {
-    try {
-      setLoading(true);
-
-      const res = await fetch(`/api/lobbies/${identifier}`);
-      if (!res.ok) {
-        if (res.status === 404) {
-          toast.error("Lobby not found");
-          router.replace("/join-lobby");
-        } else {
-          toast.error("Failed to fetch lobby");
-        }
-        return;
-      }
-
-      const data = await res.json();
-      setLobby(data);
-      setPlayers(data.players ?? []);
-      setUiState(data.state ?? "WAITING");
-    } catch (err) {
-      console.error("❌ Error fetching lobby:", err);
-      toast.error("Something went wrong while loading the lobby");
-    } finally {
-      setLoading(false);
-    }
-  }, [identifier, router]);
-
-
-  const removePlayer = useCallback(
-    async (playerId: string) => {
-      const player = players.find((p) => p.playerId === playerId);
-      try {
-        await fetch(`/api/lobbies/${identifier}/leave`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ id: playerId, type: player!.type }),
-        });
-
-        setPlayers((prev) => prev.filter((p) => p.playerId !== playerId));
-        toast.success(`${player?.displayName} left the lobby`);
-      } catch {
-        toast.error("Failed to leave lobby");
-      }
-    },
-    [identifier, router]
-  );
 
   // --------------------------------------------------------------------------
   // ⚡ WebSocket event handling
   // --------------------------------------------------------------------------
   const handleMessage = useCallback(
     (event: WSEvent, payload: any) => {
+      console.log("🚀 ~ LobbyHostProvider ~ event:", event);
       switch (event) {
         case WSEvent.OPEN:
           console.log("✅ Host WS connected");
+          wsRef.current?.send(WSEvent.ROOM_INIT, { roomId: identifier });
           break;
 
-        case WSEvent.PLAYER_JOINED:
-          setPlayers((prev) =>
-            prev.some((p) => p.playerId === payload.playerId)
-              ? prev
-              : [...prev, payload]
-          );
+        case WSEvent.ROOM_STATE:
+          const data = payload as WSPayloads[WSEvent.ROOM_STATE];
+          (setLobby(data), setPlayers(data.players));
+          setUiState(data.state.uiState);
+          setGameState(data.state.gameState);
+          setRankings(data.rankings ?? []);
+          setGame(data.game);
+          setLoading(false);
+          break;
+
+        case WSEvent.PLAYER_JOIN:
           toast.success(`${payload?.displayName} joined the lobby`);
           break;
 
-        case WSEvent.PLAYER_LEFT:
-          console.log("🚀 ~ LobbyHostProvider ~ players:", players);
-          // removePlayer(payload.playerId);
-          setPlayers((prev) => prev.filter((p) => p.playerId !== payload.playerId));
-          break;
+        // case WSEvent.PLAYER_LEFT:
+        //   console.log("🚀 ~ LobbyHostProvider ~ players:", players);
+        //   // removePlayer(payload.playerId);
+        //   setPlayers((prev) => prev.filter((p) => p.playerId !== payload.playerId));
+        //   break;
 
         case WSEvent.PLAYER_REACTION:
           setReactions((prev) => ({
@@ -142,24 +114,24 @@ export function LobbyHostProvider({ children }: { children: ReactNode }) {
           }, 3000);
           break;
 
-        case WSEvent.PLAYER_KICKED:
-          toast.info(`Player ${payload.playerId} was kicked`);
-          setPlayers((prev) =>
-            prev.filter((p) => p.playerId !== payload.playerId)
-          );
-          break;
+        // case WSEvent.PLAYER_KICKED:
+        //   toast.info(`Player ${payload.playerId} was kicked`);
+        //   setPlayers((prev) =>
+        //     prev.filter((p) => p.playerId !== payload.playerId)
+        //   );
+        //   break;
 
         case WSEvent.GAME_QUESTION:
-          setUiState("GAME");
+          // setUiState("GAME");
           break;
 
         case WSEvent.GAME_ROUND_ENDED:
-          setUiState("LEADERBOARD");
+          // setUiState("LEADERBOARD");
           break;
 
         case WSEvent.ROOM_CLOSED:
-          toast.info("Lobby closed");
-          router.replace("/dashboard");
+          toast.info(payload.reason);
+          router.replace("/");
           break;
 
         default:
@@ -175,9 +147,8 @@ export function LobbyHostProvider({ children }: { children: ReactNode }) {
   // --------------------------------------------------------------------------
   useEffect(() => {
     if (!identifier) return;
-    fetchLobby();
 
-    const wsUrl = getWsUrl(identifier, "host");
+    const wsUrl = getWsUrl();
     const ws = new WSClient(wsUrl);
     wsRef.current = ws;
 
@@ -189,10 +160,11 @@ export function LobbyHostProvider({ children }: { children: ReactNode }) {
 
     // Register handlers
     ws.on(WSEvent.OPEN, (p) => handleMessage(WSEvent.OPEN, p));
-    ws.on(WSEvent.PLAYER_JOINED, (p) =>
-      handleMessage(WSEvent.PLAYER_JOINED, p)
-    );
-    ws.on(WSEvent.PLAYER_LEFT, (p) => handleMessage(WSEvent.PLAYER_LEFT, p));
+    ws.on(WSEvent.ROOM_STATE, (p) => handleMessage(WSEvent.ROOM_STATE, p));
+    ws.on(WSEvent.ROOM_CLOSED, (p) => handleMessage(WSEvent.ROOM_CLOSED, p));
+
+    ws.on(WSEvent.PLAYER_JOIN, (p) => handleMessage(WSEvent.PLAYER_JOIN, p));
+    // ws.on(WSEvent.PLAYER_LEFT, (p) => handleMessage(WSEvent.PLAYER_LEFT, p));
     ws.on(WSEvent.PLAYER_REACTION, (p) =>
       handleMessage(WSEvent.PLAYER_REACTION, p)
     );
@@ -205,13 +177,12 @@ export function LobbyHostProvider({ children }: { children: ReactNode }) {
     ws.on(WSEvent.GAME_ROUND_ENDED, (p) =>
       handleMessage(WSEvent.GAME_ROUND_ENDED, p)
     );
-    ws.on(WSEvent.ROOM_CLOSED, (p) => handleMessage(WSEvent.ROOM_CLOSED, p));
 
     return () => {
       wsRef.current?.close();
       wsRef.current = null;
     };
-  }, [identifier, fetchLobby, handleMessage]);
+  }, []);
 
   // --------------------------------------------------------------------------
   // 🧩 Derived values
@@ -221,13 +192,31 @@ export function LobbyHostProvider({ children }: { children: ReactNode }) {
     if (!lobby) return "";
     if (typeof window === "undefined") return "";
     // ✅ Use your Next.js route convention here
-    return `${window.location.origin}/lobby/${lobby.lobbyIdentifier}`;
+    return `${window.location.origin}/lobby/${lobby.id}`;
   }, [lobby]);
 
   // --------------------------------------------------------------------------
   // 🎮 Host Actions
   // --------------------------------------------------------------------------
+  const setupGame = useCallback((gameId: string, options: any) => {
+    wsRef.current?.send(WSEvent.GAME_INIT, {
+      roomId: identifier,
+      options,
+    });
+  }, []);
 
+  const startGame = useCallback(() => {
+    wsRef.current?.send(WSEvent.GAME_START, {
+      roomId: identifier,
+    });
+  }, []);
+
+  const changeUiState = useCallback((uiState: RoomState["uiState"]) => {
+    wsRef.current?.send(WSEvent.ROOM_STATE_CHANGE, {
+      roomId: identifier,
+      state: { uiState },
+    });
+  }, []);
 
   const sendAnnouncement = useCallback((message: string) => {
     wsRef.current?.send(WSEvent.SYSTEM_ANNOUNCEMENT, {
@@ -241,12 +230,10 @@ export function LobbyHostProvider({ children }: { children: ReactNode }) {
   }, []);
 
   const closeLobby = useCallback(() => {
-    wsRef.current?.send(WSEvent.ROOM_CLOSED, {
+    wsRef.current?.send(WSEvent.ROOM_CLOSED_ME, {
       roomId: identifier,
       reason: "Host closed lobby",
     });
-    toast.info("Lobby closed");
-    router.replace("/dashboard");
   }, [identifier, router]);
 
   // --------------------------------------------------------------------------
@@ -260,12 +247,16 @@ export function LobbyHostProvider({ children }: { children: ReactNode }) {
       reactions,
       loading,
       uiState,
+      gameState,
       joinUrl,
-      refetchLobby: fetchLobby,
-      setUiState,
+      rankings,
+      game,
+      changeUiState,
       sendAnnouncement,
       kickPlayer,
       closeLobby,
+      startGame,
+      setupGame,
     }),
     [
       lobby,
@@ -273,11 +264,16 @@ export function LobbyHostProvider({ children }: { children: ReactNode }) {
       reactions,
       loading,
       uiState,
+      gameState,
       joinUrl,
-      fetchLobby,
+      rankings,
+      game,
+      changeUiState,
       sendAnnouncement,
       kickPlayer,
       closeLobby,
+      startGame,
+      setupGame,
     ]
   );
 

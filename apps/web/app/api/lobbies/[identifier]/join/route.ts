@@ -1,4 +1,4 @@
-import { prisma } from "@/lib/prisma";
+import { prisma } from "@umati/prisma";
 import { WSEvent } from "@/lib/ws/events";
 import { WSManager } from "@/lib/ws/manager";
 import { toWirePlayer } from "@/lib/ws/utils";

@@ -1,11 +1,12 @@
 {
-  "name": "crowdparty",
+  "name": "umati",
   "private": true,
   "scripts": {
     "build": "turbo run build",
     "dev": "turbo run dev",
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "clean": "rm -rf node_modules dist",
     "check-types": "turbo run check-types"
   },
   "devDependencies": {
@@ -15,6 +16,6 @@
   },
   "packageManager": "pnpm@9.0.0",
   "engines": {
-    "node": ">=20"
+    "node": ">=22"
   }
 }

@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { prisma } from "../../../lib/prisma";
+import { prisma } from "@umati/prisma";
 import { customAlphabet } from "nanoid";
 
 interface CreateLobbyBody {
@@ -61,6 +61,7 @@ export async function POST(req: Request) {
 
     const lobbyIdentifier = nanoidAlphabet();
     const code = nanoidNumbers();
+    console.log("🚀 ~ POST ~ data.hostGuestId:", hostGuestId)
 
     // 🏗️ Create Lobby
     const lobby = await prisma.lobby.create({
@@ -71,8 +72,12 @@ export async function POST(req: Request) {
         code,
         private: isPrivate || false,
         pin: isPrivate ? pin : null,
-        hostGuestId: hostGuestId || null,
-        hostUserId: hostUserId || null,
+        hostGuest: hostGuestId ? { 
+          connect: { id:  hostGuestId}
+        } : undefined,
+        hostUser: hostUserId ? {
+          connect: {id: hostUserId}
+        } : undefined
       },
     });
 

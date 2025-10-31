@@ -16,6 +16,13 @@
     "dev": {
       "cache": false,
       "persistent": true
+    },
+     "prisma:generate": {
+      "cache": false
+    },
+    "prisma:migrate": {
+      "cache": false
     }
-  }
+  },
+    "globalDependencies": [".env"]
 }

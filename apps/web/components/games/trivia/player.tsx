@@ -1,31 +1,41 @@
-import React from 'react'
-import {Option, PlayerOption, PlayerOptions, Question, Timer} from './widgets'
-import { Fbutton } from '../../ui/fancy-button'
-import { Leaderboard, Podium } from '../shared'
+import React, { useMemo } from "react";
+import {
+  Option,
+  OptionLetter,
+  PlayerOption,
+  PlayerOptions,
+  Question,
+  Timer,
+} from "./widgets";
+import { Fbutton } from "../../ui/fancy-button";
+import { Leaderboard, Podium } from "../shared";
+import { useLobbyPlayer } from "@/providers/lobby-player-provider";
 
 export default function TriviaPlayer() {
+  const { game, gameState, lobby, sendAnswer } = useLobbyPlayer();
+  const data = useMemo(() => {
+    return game?.data[game?.currentRound]!;
+  }, [game]);
+  const letters: OptionLetter[] = ["A", "B", "C", "D"];
   return (
-    <div className='bg-gradient-to-br from-[#FE566B] to-[var(--umati-red)] h-dvh w-dvw'>
-  
-{/* <Leaderboard /> */}
+    <div className="bg-gradient-to-br from-[#FE566B] to-[var(--umati-red)] h-dvh w-dvw">
+      {/* <Leaderboard /> */}
 
-{/* <Podium /> */}
+      {/* <Podium /> */}
 
+      <div className="flex flex-col items-center justify-center h-full gap-16">
+        <h6 className="text-3xl font-bold">Round {game?.currentRound! + 1}</h6>
 
-          <div className="flex flex-col items-center justify-center h-full gap-16">
-            <h6 className="text-3xl font-bold">Round 1</h6>
-
-            <PlayerOptions
-  options={[
-    { letter: "A", text: "China" },
-    { letter: "B", text: "Brazil" },
-    { letter: "C", text: "UK" },
-    { letter: "D", text: "Russia" },
-  ]}
-  onSelect={(letter) => console.log("Selected:", letter)}
-/>
-          </div>
-
+        <PlayerOptions
+          options={data.choices.map((choice, index) => ({
+            letter: letters[index],
+            text: choice,
+          }))}
+          onSelect={(letter) =>
+            sendAnswer(letters.indexOf(letter) as 0 | 1 | 2 | 3)
+          }
+        />
+      </div>
     </div>
-  )
+  );
 }

@@ -1,5 +1,5 @@
 {
-  "name": "@crowdparty/eslint-config",
+  "name": "@umati/eslint-config",
   "version": "0.0.0",
   "type": "module",
   "private": true,

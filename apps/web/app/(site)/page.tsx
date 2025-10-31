@@ -8,7 +8,7 @@ export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center ">
       <Navbar />
-      <section className="flex flex-col w-full items-center pt-10 md:pt-16 h-[calc(100vh-68px)] md:h-[calc(100vh-80px)] overflow-clip gap-16">
+      <section className="flex flex-col w-full items-center justify-between pt-10 md:pt-16 h-[calc(100vh-68px)] md:h-[calc(100vh-80px)] overflow-clip gap-16">
         <div className=" max-w-3xl mx-auto text-center mb-8 px-5 md:px-0 ">
           <h1 className="text-5xl md:text-7xl font-bold text-center mb-8">
             Bring the crowd together.
@@ -32,11 +32,11 @@ export default function Home() {
         </div>
 
         <CardFan>
-          <GameCard variant="purple" />
-          <GameCard variant="red" />
-          <GameCard variant="sky" />
-          <GameCard variant="aqua" />
-          <GameCard variant="blue" />
+          <GameCard title="OddOneOut" variant="purple" />
+          <GameCard title="Trivia Mania" variant="red" />
+          <GameCard title="DrawIt!" variant="sky" />
+          <GameCard title="Herd Mentality" variant="aqua" />
+          <GameCard title="Chameleon" variant="blue" />
         </CardFan>
 
       </section>
