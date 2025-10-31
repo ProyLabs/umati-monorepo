@@ -3,7 +3,11 @@ FROM node:20-alpine3.19 AS base
 RUN apk update && apk add --no-cache libc6-compat
 WORKDIR /app
 
-# ✅ Install pnpm directly (skip Corepack issues)
+# ✅ Properly set PNPM global directory (fixes ERR_PNPM_NO_GLOBAL_BIN_DIR)
+ENV PNPM_HOME="/usr/local/share/pnpm"
+ENV PATH="$PNPM_HOME:$PATH"
+
+# Install pnpm globally
 RUN npm install -g pnpm@9
 
 
@@ -11,13 +15,13 @@ RUN npm install -g pnpm@9
 FROM base AS prune
 WORKDIR /app
 
-# Install Turbo globally
+# Install Turbo globally (this will now work)
 RUN pnpm add -g turbo@latest
 
-# Copy the full monorepo
+# Copy full monorepo
 COPY . .
 
-# Prune the monorepo for ws-server workspace
+# Prune for the ws-server workspace only
 RUN turbo prune ws-server --docker
 
 
@@ -25,10 +29,10 @@ RUN turbo prune ws-server --docker
 FROM base AS installer
 WORKDIR /app
 
-# Copy pruned manifest files (includes pnpm-lock.yaml)
+# Copy pruned manifests (includes pnpm-lock.yaml)
 COPY --from=prune /app/out/json/ ./
 
-# Install all deps (for build)
+# Install all dependencies (for build)
 RUN pnpm install --frozen-lockfile
 
 
@@ -36,7 +40,7 @@ RUN pnpm install --frozen-lockfile
 FROM base AS installer-production
 WORKDIR /app
 
-# Copy pruned manifest files (includes pnpm-lock.yaml)
+# Copy pruned manifests (includes pnpm-lock.yaml)
 COPY --from=prune /app/out/json/ ./
 
 # Install only production dependencies
@@ -47,7 +51,7 @@ RUN pnpm install --prod --frozen-lockfile
 FROM base AS builder
 WORKDIR /app
 
-# Copy deps and full code
+# Copy deps and source
 COPY --from=installer /app/node_modules ./node_modules
 COPY --from=prune /app/out/full/ .
 
@@ -59,12 +63,12 @@ RUN pnpm turbo run build --filter=ws-server...
 FROM base AS runner
 WORKDIR /app
 
-# Create a non-root user
+# Create a non-root user for security
 RUN addgroup --system --gid 1001 ws-group \
   && adduser --system --uid 1001 ws-user
 USER ws-user
 
-# Copy only what’s needed for production
+# Copy production node_modules and built app
 COPY --from=installer-production --chown=ws-user:ws-group /app/node_modules ./node_modules
 COPY --from=builder --chown=ws-user:ws-group /app/apps/ws-server/dist ./apps/ws-server/dist
 COPY --from=builder --chown=ws-user:ws-group /app/apps/ws-server/package.json ./apps/ws-server/package.json
@@ -72,5 +76,5 @@ COPY --from=builder --chown=ws-user:ws-group /app/apps/ws-server/package.json ./
 WORKDIR /app/apps/ws-server
 EXPOSE 4000
 
-# Start the built app
+# Start the server
 CMD ["pnpm", "run", "start"]
