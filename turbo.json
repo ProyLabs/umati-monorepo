@@ -23,6 +23,10 @@
     },
     "prisma:migrate": {
       "cache": false
+    },
+    "start": {
+      "cache": false,
+      "env": ["BETTER_AUTH_SECRET", "BETTER_AUTH_URL", "NODE_ENV", "DATABASE_URL", "NEXT_API_URL", "WS_SERVER_URL", "INTERNAL_API_KEY"]
     }
   },
     "globalDependencies": [".env"]
