@@ -10,11 +10,11 @@
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate deploy",
     "studio": "prisma studio"
-
   },
   "dependencies": {
     "@prisma/client": "6.18.0",
-    "@umati/env": "workspace:*"
+    "@umati/env": "workspace:*",
+    "typescript": "^5.9.3"
   },
   "devDependencies": {
     "@types/node": "^24.9.1",
