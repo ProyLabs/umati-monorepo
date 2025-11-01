@@ -6,11 +6,12 @@ import HostLobby from "@/components/lobby/host-lobby";
 import HostWaitingLobby from "@/components/lobby/host-waiting-lobby";
 import Loading from "@/components/lobby/loading";
 import { BeforeWeBegin } from "@/components/lobby/widgets";
+import { TriviaHostProvider } from "@/providers/games/trivia/trivia-host-provider";
 import { useLobbyHost } from "@/providers/lobby-host-provider";
 
 
 export default function LobbyPage() {
-    const {loading, lobby, uiState, gameState} = useLobbyHost();
+    const {loading, lobby, uiState} = useLobbyHost();
 
 
     if(loading){
@@ -22,11 +23,14 @@ export default function LobbyPage() {
     } else if(uiState === 'LOBBY'){
         return <HostLobby />
     } else if (uiState === 'PLAYING'){
-        if(gameState === "BEFORE"){
-            return <BeforeWeBegin/>
-        } else if (gameState === "ROUND" || gameState === "ROUND_END") {
-                return <TriviaHost/>
-        }
+
+      return  <TriviaHostProvider>
+        <TriviaHost />
+            </TriviaHostProvider>
+        // if(gameState === "BEFORE"){
+        // } else if (gameState === "ROUND" || gameState === "ROUND_END") {
+        //         return <TriviaHost/>
+        // }
 
 
 

@@ -32,13 +32,15 @@ interface LobbyHostContextType {
   players: Player[];
   reactions: Record<string, string | null>; // playerId → emoji
   loading: boolean;
-  uiState: RoomState["uiState"];
-  gameState: RoomState["gameState"];
+  uiState: RoomState,
   joinUrl: string;
   rankings: Ranking[];
   game: Game|null;
 
-  changeUiState: (state: RoomState["uiState"]) => void;
+  //
+  wsClient: WSClient | null;
+
+  changeUiState: (state: RoomState) => void;
   sendAnnouncement: (message: string) => void;
   kickPlayer: (playerId: string, reason?: string) => void;
   closeLobby: () => void;
@@ -64,8 +66,7 @@ export function LobbyHostProvider({ children }: { children: ReactNode }) {
   const [players, setPlayers] = useState<Player[]>([]);
   const [loading, setLoading] = useState(true);
   const [reactions, setReactions] = useState<Record<string, string | null>>({});
-  const [uiState, setUiState] = useState<RoomState["uiState"]>("INIT");
-  const [gameState, setGameState] = useState<RoomState["gameState"]>("BEFORE");
+  const [uiState, setUiState] = useState<RoomState>("INIT");
   const [rankings, setRankings] = useState<Ranking[]>([]);
   const [game, setGame] = useState<Game|null>(null);
 
@@ -87,8 +88,7 @@ export function LobbyHostProvider({ children }: { children: ReactNode }) {
         case WSEvent.ROOM_STATE:
           const data = payload as WSPayloads[WSEvent.ROOM_STATE];
           (setLobby(data), setPlayers(data.players));
-          setUiState(data.state.uiState);
-          setGameState(data.state.gameState);
+          setUiState(data.state);
           setRankings(data.rankings ?? []);
           setGame(data.game);
           setLoading(false);
@@ -120,14 +120,6 @@ export function LobbyHostProvider({ children }: { children: ReactNode }) {
         //     prev.filter((p) => p.playerId !== payload.playerId)
         //   );
         //   break;
-
-        case WSEvent.GAME_QUESTION:
-          // setUiState("GAME");
-          break;
-
-        case WSEvent.GAME_ROUND_ENDED:
-          // setUiState("LEADERBOARD");
-          break;
 
         case WSEvent.ROOM_CLOSED:
           toast.info(payload.reason);
@@ -171,12 +163,12 @@ export function LobbyHostProvider({ children }: { children: ReactNode }) {
     ws.on(WSEvent.PLAYER_KICKED, (p) =>
       handleMessage(WSEvent.PLAYER_KICKED, p)
     );
-    ws.on(WSEvent.GAME_QUESTION, (p) =>
-      handleMessage(WSEvent.GAME_QUESTION, p)
-    );
-    ws.on(WSEvent.GAME_ROUND_ENDED, (p) =>
-      handleMessage(WSEvent.GAME_ROUND_ENDED, p)
-    );
+    // ws.on(WSEvent.GAME_QUESTION, (p) =>
+    //   handleMessage(WSEvent.GAME_QUESTION, p)
+    // );
+    // ws.on(WSEvent.GAME_ROUND_ENDED, (p) =>
+    //   handleMessage(WSEvent.GAME_ROUND_ENDED, p)
+    // );
 
     return () => {
       wsRef.current?.close();
@@ -201,7 +193,10 @@ export function LobbyHostProvider({ children }: { children: ReactNode }) {
   const setupGame = useCallback((gameId: string, options: any) => {
     wsRef.current?.send(WSEvent.GAME_INIT, {
       roomId: identifier,
-      options,
+      options: {
+        type: gameId as any,
+        config: options
+      },
     });
   }, []);
 
@@ -211,10 +206,10 @@ export function LobbyHostProvider({ children }: { children: ReactNode }) {
     });
   }, []);
 
-  const changeUiState = useCallback((uiState: RoomState["uiState"]) => {
+  const changeUiState = useCallback((uiState: RoomState) => {
     wsRef.current?.send(WSEvent.ROOM_STATE_CHANGE, {
       roomId: identifier,
-      state: { uiState },
+      state: uiState,
     });
   }, []);
 
@@ -247,10 +242,10 @@ export function LobbyHostProvider({ children }: { children: ReactNode }) {
       reactions,
       loading,
       uiState,
-      gameState,
       joinUrl,
       rankings,
       game,
+      wsClient: wsRef.current,
       changeUiState,
       sendAnnouncement,
       kickPlayer,
@@ -264,10 +259,10 @@ export function LobbyHostProvider({ children }: { children: ReactNode }) {
       reactions,
       loading,
       uiState,
-      gameState,
       joinUrl,
       rankings,
       game,
+      wsRef,
       changeUiState,
       sendAnnouncement,
       kickPlayer,

@@ -314,9 +314,10 @@ export class WSClient {
 // }
 
 export function getWsUrl() {
-  const protocol = location.protocol === "https:" ? "wss" : "ws";
-  const host = location.host;
-  return `${protocol}://${host.replace(/:\d+$/, "")}:4000/ws`;
+  // const protocol = location.protocol === "https:" ? "wss" : "ws";
+  const host = process.env.WS_SERVER_URL ?? 'ws://192.168.1.247:4000';
+  //'wss://umati-ws.onrender.com'
+  return `${host}/ws`;
 } 
 
 export default WSClient;

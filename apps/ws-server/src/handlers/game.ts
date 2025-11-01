@@ -7,41 +7,68 @@ import { GameManager } from "../lib/game-manager";
 /** When host setup a new game */
 export async function handleInitGame(
   ws: WebSocket,
-  payload: { roomId: string; options: any }
+  payload: { roomId: string; options: {
+    type: "trivia" | "emojiRace" | "bibleQuest";
+    config: Record<string, any>; // e.g. { noOfRounds: 10, duration: 30 }
+  }; }
 ) {
   const { roomId, options } = payload;
-  GameManager.create(roomId, "trivia", options);
+const room = RoomManager.get(roomId);
+  if (!room) return;
 
-  ws.send(
-    JSON.stringify({
-      event: WSEvent.ROOM_STATE,
-      payload: RoomManager.toLobbyState(roomId),
-    })
-  );
+   // ensure only host can init the game
+  if (!RoomManager.isHostSocket(roomId, ws)) {
+    return ws.send(
+      JSON.stringify({
+        event: WSEvent.ERROR,
+        payload: { message: "Only the host can initialize a game." },
+      })
+    );
+  }
 
+
+  const game = GameManager.create(roomId, options.type, options.config);
+  if(!game) return;
+
+  RoomManager.setGame(roomId, {id: game.id, type: options.type})
   return;
 }
 
 /** When host starts a new game */
-export async function handleStartGame(
-  ws: WebSocket,
-  payload: { roomId: string }
-) {
+// export async function handleStartGame(
+//   ws: WebSocket,
+//   payload: { roomId: string }
+// ) {
+//   const { roomId } = payload;
+//   GameManager.start(roomId);
+
+//   ws.send(
+//     JSON.stringify({
+//       event: WSEvent.ROOM_STATE,
+//       payload: RoomManager.toLobbyState(roomId),
+//     })
+//   );
+
+//   return;
+// }
+export function handleStartGame(ws: WebSocket, payload: { roomId: string }) {
   const { roomId } = payload;
-  GameManager.start(roomId);
+  const room = RoomManager.get(roomId);
+  if (!room?.game) return;
 
-  ws.send(
-    JSON.stringify({
-      event: WSEvent.ROOM_STATE,
-      payload: RoomManager.toLobbyState(roomId),
-    })
-  );
+  const game = GameManager.get(room.game.id);
+  if (!game) return;
 
-  return;
+  game.startGame();
+  RoomManager.broadcast(roomId, WSEvent.GAME_STARTED, {
+    roomId,
+    game: room.game,
+  });
 }
+
 
 /** When a player answers */
 export async function handleGameAnswer(ws: WebSocket, payload: WSPayloads[WSEvent.GAME_ANSWER]) {
     const {roomId, playerId, answer} = payload;
-    GameManager.submitAnswer(roomId, playerId, answer);
+    // GameManager.submitAnswer(roomId, playerId, answer);
 }

@@ -29,8 +29,7 @@ interface LobbyPlayerContextType {
   lobby: Lobby | null;
   players: Player[];
   player: Player | null;
-  uiState: RoomState["uiState"];
-  gameState: RoomState["gameState"];
+  uiState: RoomState;
   game: Game | null;
   loading: boolean;
   isInLobby: boolean;
@@ -53,8 +52,7 @@ export function LobbyPlayerProvider({ children }: { children: ReactNode }) {
   const [lobby, setLobby] = useState<Lobby | null>(null);
   const [players, setPlayers] = useState<Player[]>([]);
   const [loading, setLoading] = useState(true);
-  const [uiState, setUiState] = useState<RoomState["uiState"]>("INIT");
-  const [gameState, setGameState] = useState<RoomState["gameState"]>("BEFORE");
+  const [uiState, setUiState] = useState<RoomState>("INIT");
   const [game, setGame] = useState<Game | null>(null);
 
   const wsRef = useRef<WSClient | null>(null);
@@ -77,8 +75,7 @@ export function LobbyPlayerProvider({ children }: { children: ReactNode }) {
         case WSEvent.ROOM_STATE:
           const data = payload as WSPayloads[WSEvent.ROOM_STATE];
           (setLobby(data), setPlayers(data.players));
-          setUiState(data.state.uiState);
-          setGameState(data.state.gameState);
+          setUiState(data.state);
           setGame(data.game);
           setLoading(false);
           break;
@@ -183,7 +180,6 @@ export function LobbyPlayerProvider({ children }: { children: ReactNode }) {
       players,
       player,
       uiState,
-      gameState,
       game,
       loading,
       isInLobby,
@@ -200,7 +196,6 @@ export function LobbyPlayerProvider({ children }: { children: ReactNode }) {
       uiState,
       loading,
       isInLobby,
-      gameState,
       game,
       joinLobby,
       leaveLobby,

@@ -10,7 +10,7 @@ import { useLobbyPlayer } from "@/providers/lobby-player-provider";
 
 export default function LobbyPage() {
 
-    const {lobby, uiState, gameState, isInLobby, loading} = useLobbyPlayer();
+    const {lobby, uiState, isInLobby, loading} = useLobbyPlayer();
 
     if(loading){
         return <Loading />;
@@ -19,10 +19,10 @@ export default function LobbyPage() {
     else if(!isInLobby){
         return <PlayerJoinLobby />
     }
-else if(uiState === 'INIT' || uiState === 'LOBBY' || (uiState === 'PLAYING' && gameState === 'BEFORE')) {
+else if(uiState === 'INIT' || uiState === 'LOBBY') {
     return <PlayerLobby />
 
-}  else if (uiState === 'PLAYING' && gameState === 'ROUND'){
+}  else if (uiState === 'PLAYING'){
     return <TriviaPlayer/>;
 
 }

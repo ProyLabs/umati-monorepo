@@ -10,7 +10,7 @@
  *  - 🔹 WSMessage: full message shape { event, payload }
  */
 
-import { Game, Lobby, Player, Ranking, RoomState } from "./types";
+import { Game, GameState, Lobby, Player, Ranking, RoomState } from "./types";
 
 export enum WSEvent {
   // --- Core lifecycle ---
@@ -43,12 +43,15 @@ export enum WSEvent {
 
   // --- Game lifecycle ---
   GAME_INIT = "GAME:INIT",
+  GAME_STATE = "GAME:STATE",
   GAME_START = "GAME:START",
   GAME_STARTED = "GAME:started",
+  GAME_ROUND_START = "GAME:round-start",
   GAME_ROUND_ENDED = "GAME:round-ended",
   GAME_QUESTION = "GAME:question",
   GAME_ANSWER = "GAME:ANSWER",
   GAME_ANSWER_RECEIVED = "GAME:answer-received",
+  GAME_END="GAME:END",
 
   // --- System ---
   SYSTEM_ANNOUNCEMENT = "SYSTEM:announcement",
@@ -102,7 +105,7 @@ export interface WSPayloads {
     rankings: Ranking[];
     game: Game | null
   };
-  [WSEvent.ROOM_STATE_CHANGE]: { roomId: string; state: Partial<RoomState> };
+  [WSEvent.ROOM_STATE_CHANGE]: { roomId: string; state: RoomState };
   [WSEvent.ROOM_UPDATED]: {
     roomId: string;
     data: Record<string, any>;
@@ -117,15 +120,25 @@ export interface WSPayloads {
   // --- Game lifecycle ---
   [WSEvent.GAME_INIT]: {
     roomId: string;
-    options: any;
+     options: {
+    type: "trivia" | "emojiRace" | "bibleQuest";
+    config: Record<string, any>; // e.g. { noOfRounds: 10, duration: 30 }
+  };
   };
   [WSEvent.GAME_START]: {
     roomId: string;
+  };
+  [WSEvent.GAME_STATE]: Record<string, any> &{
+    id: string;
+    type: string;
+    state: GameState
   };
   [WSEvent.GAME_STARTED]: {
     roomId: string;
     options: any;
   };
+
+
   [WSEvent.GAME_ANSWER]: {
     roomId: string;
     playerId: string;
@@ -147,6 +160,11 @@ export interface WSPayloads {
     correct: boolean;
     score: number;
   };
+  [WSEvent.GAME_END]: {}
+
+
+
+
 
   // --- System ---
   [WSEvent.SYSTEM_ANNOUNCEMENT]: {

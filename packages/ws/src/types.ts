@@ -15,8 +15,8 @@ export interface Lobby {
   private: boolean;
   pin?: string | null;
   createdAt: Date;
+  game: GameLobbyMeta | null;
 }
-
 
 export interface Ranking {
   id: string;
@@ -26,10 +26,16 @@ export interface Ranking {
   bronze: number;
 }
 
-export interface RoomState {
-  uiState: "INIT" | "LOBBY" | "WAITING" | "PLAYING" | "ENDED";
-  gameState?: "BEFORE" | "ROUND" | "ROUND_END" | "LEADERBOARD" | "GAME_END"
-}
+// Room-level state machine (lobby UI context)
+export type RoomState = "INIT" | "LOBBY" | "WAITING" | "PLAYING" | "ENDED";
+
+// Game-level state machine (handled internally by game logic)
+export type GameState =
+  | "BEFORE"
+  | "ROUND"
+  | "ROUND_END"
+  | "LEADERBOARD"
+  | "GAME_END";
 
 export interface HostConnection {
   sockets: Map<string, WebSocket>; // allows multiple connections under same host
@@ -58,28 +64,37 @@ export interface Room {
   /** Player sockets (id → ws) */
   playerSockets: Map<string, WebSocket>;
 
-  rankings: Ranking[],
+  rankings: Ranking[];
 
-
-  game: Game|null;
-
-
+  game: GameLobbyMeta | null;
 }
-
+export interface GameLobbyMeta {
+  id: string;
+  type: "trivia" | "emojiRace" | "bibleQuest";
+}
 
 export interface Game {
-    roomId: string;
-    noOfRounds: number;
-    data: DataItem[];
-    currentRound: number;
-    scores: {id: string, displayName: string, score: number}[];
-    randomize: Randomize;
-}
-export interface DataItem {
-    question: string;
-    choices: string[];
-    answer: string;
-}
-interface Randomize {
+  roomId: string;
+  noOfRounds: number;
+  data: DataItem[];
+  currentRound: number;
+  scores: { id: string; displayName: string; score: number }[];
+  randomize: Randomize;
 }
 
+export interface DataItem {
+  question: string;
+  choices: string[];
+  answer: string;
+}
+interface Randomize {}
+
+
+export interface TriviaRound {
+  number: number;
+  totalRounds: number;
+  question: string;
+  choices: string[];
+  duration: number; // seconds
+  startedAt: number; // timestamp (ms)
+}

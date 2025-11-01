@@ -1,5 +1,5 @@
 import type { WebSocket } from "ws";
-import { Lobby, Player, Ranking, Room, RoomState, WSEvent } from "@umati/ws";
+import { GameLobbyMeta, Lobby, Player, Ranking, Room, RoomState, WSEvent } from "@umati/ws";
 import { GameManager } from "./game-manager";
 
 const rooms = new Map<string, Room>();
@@ -19,7 +19,7 @@ export const RoomManager = {
 
     const room: Room = {
       meta: lobby,
-      state: { uiState: "INIT" },
+      state: "INIT",
       players: [],
       host: { sockets: hostSockets },
       playerSockets: new Map(),
@@ -140,20 +140,17 @@ export const RoomManager = {
       rankings: room.rankings.filter((r) =>
         room.players.some((p) => p.id === r.id)
       ),
-      game: GameManager.get(roomId),
+      game: room.game
     };
   },
   getAllRooms() {
     return rooms.entries();
   },
-  updateState(roomId: string, state: Partial<RoomState>) {
+  updateState(roomId: string, state: RoomState) {
     const room = rooms.get(roomId);
     if (!room) return;
 
-    room.state = {
-      ...room.state,
-      ...state,
-    };
+    room.state = state;
 
     RoomManager.broadcast(
       roomId,
@@ -163,6 +160,18 @@ export const RoomManager = {
 
     return room;
   },
+  setGame(roomId: string, meta: GameLobbyMeta | null){
+    const room = rooms.get(roomId);
+    if (!room) return;
+    if(meta){
+      room.game = meta;
+      room.state = 'PLAYING';
+    } else {
+      room.game = null;
+      room.state = 'LOBBY'
+    }
+   RoomManager.broadcast(roomId, WSEvent.ROOM_STATE, RoomManager.toLobbyState(roomId))
+  }
 };
 
 const addNewRankings = (
