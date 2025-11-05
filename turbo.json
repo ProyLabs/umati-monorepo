@@ -6,7 +6,7 @@
       "dependsOn": ["^build"],
       "inputs": ["$TURBO_DEFAULT$", ".env*"],
       "outputs": [".next/**", "!.next/cache/**"],
-      "env": ["BETTER_AUTH_SECRET", "BETTER_AUTH_URL", "NODE_ENV", "DATABASE_URL", "NEXT_API_URL", "WS_SERVER_URL", "INTERNAL_API_KEY"]
+      "env": ["BETTER_AUTH_SECRET", "BETTER_AUTH_URL", "NODE_ENV", "DATABASE_URL", "NEXT_API_URL", "NEXT_PUBLIC_WS_SERVER_URL", "INTERNAL_API_KEY"]
     },
     "lint": {
       "dependsOn": ["^lint"]
@@ -26,7 +26,7 @@
     },
     "start": {
       "cache": false,
-      "env": ["BETTER_AUTH_SECRET", "BETTER_AUTH_URL", "NODE_ENV", "DATABASE_URL", "NEXT_API_URL", "WS_SERVER_URL", "INTERNAL_API_KEY"]
+      "env": ["BETTER_AUTH_SECRET", "BETTER_AUTH_URL", "NODE_ENV", "DATABASE_URL", "NEXT_API_URL", "NEXT_PUBLIC_WS_SERVER_URL", "INTERNAL_API_KEY"]
     }
   },
     "globalDependencies": [".env"]

@@ -134,6 +134,7 @@ export const RoomManager = {
     if (!room) return;
     const data = JSON.stringify({ event, payload });
     const ws = room.playerSockets.get(playerId)
+    console.log(playerId, ws?.url)
     if(ws) ws.send(data);
   },
 

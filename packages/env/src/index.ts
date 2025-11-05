@@ -14,7 +14,7 @@ export const env = zennv({
 
     // API and WS
     NEXT_API_URL: z.string().url().default("http://localhost:3000"),
-    WS_SERVER_URL: z.string().url().default("wss://umati-ws.onrender.com"),
+    NEXT_PUBLIC_WS_SERVER_URL: z.string().url().default("wss://umati-ws.onrender.com"),
 
     // Shared secret (for internal service-to-service auth)
     INTERNAL_API_KEY: z.string().default("umati_internal_secret"),
