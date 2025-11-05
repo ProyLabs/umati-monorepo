@@ -315,8 +315,7 @@ export class WSClient {
 
 export function getWsUrl() {
   // const protocol = location.protocol === "https:" ? "wss" : "ws";
-  const host = process.env.WS_SERVER_URL ?? 'ws://192.168.1.120:4000';
-  //'wss://umati-ws.onrender.com'
+  const host = process.env.WS_SERVER_URL ?? 'wss://umati-ws.onrender.com'
   return `${host}/ws`;
 } 
 

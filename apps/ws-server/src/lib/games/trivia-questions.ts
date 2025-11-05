@@ -341,5 +341,334 @@ export const triviaquestions = [
     "question": "What is the name of the wizarding school in 'Harry Potter'?",
     "correctAnswer": "Hogwarts",
     "options": ["Hogwarts", "Durmstrang", "Beauxbatons", "Ilvermorny", "Salem", "Camelot"]
+  },
+  {
+    "category": "Science",
+    "difficulty": "easy",
+    "question": "What is the chemical symbol for gold?",
+    "correctAnswer": "Au",
+    "options": ["Au", "Ag", "Gd", "Go", "Ga", "Ge"]
+  },
+  {
+    "category": "Geography",
+    "difficulty": "medium",
+    "question": "Which country is known as the Land of the Rising Sun?",
+    "correctAnswer": "Japan",
+    "options": ["Japan", "China", "Thailand", "Vietnam", "South Korea", "Philippines"]
+  },
+  {
+    "category": "History",
+    "difficulty": "hard",
+    "question": "Who was the first emperor of China?",
+    "correctAnswer": "Qin Shi Huang",
+    "options": ["Qin Shi Huang", "Han Wudi", "Sun Yat-sen", "Kublai Khan", "Emperor Gaozu", "Emperor Taizong"]
+  },
+  {
+    "category": "Entertainment",
+    "difficulty": "easy",
+    "question": "Which animated film features a talking snowman named Olaf?",
+    "correctAnswer": "Frozen",
+    "options": ["Frozen", "Tangled", "Moana", "Encanto", "Zootopia", "Brave"]
+  },
+  {
+    "category": "Sports",
+    "difficulty": "medium",
+    "question": "What is the national sport of Japan?",
+    "correctAnswer": "Sumo wrestling",
+    "options": ["Sumo wrestling", "Judo", "Baseball", "Karate", "Kendo", "Soccer"]
+  },
+  {
+    "category": "Technology",
+    "difficulty": "hard",
+    "question": "What does 'AI' stand for?",
+    "correctAnswer": "Artificial Intelligence",
+    "options": ["Artificial Intelligence", "Automated Interface", "Active Integration", "Applied Internet", "Algorithmic Interaction", "Advanced Input"]
+  },
+  {
+    "category": "Art",
+    "difficulty": "medium",
+    "question": "Which artist painted 'Girl with a Pearl Earring'?",
+    "correctAnswer": "Johannes Vermeer",
+    "options": ["Johannes Vermeer", "Rembrandt", "Caravaggio", "Rubens", "Titian", "Michelangelo"]
+  },
+  {
+    "category": "Science",
+    "difficulty": "medium",
+    "question": "What part of the human body produces insulin?",
+    "correctAnswer": "Pancreas",
+    "options": ["Pancreas", "Liver", "Kidney", "Stomach", "Heart", "Lungs"]
+  },
+  {
+    "category": "Geography",
+    "difficulty": "hard",
+    "question": "Which mountain range separates Europe and Asia?",
+    "correctAnswer": "Ural Mountains",
+    "options": ["Ural Mountains", "Caucasus Mountains", "Alps", "Himalayas", "Carpathians", "Pyrenees"]
+  },
+  {
+    "category": "History",
+    "difficulty": "medium",
+    "question": "Who was the first female Prime Minister of the United Kingdom?",
+    "correctAnswer": "Margaret Thatcher",
+    "options": ["Margaret Thatcher", "Theresa May", "Indira Gandhi", "Golda Meir", "Angela Merkel", "Jacinda Ardern"]
+  },
+  {
+    "category": "Entertainment",
+    "difficulty": "hard",
+    "question": "Which film won the first Academy Award for Best Picture?",
+    "correctAnswer": "Wings",
+    "options": ["Wings", "Gone with the Wind", "Casablanca", "Citizen Kane", "Sunrise", "All Quiet on the Western Front"]
+  },
+  {
+    "category": "Sports",
+    "difficulty": "easy",
+    "question": "How many holes are there in a standard round of golf?",
+    "correctAnswer": "18",
+    "options": ["18", "9", "12", "15", "20", "24"]
+  },
+  {
+    "category": "Technology",
+    "difficulty": "medium",
+    "question": "What is the main programming language used for Android app development?",
+    "correctAnswer": "Kotlin",
+    "options": ["Kotlin", "Java", "Swift", "C++", "Python", "Dart"]
+  },
+  {
+    "category": "Art",
+    "difficulty": "easy",
+    "question": "Who painted the 'Mona Lisa'?",
+    "correctAnswer": "Leonardo da Vinci",
+    "options": ["Leonardo da Vinci", "Michelangelo", "Raphael", "Donatello", "Caravaggio", "Rembrandt"]
+  },
+  {
+    "category": "Geography",
+    "difficulty": "easy",
+    "question": "What is the capital city of Canada?",
+    "correctAnswer": "Ottawa",
+    "options": ["Ottawa", "Toronto", "Vancouver", "Montreal", "Calgary", "Edmonton"]
+  },
+  {
+    "category": "Science",
+    "difficulty": "medium",
+    "question": "Which planet is known for its rings?",
+    "correctAnswer": "Saturn",
+    "options": ["Saturn", "Jupiter", "Neptune", "Uranus", "Earth", "Mars"]
+  },
+  {
+    "category": "History",
+    "difficulty": "easy",
+    "question": "Who wrote the Declaration of Independence?",
+    "correctAnswer": "Thomas Jefferson",
+    "options": ["Thomas Jefferson", "John Adams", "Benjamin Franklin", "James Madison", "George Washington", "Alexander Hamilton"]
+  },
+  {
+    "category": "Entertainment",
+    "difficulty": "medium",
+    "question": "Which TV show features characters named Ross, Rachel, Monica, and Chandler?",
+    "correctAnswer": "Friends",
+    "options": ["Friends", "How I Met Your Mother", "Seinfeld", "The Office", "New Girl", "Scrubs"]
+  },
+  {
+    "category": "Sports",
+    "difficulty": "hard",
+    "question": "Which country won the first FIFA World Cup in 1930?",
+    "correctAnswer": "Uruguay",
+    "options": ["Uruguay", "Brazil", "Italy", "Germany", "Argentina", "France"]
+  },
+  {
+    "category": "Technology",
+    "difficulty": "easy",
+    "question": "What company makes the PlayStation console?",
+    "correctAnswer": "Sony",
+    "options": ["Sony", "Microsoft", "Nintendo", "Sega", "Atari", "Apple"]
+  },
+  {
+    "category": "Science",
+    "difficulty": "hard",
+    "question": "What is the heaviest naturally occurring element?",
+    "correctAnswer": "Uranium",
+    "options": ["Uranium", "Plutonium", "Lead", "Gold", "Mercury", "Radon"]
+  },
+  {
+    "category": "Geography",
+    "difficulty": "medium",
+    "question": "Which U.S. state has the nickname 'The Sunshine State'?",
+    "correctAnswer": "Florida",
+    "options": ["Florida", "California", "Arizona", "Texas", "Hawaii", "Nevada"]
+  },
+  {
+    "category": "History",
+    "difficulty": "medium",
+    "question": "In what year did the Titanic sink?",
+    "correctAnswer": "1912",
+    "options": ["1912", "1910", "1911", "1913", "1905", "1920"]
+  },
+  {
+    "category": "Entertainment",
+    "difficulty": "hard",
+    "question": "Which musician was nicknamed 'The King of Pop'?",
+    "correctAnswer": "Michael Jackson",
+    "options": ["Michael Jackson", "Prince", "Elvis Presley", "Freddie Mercury", "David Bowie", "Stevie Wonder"]
+  },
+  {
+    "category": "Sports",
+    "difficulty": "medium",
+    "question": "In basketball, how many points is a free throw worth?",
+    "correctAnswer": "1",
+    "options": ["1", "2", "3", "4", "5", "6"]
+  },
+  {
+    "category": "Art",
+    "difficulty": "medium",
+    "question": "Which art movement is Claude Monet associated with?",
+    "correctAnswer": "Impressionism",
+    "options": ["Impressionism", "Cubism", "Surrealism", "Baroque", "Renaissance", "Expressionism"]
+  },
+  {
+    "category": "Technology",
+    "difficulty": "hard",
+    "question": "What was the first web browser called?",
+    "correctAnswer": "WorldWideWeb",
+    "options": ["WorldWideWeb", "Mosaic", "Netscape", "Internet Explorer", "Safari", "Opera"]
+  },
+  {
+    "category": "Science",
+    "difficulty": "easy",
+    "question": "How many planets are in the Solar System?",
+    "correctAnswer": "8",
+    "options": ["8", "9", "7", "10", "6", "5"]
+  },
+  {
+    "category": "Geography",
+    "difficulty": "hard",
+    "question": "Which African country has the most pyramids?",
+    "correctAnswer": "Sudan",
+    "options": ["Sudan", "Egypt", "Ethiopia", "Libya", "Morocco", "Nigeria"]
+  },
+  {
+    "category": "History",
+    "difficulty": "hard",
+    "question": "Who was the last Tsar of Russia?",
+    "correctAnswer": "Nicholas II",
+    "options": ["Nicholas II", "Alexander III", "Ivan IV", "Peter the Great", "Alexander II", "Paul I"]
+  },
+  {
+    "category": "Entertainment",
+    "difficulty": "medium",
+    "question": "Which superhero is known as 'The Dark Knight'?",
+    "correctAnswer": "Batman",
+    "options": ["Batman", "Superman", "Iron Man", "Spider-Man", "Black Panther", "The Flash"]
+  },
+  {
+    "category": "Sports",
+    "difficulty": "easy",
+    "question": "What sport is played at Wimbledon?",
+    "correctAnswer": "Tennis",
+    "options": ["Tennis", "Cricket", "Golf", "Football", "Rugby", "Badminton"]
+  },
+  {
+    "category": "Technology",
+    "difficulty": "medium",
+    "question": "What company created the iPod?",
+    "correctAnswer": "Apple",
+    "options": ["Apple", "Sony", "Microsoft", "Samsung", "Nokia", "Panasonic"]
+  },
+  {
+    "category": "Science",
+    "difficulty": "medium",
+    "question": "What is the main gas found in the Earth's atmosphere?",
+    "correctAnswer": "Nitrogen",
+    "options": ["Nitrogen", "Oxygen", "Carbon Dioxide", "Argon", "Hydrogen", "Helium"]
+  },
+  {
+    "category": "Geography",
+    "difficulty": "easy",
+    "question": "Which country is home to the Great Barrier Reef?",
+    "correctAnswer": "Australia",
+    "options": ["Australia", "New Zealand", "Indonesia", "Fiji", "Thailand", "Philippines"]
+  },
+  {
+    "category": "History",
+    "difficulty": "medium",
+    "question": "Who was the 16th President of the United States?",
+    "correctAnswer": "Abraham Lincoln",
+    "options": ["Abraham Lincoln", "George Washington", "Andrew Johnson", "Thomas Jefferson", "Ulysses S. Grant", "Theodore Roosevelt"]
+  },
+  {
+    "category": "Entertainment",
+    "difficulty": "easy",
+    "question": "What is the name of the toy cowboy in Toy Story?",
+    "correctAnswer": "Woody",
+    "options": ["Woody", "Buzz", "Andy", "Jessie", "Rex", "Slinky"]
+  },
+  {
+    "category": "Sports",
+    "difficulty": "hard",
+    "question": "Which athlete has won the most Olympic gold medals?",
+    "correctAnswer": "Michael Phelps",
+    "options": ["Michael Phelps", "Usain Bolt", "Simone Biles", "Carl Lewis", "Mark Spitz", "Larisa Latynina"]
+  },
+  {
+    "category": "Technology",
+    "difficulty": "hard",
+    "question": "What does 'URL' stand for?",
+    "correctAnswer": "Uniform Resource Locator",
+    "options": ["Uniform Resource Locator", "Universal Routing Link", "Unified Reference Line", "User Resource Link", "Universal Retrieval Locator", "Uniform Retrieval Link"]
+  },
+  {
+    "category": "Art",
+    "difficulty": "hard",
+    "question": "Who painted the ceiling of the Sistine Chapel?",
+    "correctAnswer": "Michelangelo",
+    "options": ["Michelangelo", "Leonardo da Vinci", "Raphael", "Donatello", "Caravaggio", "Titian"]
+  },
+  {
+    "category": "Science",
+    "difficulty": "easy",
+    "question": "What do bees collect and use to make honey?",
+    "correctAnswer": "Nectar",
+    "options": ["Nectar", "Pollen", "Water", "Sap", "Leaves", "Sugar"]
+  },
+  {
+    "category": "Geography",
+    "difficulty": "medium",
+    "question": "What is the largest desert in the world?",
+    "correctAnswer": "Antarctic Desert",
+    "options": ["Antarctic Desert", "Sahara", "Arabian", "Gobi", "Kalahari", "Patagonian"]
+  },
+  {
+    "category": "History",
+    "difficulty": "medium",
+    "question": "Who invented the telephone?",
+    "correctAnswer": "Alexander Graham Bell",
+    "options": ["Alexander Graham Bell", "Thomas Edison", "Nikola Tesla", "James Watt", "Samuel Morse", "Benjamin Franklin"]
+  },
+  {
+    "category": "Entertainment",
+    "difficulty": "hard",
+    "question": "Who directed the movie 'Inception'?",
+    "correctAnswer": "Christopher Nolan",
+    "options": ["Christopher Nolan", "Steven Spielberg", "James Cameron", "Quentin Tarantino", "Ridley Scott", "Denis Villeneuve"]
+  },
+  {
+    "category": "Sports",
+    "difficulty": "medium",
+    "question": "What sport uses the term 'birdie'?",
+    "correctAnswer": "Golf",
+    "options": ["Golf", "Tennis", "Badminton", "Baseball", "Soccer", "Basketball"]
+  },
+  {
+    "category": "Technology",
+    "difficulty": "easy",
+    "question": "Which social media platform is represented by a blue bird logo?",
+    "correctAnswer": "Twitter",
+    "options": ["Twitter", "Facebook", "Instagram", "LinkedIn", "Snapchat", "TikTok"]
+  },
+  {
+    "category": "Science",
+    "difficulty": "medium",
+    "question": "What is the speed of light in a vacuum (approx)?",
+    "correctAnswer": "299,792 km/s",
+    "options": ["299,792 km/s", "150,000 km/s", "500,000 km/s", "1,000,000 km/s", "100,000 km/s", "350,000 km/s"]
   }
-]
+];

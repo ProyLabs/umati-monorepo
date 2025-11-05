@@ -186,8 +186,8 @@ export function LobbyHostProvider({ children }: { children: ReactNode }) {
     if (!lobby) return "";
     if (typeof window === "undefined") return "";
     // ✅ Use your Next.js route convention here
-    return `http://192.168.1.120:3000/lobby/${lobby.id}`;
-    // return `${window.location.origin}/lobby/${lobby.id}`;
+    // return `http://192.168.1.120:3000/lobby/${lobby.id}`;
+    return `${window.location.origin}/lobby/${lobby.id}`;
   }, [lobby]);
 
   // --------------------------------------------------------------------------
