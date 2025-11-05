@@ -1,17 +1,14 @@
-import { ThemeProvider } from "../components/theme-provider"
 
+import { ThemeProvider } from "@/components/theme-provider";
+import { AppProviders } from "@/providers/app-provider";
+import { Analytics } from "@vercel/analytics/next";
+import { SpeedInsights } from "@vercel/speed-insights/next"
 import type { Metadata } from "next";
-import { DM_Sans, Geist_Mono } from "next/font/google";
+import { DM_Sans } from "next/font/google";
 import "./globals.css";
-import { AppProviders } from "../providers/app-provider";
 
 const dmSans = DM_Sans({
   variable: "--font-dm-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
   subsets: ["latin"],
 });
 
@@ -28,7 +25,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body
-        className={`${dmSans.variable} ${geistMono.variable} antialiased`}
+        className={`${dmSans.variable} antialiased`}
       >
  <ThemeProvider
             attribute="class"
@@ -40,6 +37,8 @@ export default function RootLayout({
             {children}
             </AppProviders>
           </ThemeProvider>
+          <Analytics/> 
+          <SpeedInsights/>
       </body>
     </html>
   );
