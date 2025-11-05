@@ -5,22 +5,11 @@ import { AnimatePresence, motion, useAnimation } from "motion/react";
 import confetti from "canvas-confetti";
 import { cn } from "../../lib/utils";
 import { useLobbyHost } from "@/providers/lobby-host-provider";
+import { Scores } from "@umati/ws";
+import { useLobbyPlayer } from "@/providers/lobby-player-provider";
+import { PlayerAvatar } from "../lobby/widgets";
 
-export const Leaderboard = () => {
-  const {game} = useLobbyHost();
-  const scores = game?.scores;
-  const players = [
-    { name: "Alice", points: 1500 },
-    { name: "Bob", points: 1200 },
-    { name: "Charlie", points: 1900 },
-    { name: "David", points: 1800 },
-    { name: "Eve", points: 1700 },
-    { name: "Frank", points: 1600 },
-    { name: "Grace", points: 1100 },
-    { name: "Heidi", points: 1400 },
-    { name: "Ivan", points: 1300 },
-    { name: "Judy", points: 2000 },
-  ];
+export const Leaderboard = ({ scores }: { scores: Scores }) => {
   return (
     <div className="flex flex-col items-center justify-center h-full gap-16">
       <h2 className="text-5xl font-bold mb-4 text-center max-w-4xl mx-auto w-full">
@@ -29,13 +18,15 @@ export const Leaderboard = () => {
 
       <div className="grid gap-2 max-w-4xl w-full px-4">
         <AnimatePresence>
-          {players
-            .sort((a, b) => b.points - a.points)
+          {scores
+            .sort((a, b) => b.score - a.score)
+            .slice(0, 7)
             .map((player, index) => (
               <LeaderboardItem
-                key={player.name}
+                key={player.id}
                 position={index + 1}
-                {...player}
+                name={player.displayName}
+                points={player?.score}
               />
             ))}
         </AnimatePresence>
@@ -120,17 +111,14 @@ type Player = {
   points: number;
 };
 
-export const Podium = () => {
-  const players: Player[] = [
-    { position: 1, name: "Alice", points: 1500 },
-    { position: 2, name: "Bob", points: 1200 },
-    { position: 3, name: "Charlie", points: 900 },
-  ];
-
+export const Podium = ({ scores }: { scores: Scores }) => {
   // Sort & slice top 3
-  const topThree = [...players]
-    .sort((a, b) => a.position - b.position)
-    .slice(0, 3);
+  const topThree = [...scores]
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 3)
+    .map((p, i) => {
+      return { ...p, position: i + 1 };
+    });
 
   // Determine heights
   const heights: Record<number, string> = {
@@ -143,7 +131,7 @@ export const Podium = () => {
   const displayOrder = [3, 1, 2];
   const orderedPodium = displayOrder
     .map((pos) => topThree.find((p) => p.position === pos))
-    .filter(Boolean) as Player[];
+    .filter(Boolean);
 
   const [showConfetti, setShowConfetti] = useState(false);
 
@@ -186,10 +174,10 @@ export const Podium = () => {
       >
         {orderedPodium.map((player) => (
           <PodiumItem
-            key={player.position}
-            position={player.position}
-            name={player.name}
-            height={heights[player.position] ?? "60%"}
+            key={player?.position}
+            position={player?.position!}
+            name={player?.displayName!}
+            height={heights[player?.position!] ?? "60%"}
           />
         ))}
       </motion.div>
@@ -242,7 +230,7 @@ export const PodiumItem = ({
         style={{ backgroundColor: bgColor }}
         initial={{ scaleY: 0 }}
         animate={{ scaleY: 1 }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
+        transition={{ duration: 0.8, ease: "easeOut",    delay: (4-position)/2 }}
         onAnimationComplete={() => setShowName(true)} // reveal name after rise
       >
         <span className="text-6xl font-bold bg-white/30 rounded-full p-1 aspect-square flex items-center justify-center text-center h-24 mx-auto">
@@ -254,7 +242,7 @@ export const PodiumItem = ({
 };
 
 export const Rankings = () => {
-const {rankings} = useLobbyHost();
+  const { rankings } = useLobbyHost();
 
   // Sort by gold > silver > bronze
   const sortedRankings = useMemo(() => {
@@ -269,29 +257,38 @@ const {rankings} = useLobbyHost();
     <div className="flex flex-col items-center w-full h-full max-h-70">
       <h2 className="text-2xl font-bold text-left w-full">🏅 Rankings</h2>
 
-     {rankings.length > 0 ? <div className="relative w-full max-w-5xl overflow-x-auto scrollbar-thin scrollbar-thumb-foreground/30 scrollbar-track-transparent">
-        <RankingHeader className="rounded-none" />
+      {rankings.length > 0 ? (
+        <div className="relative w-full max-w-5xl overflow-x-auto scrollbar-thin scrollbar-thumb-foreground/30 scrollbar-track-transparent">
+          <RankingHeader className="rounded-none" />
 
-        <div className="flex flex-col gap-2 pb-4">
-          <AnimatePresence>
-            {sortedRankings.map((rankings, index) => (
-              <RankingRow key={rankings.id} position={index + 1} name={rankings.displayName} {...rankings} />
-            ))}
-          </AnimatePresence>
+          <div className="flex flex-col gap-2 pb-4">
+            <AnimatePresence>
+              {sortedRankings.map((rankings, index) => (
+                <RankingRow
+                  key={rankings.id}
+                  position={index + 1}
+                  name={rankings.displayName}
+                  {...rankings}
+                />
+              ))}
+            </AnimatePresence>
+          </div>
         </div>
-      </div> :  
-        <p className="m-auto">
-                No Rankings yet
-        </p>
-            
-      }
+      ) : (
+        <p className="m-auto">No Rankings yet</p>
+      )}
     </div>
   );
 };
 
-export const RankingHeader = ({className}: {className?: string}) => {
+export const RankingHeader = ({ className }: { className?: string }) => {
   return (
-    <div className={cn(" grid grid-cols-[1fr_2fr_repeat(3,1fr)] gap-4 px-6 py-3 bg-[#18161A] backdrop-blur-sm rounded-xl mb-2 font-semibold text-lg text-center sticky top-0", className)}>
+    <div
+      className={cn(
+        " grid grid-cols-[1fr_2fr_repeat(3,1fr)] gap-4 px-6 py-3 bg-[#18161A] backdrop-blur-sm rounded-xl mb-2 font-semibold text-lg text-center sticky top-0",
+        className
+      )}
+    >
       <span>#</span>
       <span>Player</span>
       <span>🥇</span>
@@ -332,7 +329,10 @@ export const RankingRow = ({
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -10 }}
       transition={{ duration: 0.3 }}
-      className={cn(`grid grid-cols-[1fr_2fr_repeat(3,1fr)] gap-4 px-6 py-3 rounded-xl text-center items-center shadow-sm text-black`, variant == 'single' && "rounded-t-none opacity-10")}
+      className={cn(
+        `grid grid-cols-[1fr_2fr_repeat(3,1fr)] gap-4 px-6 py-3 rounded-xl text-center items-center shadow-sm text-black`,
+        variant == "single" && "rounded-t-none opacity-10"
+      )}
       style={{
         backgroundColor: bg,
       }}
@@ -343,5 +343,67 @@ export const RankingRow = ({
       <span className="font-medium text-gray-500">{silver}</span>
       <span className="font-medium text-amber-700">{bronze}</span>
     </motion.div>
+  );
+};
+
+export const PlayerPodium = ({ scores }: { scores: Scores }) => {
+  const { player } = useLobbyPlayer();
+  const order = [...scores]
+    .sort((a, b) => b.score - a.score)
+    .map((p, i) => {
+      return { ...p, position: i + 1 };
+    });
+
+  const playerPosition = order.find((p) => p.id === player?.id);
+
+  const [showConfetti, setShowConfetti] = useState(false);
+
+  // Trigger confetti slightly after first place is revealed
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (playerPosition?.position! > 3) return;
+      setShowConfetti(true);
+      confetti({
+        particleCount: 200,
+        spread: 100,
+        origin: { y: 0.8 },
+      });
+    }, 3000); // after podium animation
+    return () => clearTimeout(timer);
+  }, []);
+
+  function getOrdinal(n?: number): string {
+    if (n == null) return "";
+    const suffixes = ["th", "st", "nd", "rd"];
+    const v = n % 100;
+    return n + (suffixes[(v - 20) % 10] || suffixes[v] || suffixes[0]);
+  }
+
+  return (
+    <div className="flex flex-col items-center justify-center h-full gap-16">
+      {/* Title comes in first */}
+      <motion.h2
+        className="text-5xl font-bold mb-4 text-center max-w-4xl mx-auto w-full"
+        initial={{ opacity: 0, y: -40 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, delay: 0.2 }}
+      >
+        Game Over!
+      </motion.h2>
+
+        <p className="text-2xl">
+          You finished in {getOrdinal(playerPosition?.position)} place
+        </p>
+
+      <div className="animate-bounce animation-duration-[5s] mt-10">
+        <PlayerAvatar
+          displayName={player?.displayName!}
+          avatar={player?.avatar!}
+        />
+        <p className="text-center font-semibold text-2xl">
+          {scores?.find((p) => p.id === player?.id)?.score ?? 0} pts
+        </p>
+      </div>
+    </div>
   );
 };

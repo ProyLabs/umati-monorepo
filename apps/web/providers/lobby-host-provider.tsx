@@ -2,6 +2,7 @@
 
 import {
   Game,
+  GameLobbyMeta,
   getWsUrl,
   Lobby,
   Player,
@@ -35,7 +36,7 @@ interface LobbyHostContextType {
   uiState: RoomState,
   joinUrl: string;
   rankings: Ranking[];
-  game: Game|null;
+  game: GameLobbyMeta|null;
 
   //
   wsClient: WSClient | null;
@@ -45,6 +46,7 @@ interface LobbyHostContextType {
   kickPlayer: (playerId: string, reason?: string) => void;
   closeLobby: () => void;
   startGame: () => void;
+  cancelGame: () => void;
   setupGame: (gameId: string, options: any) => void;
 }
 
@@ -68,7 +70,7 @@ export function LobbyHostProvider({ children }: { children: ReactNode }) {
   const [reactions, setReactions] = useState<Record<string, string | null>>({});
   const [uiState, setUiState] = useState<RoomState>("INIT");
   const [rankings, setRankings] = useState<Ranking[]>([]);
-  const [game, setGame] = useState<Game|null>(null);
+  const [game, setGame] = useState<GameLobbyMeta|null>(null);
 
   const wsRef = useRef<WSClient | null>(null);
 
@@ -77,7 +79,7 @@ export function LobbyHostProvider({ children }: { children: ReactNode }) {
   // ⚡ WebSocket event handling
   // --------------------------------------------------------------------------
   const handleMessage = useCallback(
-    (event: WSEvent, payload: any) => {
+  (event: WSEvent, payload: any) => {
       console.log("🚀 ~ LobbyHostProvider ~ event:", event);
       switch (event) {
         case WSEvent.OPEN:
@@ -87,10 +89,10 @@ export function LobbyHostProvider({ children }: { children: ReactNode }) {
 
         case WSEvent.ROOM_STATE:
           const data = payload as WSPayloads[WSEvent.ROOM_STATE];
-          (setLobby(data), setPlayers(data.players));
-          setUiState(data.state);
-          setRankings(data.rankings ?? []);
-          setGame(data.game);
+          (setLobby(data), setPlayers(data!.players));
+          setUiState(data!.state);
+          setRankings(data!.rankings ?? []);
+          setGame(data!.game);
           setLoading(false);
           break;
 
@@ -184,7 +186,8 @@ export function LobbyHostProvider({ children }: { children: ReactNode }) {
     if (!lobby) return "";
     if (typeof window === "undefined") return "";
     // ✅ Use your Next.js route convention here
-    return `${window.location.origin}/lobby/${lobby.id}`;
+    return `http://192.168.1.120:3000/lobby/${lobby.id}`;
+    // return `${window.location.origin}/lobby/${lobby.id}`;
   }, [lobby]);
 
   // --------------------------------------------------------------------------
@@ -205,6 +208,10 @@ export function LobbyHostProvider({ children }: { children: ReactNode }) {
       roomId: identifier,
     });
   }, []);
+
+  const cancelGame = useCallback(()=>{
+wsRef.current?.send(WSEvent.GAME_CANCEL, {roomId: identifier})
+  }, [])
 
   const changeUiState = useCallback((uiState: RoomState) => {
     wsRef.current?.send(WSEvent.ROOM_STATE_CHANGE, {
@@ -252,6 +259,7 @@ export function LobbyHostProvider({ children }: { children: ReactNode }) {
       closeLobby,
       startGame,
       setupGame,
+      cancelGame,
     }),
     [
       lobby,
@@ -269,6 +277,7 @@ export function LobbyHostProvider({ children }: { children: ReactNode }) {
       closeLobby,
       startGame,
       setupGame,
+      cancelGame,
     ]
   );
 

@@ -36,7 +36,7 @@ export default function PlayerLobby() {
       <RankingRow position={20} name={"Alex"} gold={0} silver={0} bronze={0} variant="single" />
       </div> */}
 
-      <div className="flex items-center justify-center gap-4 w-full relative max-w-md">
+      <div className="flex items-center justify-center gap-4 w-full relative max-w-md mb-4">
         <UmatiLogo className="w-8 text-foreground block md:hidden" />
         <Fbutton variant="secondary" className="w-full flex-1 mt-auto" onClick={leaveLobby}>
           Leave Room

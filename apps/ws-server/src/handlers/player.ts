@@ -2,6 +2,7 @@ import type { WebSocket } from "ws";
 import { WSEvent, WSPayloads } from "@umati/ws";
 import { RoomManager } from "../lib/room-manager";
 import { logInfo } from "../utils/logger";
+import { GameManager } from "../lib/game-manager";
 
 /** When a player connects to a room */
 export async function handlePlayerConnect(
@@ -28,7 +29,21 @@ export async function handlePlayerConnect(
     })
   );
 
-  return;
+  if (room.game && room.players.some((p) => p.id === playerId)) {
+    const game = GameManager.get(room.game.id);
+    if (!game) return;
+
+    setTimeout(() => {
+      ws.send(
+        JSON.stringify({
+          event: WSEvent.GAME_STATE,
+          payload: GameManager.toGameState(game.id),
+        })
+      );
+    }, 200);
+
+    return;
+  }
 }
 
 /**
@@ -69,6 +84,7 @@ export async function handlePlayerJoin(
   logInfo(`👤 Player ${displayName || playerId} joined room ${roomId}`);
 
   RoomManager.toHost(roomId, WSEvent.PLAYER_JOIN, {
+    roomId,
     playerId,
     displayName,
     avatar,
@@ -113,23 +129,28 @@ export async function handlePlayerLeft(
   RoomManager.removePlayer(roomId, playerId, true);
   logInfo(`🚪 Player ${playerId} left room ${roomId}`);
 
-  RoomManager.broadcast(roomId, WSEvent.ROOM_STATE, RoomManager.toLobbyState(roomId));
+  RoomManager.broadcast(
+    roomId,
+    WSEvent.ROOM_STATE,
+    RoomManager.toLobbyState(roomId)
+  );
   ws.send(
-      JSON.stringify({
-        event: WSEvent.ROOM_STATE,
-        payload: RoomManager.toLobbyState(roomId)
-      })
-    );
+    JSON.stringify({
+      event: WSEvent.ROOM_STATE,
+      payload: RoomManager.toLobbyState(roomId),
+    })
+  );
 }
 
-
 /** When a player sends a reaction */
-export async function handlePlayerReaction(ws: WebSocket, payload: WSPayloads[WSEvent.PLAYER_REACTION]){
-  const {roomId, playerId, emoji } = payload;
-    const room = RoomManager.get(roomId);
+export async function handlePlayerReaction(
+  ws: WebSocket,
+  payload: WSPayloads[WSEvent.PLAYER_REACTION]
+) {
+  const { roomId, playerId, emoji } = payload;
+  const room = RoomManager.get(roomId);
   if (!room) return;
   logInfo(`🚪 Player ${playerId} reacted ${emoji}`);
 
-  RoomManager.toHost(roomId, WSEvent.PLAYER_REACTION, payload)
-
+  RoomManager.toHost(roomId, WSEvent.PLAYER_REACTION, payload);
 }

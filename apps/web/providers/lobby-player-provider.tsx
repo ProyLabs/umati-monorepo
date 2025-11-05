@@ -22,6 +22,8 @@ import {
   WSPayloads,
   getWsUrl,
   Game,
+  GameLobbyMeta,
+  TriviaOptions,
 } from "@umati/ws";
 
 /** Context shape */
@@ -30,15 +32,17 @@ interface LobbyPlayerContextType {
   players: Player[];
   player: Player | null;
   uiState: RoomState;
-  game: Game | null;
+  game: GameLobbyMeta | null;
   loading: boolean;
   isInLobby: boolean;
+
+  wsClient: WSClient | null;
 
   // Actions
   joinLobby: (displayName: string, avatar: string) => Promise<void>;
   leaveLobby: () => Promise<void>;
   sendReaction: (emoji: string) => void;
-  sendAnswer: (index: 0|1|2|3) => void;
+  sendAnswer: (index: TriviaOptions) => void;
 }
 
 const LobbyPlayerContext = createContext<LobbyPlayerContextType | undefined>(
@@ -53,7 +57,7 @@ export function LobbyPlayerProvider({ children }: { children: ReactNode }) {
   const [players, setPlayers] = useState<Player[]>([]);
   const [loading, setLoading] = useState(true);
   const [uiState, setUiState] = useState<RoomState>("INIT");
-  const [game, setGame] = useState<Game | null>(null);
+  const [game, setGame] = useState<GameLobbyMeta | null>(null);
 
   const wsRef = useRef<WSClient | null>(null);
 
@@ -74,9 +78,9 @@ export function LobbyPlayerProvider({ children }: { children: ReactNode }) {
 
         case WSEvent.ROOM_STATE:
           const data = payload as WSPayloads[WSEvent.ROOM_STATE];
-          (setLobby(data), setPlayers(data.players));
-          setUiState(data.state);
-          setGame(data.game);
+          (setLobby(data), setPlayers(data!.players));
+          setUiState(data!.state);
+          setGame(data!.game);
           setLoading(false);
           break;
 
@@ -162,14 +166,13 @@ export function LobbyPlayerProvider({ children }: { children: ReactNode }) {
     });
   };
 
-
-  const sendAnswer = async (index:0|1|2|3) => {
-     wsRef.current?.send(WSEvent.GAME_ANSWER, {
+  const sendAnswer = async (index: 0 | 1 | 2 | 3) => {
+    wsRef.current?.send(WSEvent.GAME_ANSWER, {
       roomId: identifier,
       answer: index,
       playerId: player?.id!,
     });
-  }
+  };
 
   // --------------------------------------------------------------------------
   // 💾 Context Value
@@ -183,7 +186,7 @@ export function LobbyPlayerProvider({ children }: { children: ReactNode }) {
       game,
       loading,
       isInLobby,
-
+      wsClient: wsRef.current,
       joinLobby,
       leaveLobby,
       sendReaction,
@@ -197,10 +200,11 @@ export function LobbyPlayerProvider({ children }: { children: ReactNode }) {
       loading,
       isInLobby,
       game,
+      wsRef,
       joinLobby,
       leaveLobby,
       sendReaction,
-      sendAnswer
+      sendAnswer,
     ]
   );
 

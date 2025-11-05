@@ -3,6 +3,7 @@ import { WSEvent, WSPayloads } from "@umati/ws";
 import { prisma } from "@umati/prisma";
 import { RoomManager } from "../lib/room-manager";
 import { logInfo, logError } from "../utils/logger";
+import { GameManager } from "../lib/game-manager";
 
 export async function handleRoomInit(
   ws: WebSocket,
@@ -25,6 +26,20 @@ export async function handleRoomInit(
           payload: RoomManager.toLobbyState(roomId),
         })
       );
+
+      if (room.game) {
+        const game = GameManager.get(room.game.id);
+        if (!game) return;
+
+        setTimeout(() => {
+          ws.send(
+            JSON.stringify({
+              event: WSEvent.GAME_STATE,
+              payload: GameManager.toGameState(game.id),
+            })
+          );
+        }, 200);
+      }
       return;
     }
 
@@ -61,9 +76,10 @@ export async function handleRoomInit(
       private: lobby.private,
       pin: lobby.pin,
       createdAt: lobby.createdAt,
+      game: null, // Initialize game as null
     };
 
-    const room = RoomManager.create(meta, sid, ws);
+    const room = RoomManager.create(meta as any, sid, ws);
 
     logInfo(`🏠 Room ${room.meta.name} (${roomId}) initialized`);
 

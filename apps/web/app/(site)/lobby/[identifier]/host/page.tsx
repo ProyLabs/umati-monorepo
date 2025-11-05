@@ -27,13 +27,6 @@ export default function LobbyPage() {
       return  <TriviaHostProvider>
         <TriviaHost />
             </TriviaHostProvider>
-        // if(gameState === "BEFORE"){
-        // } else if (gameState === "ROUND" || gameState === "ROUND_END") {
-        //         return <TriviaHost/>
-        // }
-
-
-
     }
 
     return ''

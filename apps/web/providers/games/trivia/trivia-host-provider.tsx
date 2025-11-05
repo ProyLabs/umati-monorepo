@@ -1,24 +1,15 @@
 "use client";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { useLobbyHost } from "@/providers/lobby-host-provider"; // Host context provides wsClient
-import { GameState, WSEvent } from "@umati/ws";
-
-export interface TriviaRound {
-  number: number;
-  totalRounds: number;
-  question: string;
-  choices: string[];
-  duration: number; // seconds
-  startedAt: number; // timestamp (ms)
-}
+import { GameState, Scores, TriviaOptions, TriviaRound, WSEvent } from "@umati/ws";
 
 interface TriviaHostContextType {
   gameId: string | null;
   gameType: string | null;
   state: GameState; // BEFORE, ROUND, ROUND_END, etc.
   round?: TriviaRound;
-  scores?: any[];
-  finalScores?: any[];
+  scores: Scores;
+  counts?: Record<TriviaOptions, number>;
   startGame: () => void;
   nextRound: () => void;
 }
@@ -32,31 +23,34 @@ export const TriviaHostProvider = ({ children }: { children: React.ReactNode }) 
   const [gameType, setGameType] = useState<string | null>(lobby?.game?.type ?? null);
   const [state, setState] = useState<GameState>("BEFORE");
   const [round, setRound] = useState<TriviaRound | undefined>(undefined);
-  const [scores, setScores] = useState<any[]>([]);
-  const [finalScores, setFinalScores] = useState<any[]>([]);
+  const [counts, setCounts] = useState<Record<TriviaOptions, number> | undefined>(undefined);
+  const [scores, setScores] = useState<Scores>([]);
 
   // --- WS Event Handlers ---
   useEffect(() => {
     if (!wsClient) return;
 
     wsClient.on(WSEvent.GAME_STATE, (payload) => {
+      console.log("🚀 ~ TriviaHostProvider ~ payload:", payload);
       setGameId(payload.id);
       setGameType(payload.type);
       setState(payload.state);
         if (payload.round) setRound(payload.round as TriviaRound);
-        if (payload.scores) setScores(payload.scores);
-      if (payload.finalScores) setFinalScores(payload.finalScores);
+        if (payload.counts) setCounts(payload.counts);
+        if (payload.scores) setScores(payload.scores ?? []);
     });
 
-    // wsClient.on("GAME_ROUND_STARTED", ({ round }) => {
-    //   setState("ROUND");
-    //   setRound(round);
-    // });
+    wsClient.on(WSEvent.TRIVIA_ROUND_START, ({ state, round }) => {
+      setState(state);
+      setRound(round);
+    });
 
-    // wsClient.on("GAME_ROUND_ENDED", ({ scores }) => {
-    //   setState("ROUND_END");
-    //   setScores(scores);
-    // });
+    wsClient.on(WSEvent.TRIVIA_ROUND_END, ({ state, round, scores, counts }) => {
+      setState(state);
+      setRound(round);
+      setScores(scores ?? []);
+      setCounts(counts);
+    });
 
     // wsClient.on("GAME_ENDED", ({ finalScores }) => {
     //   setState("GAME_END");
@@ -88,12 +82,12 @@ export const TriviaHostProvider = ({ children }: { children: React.ReactNode }) 
         state,
         round,
         scores,
-        finalScores,
+        counts,
         startGame,
         nextRound,
       }}
     >
-      <div className='bg-gradient-to-br from-[#FE566B] to-[var(--umati-red)] h-screen w-screen'>
+      <div className='bg-gradient-to-br from-[#FE566B] to-[var(--umati-red)] h-dvh w-dvw'>
       {children}
       </div>
     </TriviaHostContext.Provider>

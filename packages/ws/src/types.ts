@@ -18,6 +18,12 @@ export interface Lobby {
   game: GameLobbyMeta | null;
 }
 
+export interface LobbyFull extends Lobby {
+  state: RoomState;
+  players: Player[];
+  rankings: Ranking[];
+}
+
 export interface Ranking {
   id: string;
   displayName: string;
@@ -27,15 +33,27 @@ export interface Ranking {
 }
 
 // Room-level state machine (lobby UI context)
-export type RoomState = "INIT" | "LOBBY" | "WAITING" | "PLAYING" | "ENDED";
+export const RoomState = {
+  INIT: "INIT",
+  LOBBY: "LOBBY",
+  WAITING: "WAITING",
+  PLAYING: "PLAYING",
+  ENDED: "ENDED",
+} as const;
+
+export type RoomState = (typeof RoomState)[keyof typeof RoomState];
 
 // Game-level state machine (handled internally by game logic)
-export type GameState =
-  | "BEFORE"
-  | "ROUND"
-  | "ROUND_END"
-  | "LEADERBOARD"
-  | "GAME_END";
+export const GameState = {
+  BEFORE: "BEFORE",
+  ROUND: "ROUND",
+  ROUND_END: "ROUND_END",
+  LEADERBOARD: "LEADERBOARD",
+  RANKING: "RANKING",
+  GAME_END: "GAME_END",
+} as const;
+
+export type GameState = (typeof GameState)[keyof typeof GameState];
 
 export interface HostConnection {
   sockets: Map<string, WebSocket>; // allows multiple connections under same host
@@ -73,12 +91,15 @@ export interface GameLobbyMeta {
   type: "trivia" | "emojiRace" | "bibleQuest";
 }
 
+export type Score = { id: string; displayName: string; score: number };
+export type Scores = Score[];
+
 export interface Game {
   roomId: string;
   noOfRounds: number;
   data: DataItem[];
   currentRound: number;
-  scores: { id: string; displayName: string; score: number }[];
+  scores: Scores;
   randomize: Randomize;
 }
 
@@ -89,7 +110,6 @@ export interface DataItem {
 }
 interface Randomize {}
 
-
 export interface TriviaRound {
   number: number;
   totalRounds: number;
@@ -97,4 +117,20 @@ export interface TriviaRound {
   choices: string[];
   duration: number; // seconds
   startedAt: number; // timestamp (ms)
+  correctAnswer: string | null;
+  answer: string | null;
 }
+
+export type PlayerAnswer = {
+  answer: TriviaOptions;
+  timeTaken: number;
+};
+
+export const TriviaOptions = {
+  0: 0,
+  1: 1,
+  2: 2,
+  3: 3,
+} as const;
+
+export type TriviaOptions = (typeof TriviaOptions)[keyof typeof TriviaOptions];

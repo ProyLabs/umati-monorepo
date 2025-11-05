@@ -51,7 +51,7 @@ const room = RoomManager.get(roomId);
 
 //   return;
 // }
-export function handleStartGame(ws: WebSocket, payload: { roomId: string }) {
+export function handleStartGame(ws: WebSocket,  payload: WSPayloads[WSEvent.GAME_START]) {
   const { roomId } = payload;
   const room = RoomManager.get(roomId);
   if (!room?.game) return;
@@ -60,15 +60,30 @@ export function handleStartGame(ws: WebSocket, payload: { roomId: string }) {
   if (!game) return;
 
   game.startGame();
-  RoomManager.broadcast(roomId, WSEvent.GAME_STARTED, {
-    roomId,
-    game: room.game,
-  });
+  // RoomManager.broadcast(roomId, WSEvent.GAME_STARTED, {
+  //   roomId,
+  //   game: room.game,
+  // });
+}
+
+export function handleCancelGame(ws: WebSocket, payload: WSPayloads[WSEvent.GAME_CANCEL]) {
+   const { roomId } = payload;
+  const room = RoomManager.get(roomId);
+  if (!room?.game) return;
+
+  const game = GameManager.get(room.game.id);
+  if (!game) return;
+
+  GameManager.remove(game.id);
+  RoomManager.setGame(roomId, null);
 }
 
 
 /** When a player answers */
-export async function handleGameAnswer(ws: WebSocket, payload: WSPayloads[WSEvent.GAME_ANSWER]) {
+export async function handleGameAnswer(ws: WebSocket, payload: WSPayloads[WSEvent.GAME_ANSWER]|WSPayloads[WSEvent.TRIVIA_ROUND_ANSWER]) {
     const {roomId, playerId, answer} = payload;
-    // GameManager.submitAnswer(roomId, playerId, answer);
+    const room = RoomManager.get(roomId);
+    if(!room) return;
+    if(!room.game) return;
+    GameManager.submitAnswer(room.game.id, playerId, answer);
 }

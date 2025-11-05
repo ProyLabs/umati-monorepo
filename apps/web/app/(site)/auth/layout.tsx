@@ -11,7 +11,7 @@ export default function AuthLayout({
 }>) {
   return (
         <AuroraBackground>
-    <div className="h-screen w-screen flex flex-col items-center justify-center gap-8 relative">
+    <div className="h-dvh w-dvw flex flex-col items-center justify-center gap-8 relative">
      <Link href="/" className="">
          <UmatiFullLogo className="h-10 text-black dark:text-white" />
      </Link>

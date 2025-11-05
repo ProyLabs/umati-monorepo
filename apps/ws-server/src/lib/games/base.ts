@@ -1,4 +1,4 @@
-import { WSEvent } from "@umati/ws";
+import { GameState, RoomState, WSEvent, WSPayloads } from "@umati/ws";
 import { nanoid } from "nanoid";
 import { GameType } from "../game-manager";
 import { RoomManager } from "../room-manager";
@@ -7,7 +7,7 @@ export abstract class BaseGame {
   public readonly id: string;
   public readonly roomId: string;
   public readonly type: GameType;
-  public state: string = "BEFORE";
+  public state: GameState = "BEFORE";
 
   constructor(roomId: string, type: GameType) {
     this.id = nanoid();
@@ -16,23 +16,32 @@ export abstract class BaseGame {
   }
 
   /** Broadcast a WS event to everyone in the room */
-  protected broadcast(event: WSEvent, payload: any) {
+  protected broadcast<E extends WSEvent>(event: E, payload: WSPayloads[E & keyof WSPayloads]) {
     RoomManager.broadcast(this.roomId, event, payload);
   }
 
   /** Broadcast only to host */
-  protected toHost(event: WSEvent, payload: any) {
+  protected toHost<E extends WSEvent>(event: E, payload: WSPayloads[E & keyof WSPayloads]) {
     RoomManager.toHost(this.roomId, event, payload);
   }
 
+    /** Broadcast only to host */
+  protected toPlayer<E extends WSEvent>(playerId: string, event: E, payload: WSPayloads[E & keyof WSPayloads]) {
+    RoomManager.toPlayer(this.roomId, playerId, event, payload);
+  }
+
   /** Update room UI state */
-  protected setRoomState(state: "LOBBY" | "PLAYING" | "ENDED") {
+  protected setRoomState(state: RoomState) {
     RoomManager.updateState(this.roomId, state);
+  }
+
+  public addPlayer(playerId: string) {
+    
   }
 
   /** Common teardown */
   public endGame() {
-    this.state = "GAME_END";
+    this.state = GameState.GAME_END;
     this.broadcast(WSEvent.GAME_END, {});
     RoomManager.setGame(this.roomId, null);
   }

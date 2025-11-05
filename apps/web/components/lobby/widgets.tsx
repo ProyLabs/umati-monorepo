@@ -1,18 +1,17 @@
 "use client";
 
+import { useAuth } from "@/providers/auth-provider";
 import { RiHeart3Line, RiMedalFill } from "@remixicon/react";
 import { cva, VariantProps } from "class-variance-authority";
 import {
   Maximize2Icon,
   MaximizeIcon,
   MinimizeIcon,
-  Moon,
-  Sun,
   Volume2,
   VolumeX,
   WifiHighIcon,
   WifiIcon,
-  WifiLowIcon,
+  WifiLowIcon
 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useTheme } from "next-themes";
@@ -22,7 +21,6 @@ import { useEffect, useRef, useState } from "react";
 import useClickOutside from "../../hooks/use-click-outside";
 import { useClipboard } from "../../hooks/use-clipboard";
 import { cn, getRandomAvatarUrl } from "../../lib/utils";
-import { WSEvent } from "../../lib/ws/events";
 import { useLobbyHost } from "../../providers/lobby-host-provider";
 import { useLobbyPlayer } from "../../providers/lobby-player-provider";
 import { useSettings } from "../../providers/settings-provider";
@@ -30,14 +28,6 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import AvatarSelect from "../ui/avatar-select";
 import { Button } from "../ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
-  DropdownMenuTrigger,
-} from "../ui/dropdown-menu";
 import { Fbutton } from "../ui/fancy-button";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
@@ -45,7 +35,6 @@ import UmatiLogo, { UmatiFullLogo } from "../ui/logo";
 import { Separator } from "../ui/separator";
 import { QRCode } from "../ui/shadcn-io/qr-code";
 import { Slider } from "../ui/slider";
-import { useAuth } from "@/providers/auth-provider";
 
 export const CopyLinkButton = () => {
   const { joinUrl } = useLobbyHost();
@@ -178,7 +167,7 @@ export const Latency = ({ ms }: { ms: number }) => {
 };
 
 export const BeforeWeBegin = () => {
-  const {startGame} = useLobbyHost()
+  const { startGame, cancelGame } = useLobbyHost();
   return (
     <div className="max-w-screen-2xl mx-auto w-full py-4 flex flex-col gap-8 px-4 items-center justify-center h-full">
       <h3 className="text-5xl font-bold text-center">Before We Begin</h3>
@@ -191,10 +180,14 @@ export const BeforeWeBegin = () => {
         <li className="">Answer using the device you've joined with!</li>
         <li className="">The faster you answer, the more points you'll get!</li>
       </ul>
-      <Fbutton className="max-w-xs mx-auto w-full" variant="secondary" onClick={startGame}>
+      <Fbutton
+        className="max-w-xs mx-auto w-full"
+        variant="secondary"
+        onClick={startGame}
+      >
         Let's Play
       </Fbutton>
-      <Fbutton size="sm" variant="outline" className="max-w-xs mx-auto w-full">
+      <Fbutton size="sm" variant="outline" className="max-w-xs mx-auto w-full" onClick={cancelGame}>
         Back to Lobby
       </Fbutton>
     </div>
@@ -369,7 +362,7 @@ export const PlayerAvatar = ({
 }) => {
   return (
     <motion.div className="flex flex-col items-center">
-      <Avatar className="size-30 ring-2 ring-foreground shadow-md hover:scale-110 transition-transform mb-2">
+      <Avatar className={cn("size-30 ring-2 ring-foreground shadow-md hover:scale-110 transition-transform mb-2 relative")}>
         <AvatarImage src={avatar} alt={displayName} />
         <AvatarFallback>{displayName?.[0]}</AvatarFallback>
       </Avatar>
@@ -379,9 +372,11 @@ export const PlayerAvatar = ({
 };
 
 export const PlayerJoinLobby = () => {
-  const {user} = useAuth();
+  const { user } = useAuth();
   const [displayName, setDisplayName] = useState(user?.displayName ?? "");
-  const [avatar, setAvatar] = useState<string>(user?.avatar ?? getRandomAvatarUrl());
+  const [avatar, setAvatar] = useState<string>(
+    user?.avatar ?? getRandomAvatarUrl()
+  );
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
@@ -443,6 +438,19 @@ export const PlayerJoinLobby = () => {
   );
 };
 
+export const PlayerLeaveButton = () => {
+  const { leaveLobby } = useLobbyPlayer();
+  return (
+    <Fbutton
+      variant="secondary"
+      className="w-full flex-1 mt-auto"
+      onClick={leaveLobby}
+    >
+      Leave Room
+    </Fbutton>
+  );
+};
+
 export const Reactions = () => {
   const [showTray, setShowTray] = useState(false);
   const trayRef = useRef<HTMLDivElement>(null);
@@ -492,11 +500,25 @@ export const Reactions = () => {
 
 export const PlayerReactionLayer = () => {
   const { reactions } = useLobbyHost();
-  const [activeReactions, setActiveReactions] = useState<{ id: string; playerId: string; emoji: string; xOffset: number; drift: number; }[]>([]);
+  const [activeReactions, setActiveReactions] = useState<
+    {
+      id: string;
+      playerId: string;
+      emoji: string;
+      xOffset: number;
+      drift: number;
+    }[]
+  >([]);
 
   // Whenever reactions change, spawn new emoji reactions
   useEffect(() => {
-    const newReactions: { id: string; playerId: string; emoji: string; xOffset: number; drift: number; }[] = [];
+    const newReactions: {
+      id: string;
+      playerId: string;
+      emoji: string;
+      xOffset: number;
+      drift: number;
+    }[] = [];
 
     Object.entries(reactions).forEach(([playerId, emoji]) => {
       if (!emoji) return;
@@ -544,7 +566,7 @@ export const PlayerReactionLayer = () => {
               setActiveReactions((prev) => prev.filter((x) => x.id !== r.id));
             }}
           >
-          {r.emoji}
+            {r.emoji}
           </motion.div>
         ))}
       </AnimatePresence>

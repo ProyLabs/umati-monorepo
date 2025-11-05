@@ -3,7 +3,7 @@ import type { WebSocket } from "ws";
 import { handlePlayerConnect, handlePlayerJoin, handlePlayerLeft, handlePlayerReaction } from "../handlers/player";
 import { handleRoomClose, handleRoomInit, handleRoomStateChange } from "../handlers/room";
 import { logInfo } from "../utils/logger";
-import { handleGameAnswer, handleInitGame, handleStartGame } from "../handlers/game";
+import { handleCancelGame, handleGameAnswer, handleInitGame, handleStartGame } from "../handlers/game";
 
 export async function handleMessage(ws: WebSocket, msg: WSMessage, sid: string) {
   logInfo("🔻", msg.event, msg.payload)
@@ -49,8 +49,16 @@ export async function handleMessage(ws: WebSocket, msg: WSMessage, sid: string) 
     case WSEvent.GAME_START: 
       await handleStartGame(ws, msg.payload as  WSPayloads[WSEvent.GAME_START]);
       break;
+      
+    case WSEvent.GAME_CANCEL: 
+      await handleCancelGame(ws, msg.payload as  WSPayloads[WSEvent.GAME_CANCEL]);
+      break;
 
     case WSEvent.GAME_ANSWER:
+      await handleGameAnswer(ws, msg.payload as WSPayloads[WSEvent.GAME_ANSWER]);
+      break;
+
+    case WSEvent.TRIVIA_ROUND_ANSWER:
       await handleGameAnswer(ws, msg.payload as WSPayloads[WSEvent.GAME_ANSWER]);
       break;
 

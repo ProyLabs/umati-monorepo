@@ -2,7 +2,18 @@ import { BaseGame } from "./base";
 import { triviaquestions } from "./trivia-questions";
 import { Randomize } from "js-randomize";
 import { RoomManager } from "../room-manager";
-import { TriviaRound, WSEvent, type DataItem } from "@umati/ws";
+import {
+  Scores,
+  TriviaRound,
+  WSEvent,
+  type DataItem,
+  GameState,
+  RoomState,
+  TriviaOptions,
+  PlayerAnswer,
+  Score,
+} from "@umati/ws";
+import { GameManager } from "../game-manager";
 
 export class TriviaGame extends BaseGame {
   static maxNumberOfRounds = 20;
@@ -10,18 +21,28 @@ export class TriviaGame extends BaseGame {
   public noOfRounds: number;
   public data: DataItem[] = [];
   public currentRound = 0;
-  public scores: { id: string; displayName: string; score: number }[] = [];
+  private _scores: Map<string, Score> = new Map();
 
   private randomize = new Randomize();
   private roundDuration: number;
-  private answers: { playerId: string; answer: 0 | 1 | 2 | 3; timeTaken: number }[] = [];
+  private answers: Map<string, PlayerAnswer> = new Map();
   private roundStartTime = 0;
   private roundTimer?: NodeJS.Timeout;
-  private round?: TriviaRound | null;
+  public round?: TriviaRound | null;
 
-  constructor(roomId: string, options: { noOfRounds: number; duration?: number }) {
+  public get scores(): Scores {
+    return Array.from(this._scores.values());
+  }
+
+  constructor(
+    roomId: string,
+    options: { noOfRounds: number; duration?: number }
+  ) {
     super(roomId, "trivia");
-    this.noOfRounds = Math.min(options.noOfRounds, TriviaGame.maxNumberOfRounds);
+    this.noOfRounds = Math.min(
+      options.noOfRounds,
+      TriviaGame.maxNumberOfRounds
+    );
     this.roundDuration = (options.duration ?? 30) * 1000;
     this.init();
   }
@@ -36,7 +57,10 @@ export class TriviaGame extends BaseGame {
       .sample(triviaquestions, this.noOfRounds)
       .map((s) => {
         const options = [
-          ...this.randomize.sample(s.options.filter((o) => o !== s.correctAnswer), 3),
+          ...this.randomize.sample(
+            s.options.filter((o) => o !== s.correctAnswer),
+            3
+          ),
           s.correctAnswer,
         ];
         return {
@@ -50,76 +74,202 @@ export class TriviaGame extends BaseGame {
   private initPlayerScores() {
     const room = RoomManager.get(this.roomId);
     if (!room) return;
-    this.scores = room.players.map((p) => ({
-      id: p.id,
-      displayName: p.displayName,
+    room.players.forEach((p) => {
+      this._scores.set(p.id, {
+        id: p.id,
+        displayName: p.displayName,
+        score: 0,
+      });
+    });
+  }
+
+  addPlayer(playerId: string) {
+    const room = RoomManager.get(this.roomId);
+    if (!room) return;
+
+    const player = room.players.find((p) => p.id === playerId);
+    if (!player) return;
+
+    const score = this._scores.get(playerId);
+    if (score) return;
+
+    this._scores.set(player.id, {
+      id: player.id,
+      displayName: player.displayName,
       score: 0,
-    }));
+    });
+
+    if (this.state === GameState.ROUND) {
+      this.broadcast(WSEvent.TRIVIA_ROUND_START, {
+        state: this.state,
+        round: { ...this.round!, correctAnswer: null },
+      });
+    } else if (this.state === GameState.ROUND_END) {
+      let counts = {
+        0: 0,
+        1: 0,
+        2: 0,
+        3: 0,
+      };
+
+      for (const { answer } of this.answers.values()) {
+        counts[answer]++;
+      }
+
+      this.broadcast(WSEvent.TRIVIA_ROUND_END, {
+        state: this.state,
+        round: this.round!,
+        scores: this.scores.sort((a, b) => b.score - a.score),
+        counts: counts,
+      });
+    } else if (this.state === GameState.LEADERBOARD) {
+      this.broadcast(WSEvent.GAME_STATE, GameManager.toGameState(this.id)!);
+    } else {
+      this.broadcast(WSEvent.GAME_STATE, GameManager.toGameState(this.id)!);
+    }
+
   }
 
   // -- Required override --
   public startGame() {
-    this.state = "ROUND";
-    this.setRoomState("PLAYING");
+    this.state = GameState.ROUND;
+    this.setRoomState(RoomState.PLAYING);
     this.startRound();
   }
 
   private startRound() {
+    this.state = GameState.ROUND;
     const q = this.data[this.currentRound];
-    this.answers = [];
+    this.answers = new Map();
     this.roundStartTime = Date.now();
 
     this.round = {
-        number: this.currentRound + 1,
-        totalRounds: this.noOfRounds,
-        question: q?.question!,
-        choices: q?.choices!,
-        duration: this.roundDuration / 1000,
-        startedAt: this.roundStartTime,
-    }
-    this.roundTimer = setTimeout(() => this.endRound(), this.roundDuration);
-    this.broadcast(WSEvent.GAME_ROUND_START, this.round);
+      number: this.currentRound + 1,
+      totalRounds: this.noOfRounds,
+      question: q?.question!,
+      choices: q?.choices!,
+      duration: this.roundDuration / 1000,
+      startedAt: this.roundStartTime,
+      correctAnswer: q?.answer!,
+      answer: null,
+    };
+    this.roundTimer = setTimeout(() => {
+      this.endRound();
+    }, this.roundDuration);
+    console.log("🚀 ~ TriviaGame ~ startRound ~ this.state:", this.state);
+
+    this.broadcast(WSEvent.TRIVIA_ROUND_START, {
+      state: this.state,
+      round: { ...this.round, correctAnswer: null },
+    });
   }
 
-  public submitAnswer(playerId: string, answer: 0 | 1 | 2 | 3) {
-    const exists = this.answers.find((a) => a.playerId === playerId);
+  public submitAnswer(playerId: string, answer: TriviaOptions) {
+    const exists = this.answers.get(playerId);
     if (exists) return;
     const timeTaken = Date.now() - this.roundStartTime;
-    this.answers.push({ playerId, answer, timeTaken });
-    if (this.answers.length === this.scores.length) {
+    this.answers.set(playerId, { answer, timeTaken });
+    this.toPlayer(playerId, WSEvent.TRIVIA_ROUND_ANSWERED, {
+      answer: this.answers.get(playerId)?.answer ?? null,
+    });
+
+    if (this.answers.size === this.scores.length) {
       if (this.roundTimer) clearTimeout(this.roundTimer);
-      this.endRound();
+      setTimeout(() => {
+        this.endRound();
+      }, 1500);
     }
   }
 
   private endRound() {
+    this.state = GameState.ROUND_END;
     const q = this.data[this.currentRound];
     const correctIndex = q?.choices.indexOf(q.answer);
-    const basePoints = 1000;
+    const basePoints = 200;
     const timeBonusFactor = 0.5;
 
-    for (const ans of this.answers) {
-      const player = this.scores.find((s) => s.id === ans.playerId);
-      if (!player) continue;
-      if (ans.answer === correctIndex) {
+    for (const [playerId, answer] of this.answers) {
+      if (answer.answer === correctIndex) {
         const bonus = Math.max(
           0,
-          (1 - ans.timeTaken / this.roundDuration) * basePoints * timeBonusFactor
+          (1 - answer.timeTaken / this.roundDuration) *
+            basePoints *
+            timeBonusFactor
         );
-        player.score += basePoints + bonus;
+
+        // Round to whole number
+        const points = Math.round(basePoints + bonus);
+
+        const currentScore = this._scores.get(playerId);
+        if (!currentScore) continue;
+
+        this._scores.set(playerId, {
+          ...currentScore,
+          score: currentScore.score + points,
+        });
       }
     }
 
-    this.broadcast(WSEvent.GAME_ROUND_ENDED, {
-      correctAnswer: q?.answer,
+    let counts = {
+      0: 0,
+      1: 0,
+      2: 0,
+      3: 0,
+    };
+
+    for (const { answer } of this.answers.values()) {
+      counts[answer]++;
+    }
+
+    this.broadcast(WSEvent.TRIVIA_ROUND_END, {
+      state: this.state,
+      round: this.round!,
       scores: this.scores.sort((a, b) => b.score - a.score),
+      counts: counts,
     });
 
-    if (++this.currentRound >= this.noOfRounds) return this.endGame();
-    setTimeout(() => this.startRound(), 5000);
+    setTimeout(() => this.showLeaderboard(), 5000);
+  }
+
+  private showLeaderboard() {
+    if (++this.currentRound >= this.noOfRounds) {
+      this.state = GameState.LEADERBOARD;
+      this.broadcast(WSEvent.GAME_STATE, GameManager.toGameState(this.id)!);
+
+      setTimeout(() => {
+        this.state = GameState.RANKING;
+        this.broadcast(WSEvent.GAME_STATE, GameManager.toGameState(this.id)!);
+
+        const sorted = Array.from(this._scores.entries())
+          .map(([id, data]) => ({
+            id,
+            displayName: data.displayName,
+            score: data.score,
+          }))
+          .sort((a, b) => b.score - a.score);
+
+        // Get top 3 (pad with empty entries if less than 3 players)
+        const top3 = sorted.slice(0, 3);
+        while (top3.length < 3) {
+          top3.push({ id: "", displayName: "", score: 0 });
+        }
+
+        RoomManager.submitGameResult(this.roomId, top3);
+
+        setTimeout(() => {
+          this.endGame();
+        }, 10000);
+      }, 5000);
+    } else {
+      this.state = GameState.LEADERBOARD;
+      this.broadcast(WSEvent.GAME_STATE, GameManager.toGameState(this.id)!);
+
+      setTimeout(() => {
+        this.startRound();
+      }, 5000);
+    }
   }
 }
-
 
 // export class TriviaGame {
 //   private roomId: string;

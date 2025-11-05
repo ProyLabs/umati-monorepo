@@ -10,7 +10,7 @@
  *  - 🔹 WSMessage: full message shape { event, payload }
  */
 
-import { Game, GameState, Lobby, Player, Ranking, RoomState } from "./types";
+import { Game, GameState, Lobby, LobbyFull, Player, Ranking, RoomState, Scores, TriviaOptions, TriviaRound } from "./types";
 
 export enum WSEvent {
   // --- Core lifecycle ---
@@ -45,13 +45,22 @@ export enum WSEvent {
   GAME_INIT = "GAME:INIT",
   GAME_STATE = "GAME:STATE",
   GAME_START = "GAME:START",
+  GAME_CANCEL = "GAME:CANCEL",
+  GAME_ROUND_START = "GAME:ROUND:START",
+
   GAME_STARTED = "GAME:started",
-  GAME_ROUND_START = "GAME:round-start",
   GAME_ROUND_ENDED = "GAME:round-ended",
   GAME_QUESTION = "GAME:question",
   GAME_ANSWER = "GAME:ANSWER",
   GAME_ANSWER_RECEIVED = "GAME:answer-received",
   GAME_END="GAME:END",
+
+
+  //Trivia
+  TRIVIA_ROUND_START="GAME:TRIVIA:ROUND:START",
+  TRIVIA_ROUND_ANSWER="GAME:TRIVIA:ROUND:ANSWER",
+  TRIVIA_ROUND_ANSWERED="GAME:TRIVIA:ROUND:ANSWERED",
+  TRIVIA_ROUND_END="GAME:TRIVIA:ROUND:END",
 
   // --- System ---
   SYSTEM_ANNOUNCEMENT = "SYSTEM:announcement",
@@ -99,12 +108,7 @@ export interface WSPayloads {
   };
 
   [WSEvent.ROOM_CREATED]: { roomId: string };
-  [WSEvent.ROOM_STATE]: Lobby & {
-    state: RoomState;
-    players: Player[];
-    rankings: Ranking[];
-    game: Game | null
-  };
+  [WSEvent.ROOM_STATE]: LobbyFull | null;
   [WSEvent.ROOM_STATE_CHANGE]: { roomId: string; state: RoomState };
   [WSEvent.ROOM_UPDATED]: {
     roomId: string;
@@ -125,14 +129,26 @@ export interface WSPayloads {
     config: Record<string, any>; // e.g. { noOfRounds: 10, duration: 30 }
   };
   };
-  [WSEvent.GAME_START]: {
-    roomId: string;
-  };
+  [WSEvent.GAME_START]: {roomId: string};
+  [WSEvent.GAME_CANCEL]: {roomId: string};
+
+
   [WSEvent.GAME_STATE]: Record<string, any> &{
     id: string;
     type: string;
     state: GameState
   };
+
+
+
+  //Trivia actions
+  [WSEvent.TRIVIA_ROUND_START]: {state: GameState, round: TriviaRound}
+  [WSEvent.TRIVIA_ROUND_ANSWER]: {roomId: string;playerId: string;answer: TriviaOptions};
+  [WSEvent.TRIVIA_ROUND_ANSWERED]: { answer: TriviaOptions| null};
+  [WSEvent.TRIVIA_ROUND_END]: {state: GameState, round: TriviaRound, scores: Scores, counts: Record<TriviaOptions, number>}
+
+  
+
   [WSEvent.GAME_STARTED]: {
     roomId: string;
     options: any;
@@ -142,7 +158,7 @@ export interface WSPayloads {
   [WSEvent.GAME_ANSWER]: {
     roomId: string;
     playerId: string;
-    answer: 0|1|2|3;
+    answer: TriviaOptions;
   };
   [WSEvent.GAME_ROUND_ENDED]: {
     roomId: string;
