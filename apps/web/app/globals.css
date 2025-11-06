@@ -43,13 +43,16 @@
   --radius-xl: calc(var(--radius) + 4px);
   --animate-aurora: aurora 60s linear infinite;
 
-
   @keyframes aurora {
-  from {
-    backgroundPosition: 50% 50%, 50% 50%;
+    from {
+      backgroundposition:
+        50% 50%,
+        50% 50%;
     }
-  to {
-    backgroundPosition: 350% 50%, 350% 50%;
+    to {
+      backgroundposition:
+        350% 50%,
+        350% 50%;
     }
   }
 }
@@ -57,13 +60,13 @@
   --radius: 0.625rem;
 
   /* ===== Umati Brand Colors ===== */
-  --umati-black: #0B0A0E;
-  --umati-yellow: #F9D94A;
-  --umati-sky: #4DC7FF;
-  --umati-red: #EF3E46;
-  --umati-purple: #6A3BFF;
-  --umati-blue: #3749F3;
-  --umati-aqua: #64E0C2;
+  --umati-black: #0b0a0e;
+  --umati-yellow: #f9d94a;
+  --umati-sky: #4dc7ff;
+  --umati-red: #ef3e46;
+  --umati-purple: #6a3bff;
+  --umati-blue: #3749f3;
+  --umati-aqua: #64e0c2;
 
   --cursor-pointer: url(/cursor.png), pointer;
 
@@ -113,10 +116,9 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
-
 @layer base {
   * {
-    @apply border-border outline-ring/50 ;
+    @apply border-border outline-ring/50;
   }
   body {
     @apply bg-background text-foreground;
@@ -133,7 +135,7 @@
   /* max-width: 48rem; */
   @apply w-full;
   margin: auto;
-   max-width: 70rem;
+  max-width: 70rem;
   --slide-height: 19rem;
   --slide-spacing: 1.6rem;
   --slide-size: 100%;
@@ -188,4 +190,29 @@
   justify-content: center;
   height: var(--slide-height);
   user-select: none;
+}
+
+.policy h1 {
+  font-size: 2em;
+  margin-bottom: 0.5em;
+}
+.policy h2 {
+  margin-top: 1.5em;
+}
+.policy ul {
+  margin: 0.5em 0 1em 2em;
+}
+.policy p {
+  margin: 0.5em 0 1em;
+}
+.policy footer {
+  margin-top: 2em;
+  font-size: 0.9em;
+  color: #666;
+}
+.policy a {
+  color: #4770FF;
+}
+.policy a:hover {
+  text-decoration: underline;
 }

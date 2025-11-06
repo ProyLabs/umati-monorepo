@@ -41,9 +41,9 @@ export default function RootLayout({
         </ThemeProvider>
         <Analytics />
         <SpeedInsights />
-        {/* <CookieConsent
+        <CookieConsent
           variant="small"
-        /> */}
+        />
       </body>
     </html>
   );

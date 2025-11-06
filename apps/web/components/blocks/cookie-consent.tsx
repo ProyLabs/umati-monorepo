@@ -33,7 +33,7 @@ const CookieConsent = React.forwardRef<HTMLDivElement, CookieConsentProps>(
       onDeclineCallback = () => {},
       className,
       description = "We use cookies to ensure you get the best experience on our website. For more information, please see our cookie policy.",
-      learnMoreHref = "#",
+      learnMoreHref = "/cookies-policy",
       ...props
     },
     ref,
