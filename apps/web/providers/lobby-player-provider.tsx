@@ -21,12 +21,13 @@ import {
   WSClient,
   WSPayloads,
   getWsUrl,
-  Game,
   GameLobbyMeta,
   TriviaOptions,
 } from "@umati/ws";
 
-/** Context shape */
+/* -------------------------------------------------------------------------- */
+/* 🧩 Context Type                                                           */
+/* -------------------------------------------------------------------------- */
 interface LobbyPlayerContextType {
   lobby: Lobby | null;
   players: Player[];
@@ -34,8 +35,8 @@ interface LobbyPlayerContextType {
   uiState: RoomState;
   game: GameLobbyMeta | null;
   loading: boolean;
+  reconnecting: boolean;
   isInLobby: boolean;
-
   wsClient: WSClient | null;
 
   // Actions
@@ -49,135 +50,180 @@ const LobbyPlayerContext = createContext<LobbyPlayerContextType | undefined>(
   undefined
 );
 
+/* -------------------------------------------------------------------------- */
+/* 🏠 Provider                                                               */
+/* -------------------------------------------------------------------------- */
 export function LobbyPlayerProvider({ children }: { children: ReactNode }) {
   const { identifier } = useParams() as { identifier: string };
   const router = useRouter();
-  const { user, updateUser } = useAuth(); // Always returns a user or guest
+  const { user, updateUser } = useAuth();
+
   const [lobby, setLobby] = useState<Lobby | null>(null);
   const [players, setPlayers] = useState<Player[]>([]);
   const [loading, setLoading] = useState(true);
   const [uiState, setUiState] = useState<RoomState>("INIT");
   const [game, setGame] = useState<GameLobbyMeta | null>(null);
+  const [reconnecting, setReconnecting] = useState(false);
 
   const wsRef = useRef<WSClient | null>(null);
+  const initializedRef = useRef(false);
 
-  // --------------------------------------------------------------------------
-  // ⚡ WebSocket event handling
-  // --------------------------------------------------------------------------
+  /* ------------------------------------------------------------------------ */
+  /* 🧠 Strongly Typed Send Helper                                            */
+  /* ------------------------------------------------------------------------ */
+  const send = useCallback(
+    <E extends WSEvent>(event: E, payload: WSPayloads[E & keyof WSPayloads]) => {
+      wsRef.current?.send(event, payload);
+    },
+    []
+  );
+
+  /* ------------------------------------------------------------------------ */
+  /* ⚡ WebSocket Event Handling                                              */
+  /* ------------------------------------------------------------------------ */
   const handleMessage = useCallback(
     (event: WSEvent, payload: any) => {
-      console.log("🚀 ~ LobbyHostProvider ~ event:", event);
       switch (event) {
         case WSEvent.OPEN:
-          console.log(`✅ Player ${user?.id!} WS connected`);
-          wsRef.current?.send(WSEvent.PLAYER_CONNECT, {
+          console.log(`✅ Player ${user?.id} WS connected`);
+          setReconnecting(false);
+          send(WSEvent.PLAYER_CONNECT, {
             roomId: identifier,
             playerId: user?.id!,
           });
           break;
 
-        case WSEvent.ROOM_STATE:
+        case WSEvent.ROOM_STATE: {
           const data = payload as WSPayloads[WSEvent.ROOM_STATE];
-          (setLobby(data), setPlayers(data!.players));
+          setLobby(data);
+          setPlayers(data!.players);
           setUiState(data!.state);
-          setGame(data!.game);
+          setGame(data!.game ?? null);
           setLoading(false);
           break;
+        }
 
         case WSEvent.ROOM_CLOSED:
-          toast.info(payload.reason);
+          toast.info(payload.reason ?? "Lobby closed");
           router.replace("/");
           break;
 
         default:
           console.log("📩 Unhandled event:", event, payload);
-          break;
       }
     },
-    [router]
+    [identifier, router, send, user?.id]
   );
 
-  // --------------------------------------------------------------------------
-  // 🔌 WebSocket connection setup
-  // --------------------------------------------------------------------------
+  /* ------------------------------------------------------------------------ */
+  /* 🔌 WebSocket Setup + Lifecycle                                           */
+  /* ------------------------------------------------------------------------ */
   useEffect(() => {
-    if (!identifier) return;
+    if (!identifier || initializedRef.current) return;
 
-    const wsUrl = getWsUrl();
-    const ws = new WSClient(wsUrl);
+    initializedRef.current = true;
+    console.log("🔌 Player WS initializing:", identifier);
+
+    const ws = new WSClient(getWsUrl());
     wsRef.current = ws;
 
     ws.onConnectionChange((state) => {
-      if (state === "open") console.log("✅ Player WS connected");
-      if (state === "reconnecting") toast.info("Reconnecting...");
-      if (state === "closed") toast.error("WS disconnected");
+      switch (state) {
+        case "open":
+          setReconnecting(false);
+          console.log("✅ WS open");
+          break;
+        case "reconnecting":
+          // if (!reconnecting) toast.info("Reconnecting...");
+          setReconnecting(true);
+          break;
+        case "closed":
+          setReconnecting(false);
+          // toast.error("WS disconnected");
+          break;
+      }
     });
 
-    // Register handlers
-    ws.on(WSEvent.OPEN, (p) => handleMessage(WSEvent.OPEN, p));
-    ws.on(WSEvent.ROOM_STATE, (p) => handleMessage(WSEvent.ROOM_STATE, p));
-    ws.on(WSEvent.ROOM_CLOSED, (p) => handleMessage(WSEvent.ROOM_CLOSED, p));
+    const events: WSEvent[] = [
+      WSEvent.OPEN,
+      WSEvent.ROOM_STATE,
+      WSEvent.ROOM_CLOSED,
+    ];
+    for (const ev of events) ws.on(ev as WSEvent & keyof WSPayloads, (payload) => handleMessage(ev, payload));
 
     return () => {
-      wsRef.current?.close();
+      console.log("🧹 Cleaning up WS connection");
+      initializedRef.current = false;
+      ws.close();
       wsRef.current = null;
     };
-  }, []);
+  }, [identifier, handleMessage, reconnecting]);
 
-  // --------------------------------------------------------------------------
-  // 🧩 Derived values
-  // --------------------------------------------------------------------------
+  /* ------------------------------------------------------------------------ */
+  /* 🧩 Derived Values                                                        */
+  /* ------------------------------------------------------------------------ */
+  const player = useMemo(
+    () => players.find((p) => p.id === user?.id) ?? null,
+    [players, user?.id]
+  );
 
-  const player = useMemo(() => {
-    if (!lobby) return null;
-    const player = players.find((p) => p.id === user?.id);
-    return player ?? null;
-  }, [lobby, players]);
+  const isInLobby = useMemo(
+    () => players.some((p) => p.id === user?.id),
+    [players, user?.id]
+  );
 
-  const isInLobby = useMemo(() => {
-    if (!lobby) return false;
-    return players.some((p) => p.id === user?.id);
-  }, [lobby, players]);
+  /* ------------------------------------------------------------------------ */
+  /* 🎮 Player Actions                                                        */
+  /* ------------------------------------------------------------------------ */
+  const joinLobby = useCallback(
+    async (displayName: string, avatar: string) => {
+      updateUser(displayName, avatar);
+      send(WSEvent.PLAYER_JOIN, {
+        roomId: identifier,
+        playerId: user?.id!,
+        displayName,
+        avatar,
+      });
+    },
+    [identifier, send, updateUser, user?.id]
+  );
 
-  // Actions
-  const joinLobby = async (displayName: string, avatar: string) => {
-    updateUser(displayName, avatar);
-    wsRef.current?.send(WSEvent.PLAYER_JOIN, {
+  const leaveLobby = useCallback(async () => {
+    send(WSEvent.PLAYER_LEAVE, {
       roomId: identifier,
       playerId: user?.id!,
-      displayName,
-      avatar,
     });
-  };
+  }, [identifier, send, user?.id]);
 
-  const leaveLobby = async () => {
-    wsRef.current?.send(WSEvent.PLAYER_LEAVE, {
-      roomId: identifier,
-      playerId: user?.id!,
-    });
-  };
+  const sendReaction = useCallback(
+    (emoji: string) => {
+      if (!player) return;
+      send(WSEvent.PLAYER_REACTION, {
+        roomId: identifier,
+        playerId: player.id,
+        displayName: player.displayName,
+        emoji,
+      });
+    },
+    [identifier, player, send]
+  );
 
-  const sendReaction = async (emoji: string) => {
-    wsRef.current?.send(WSEvent.PLAYER_REACTION, {
-      roomId: identifier,
-      playerId: player?.id!,
-      displayName: player?.displayName!,
-      emoji,
-    });
-  };
+  const sendAnswer = useCallback(
+    (index: TriviaOptions) => {
+      if (!player) return;
+      send(WSEvent.GAME_ANSWER, {
+        roomId: identifier,
+        playerId: player.id,
+        answer: index,
+      });
+    },
+    [identifier, player, send]
+  );
 
-  const sendAnswer = async (index: 0 | 1 | 2 | 3) => {
-    wsRef.current?.send(WSEvent.GAME_ANSWER, {
-      roomId: identifier,
-      answer: index,
-      playerId: player?.id!,
-    });
-  };
-
-  // --------------------------------------------------------------------------
-  // 💾 Context Value
-  // --------------------------------------------------------------------------
-  const value = useMemo(
+  /* ------------------------------------------------------------------------ */
+  /* 💾 Context Value                                                         */
+  /* ------------------------------------------------------------------------ */
+  const value = useMemo<LobbyPlayerContextType>(
     () => ({
       lobby,
       players,
@@ -185,6 +231,7 @@ export function LobbyPlayerProvider({ children }: { children: ReactNode }) {
       uiState,
       game,
       loading,
+      reconnecting,
       isInLobby,
       wsClient: wsRef.current,
       joinLobby,
@@ -197,10 +244,10 @@ export function LobbyPlayerProvider({ children }: { children: ReactNode }) {
       players,
       player,
       uiState,
-      loading,
-      isInLobby,
       game,
-      wsRef,
+      loading,
+      reconnecting,
+      isInLobby,
       joinLobby,
       leaveLobby,
       sendReaction,
@@ -215,10 +262,11 @@ export function LobbyPlayerProvider({ children }: { children: ReactNode }) {
   );
 }
 
-/** Hook */
+/* -------------------------------------------------------------------------- */
+/* 🪄 Hook                                                                    */
+/* -------------------------------------------------------------------------- */
 export function useLobbyPlayer() {
   const ctx = useContext(LobbyPlayerContext);
-  if (!ctx)
-    throw new Error("useLobbyPlayer must be used within a LobbyPlayerProvider");
+  if (!ctx) throw new Error("useLobbyPlayer must be used within a LobbyPlayerProvider");
   return ctx;
 }

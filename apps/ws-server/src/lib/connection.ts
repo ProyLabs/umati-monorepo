@@ -29,6 +29,7 @@ export function handleConnection(ws: WebSocket) {
     })
   );
 
+
   ws.on("message", async (raw) => {
     const msg = parseWSMessage(raw.toString());
     if (!msg) return;
@@ -46,11 +47,21 @@ export function handleConnection(ws: WebSocket) {
   logInfo(`❌ Disconnected [sid=${sid}]`);
   activeSockets.delete(sid);
 
-  // optional: remove from any room host set
+// Clean up from any room
   for (const [roomId, room] of RoomManager.getAllRooms()) {
+    // 🧹 Remove host socket if applicable
     if (room.host.sockets.has(sid)) {
       RoomManager.removeHostSocket(roomId, sid);
       logInfo(`🧹 Removed host sid=${sid} from room ${roomId}`);
+    }
+
+    // 🧹 Remove player socket if this sid matches one
+    for (const [playerId, playerWs] of room.playerSockets.entries()) {
+      if (playerWs === ws) {
+        RoomManager.removePlayer(roomId, playerId);
+        logInfo(`🧹 Removed player ${playerId} from room ${roomId}`);
+        break;
+      }
     }
   }
 });

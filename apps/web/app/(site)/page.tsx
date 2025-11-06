@@ -1,12 +1,13 @@
-import GameCard from "../../components/landing/game-card";
-import Navbar from "../../components/landing/navbar";
-import CardFan from "../../components/ui/card-fan";
-import { Fbutton } from "../../components/ui/fancy-button";
+import { Particles } from "@/components/ui/shadcn-io/particles";
+import GameCard from "@/components/landing/game-card";
+import Navbar from "@/components/landing/navbar";
+import CardFan from "@/components/ui/card-fan";
+import { Fbutton } from "@/components/ui/fancy-button";
 import Link from "next/link";
 
 export default function Home() {
   return (
-    <main className="flex min-h-screen flex-col items-center ">
+    <main className="flex min-h-screen flex-col items-center relative">
       <Navbar />
       <section className="flex flex-col w-full items-center justify-between pt-10 md:pt-16 h-[calc(100vh-68px)] md:h-[calc(100vh-80px)] overflow-clip gap-16">
         <div className=" max-w-3xl mx-auto text-center mb-8 px-5 md:px-0 ">
@@ -40,6 +41,13 @@ export default function Home() {
         </CardFan>
 
       </section>
+      <Particles
+        className="absolute inset-0"
+        quantity={200}
+        ease={80}
+        color="#ffffff"
+        refresh
+      />
     </main>
   );
 }

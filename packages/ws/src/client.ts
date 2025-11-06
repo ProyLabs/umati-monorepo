@@ -7,9 +7,9 @@ export type WSState = "connecting" | "open" | "reconnecting" | "closed" | "error
 type ConnectionListener = (state: WSState) => void;
 type EventHandler<T> = (payload: T) => void;
 
-interface QueuedMessage<T extends keyof WSPayloads = keyof WSPayloads> {
+interface QueuedMessage<T extends WSEvent = WSEvent> {
   event: T;
-  payload: WSPayloads[T];
+  payload: WSPayloads[T & keyof WSPayloads]
   timestamp: number;
 }
 
@@ -155,7 +155,7 @@ export class WSClient {
     }
   }
 
-  public send<T extends keyof WSPayloads>(event: T, payload: WSPayloads[T]) {
+  public send<T extends WSEvent>(event: T, payload: WSPayloads[T & keyof WSPayloads]) {
     const message: WSMessage<T> = { event, payload };
     const data = JSON.stringify(message);
 
@@ -176,7 +176,7 @@ export class WSClient {
   // 📦 Queue
   // ---------------------------------------------------------------------------
 
-  private enqueueMessage<T extends keyof WSPayloads>(event: T, payload: WSPayloads[T]) {
+  private enqueueMessage<T extends WSEvent>(event: T, payload: WSPayloads[T & keyof WSPayloads]) {
     this.messageQueue.push({ event, payload, timestamp: Date.now() });
   }
 
@@ -315,7 +315,7 @@ export class WSClient {
 
 export function getWsUrl() {
   // const protocol = location.protocol === "https:" ? "wss" : "ws";
-  const host = process.env.NEXT_PUBLIC_WS_SERVER_URL ?? 'wss://umati-ws.onrender.com'
+  const host = process.env.NEXT_PUBLIC_WS_SERVER_URL ?? 'ws://192.168.1.120:4000'
   return `${host}/ws`;
 } 
 

@@ -255,7 +255,7 @@ export const Rankings = () => {
 
   return (
     <div className="flex flex-col items-center w-full h-full max-h-70">
-      <h2 className="text-2xl font-bold text-left w-full">🏅 Rankings</h2>
+      <h2 className="text-2xl font-bold text-left w-full mb-2">🏅 Rankings</h2>
 
       {rankings.length > 0 ? (
         <div className="relative w-full max-w-5xl overflow-x-auto scrollbar-thin scrollbar-thumb-foreground/30 scrollbar-track-transparent">
@@ -283,9 +283,10 @@ export const Rankings = () => {
 
 export const RankingHeader = ({ className }: { className?: string }) => {
   return (
+    <div className="bg-white/10 backdrop-blur-sm rounded-2xl mb-2 sticky top-0">
     <div
       className={cn(
-        " grid grid-cols-[1fr_2fr_repeat(3,1fr)] gap-4 px-6 py-3 bg-[#18161A] backdrop-blur-sm rounded-xl mb-2 font-semibold text-lg text-center sticky top-0",
+        " grid grid-cols-[1fr_2fr_repeat(3,1fr)] gap-4 px-6 py-3  font-semibold text-lg text-center ",
         className
       )}
     >
@@ -294,6 +295,7 @@ export const RankingHeader = ({ className }: { className?: string }) => {
       <span>🥇</span>
       <span>🥈</span>
       <span>🥉</span>
+    </div>
     </div>
   );
 };

@@ -193,7 +193,7 @@ export interface WSPayloads {
  * 🔹 Unified WebSocket message structure.
  * Every message must have an `event` and a matching `payload`.
  */
-export interface WSMessage<T extends keyof WSPayloads = keyof WSPayloads> {
+export interface WSMessage<T extends WSEvent = WSEvent> {
   event: T;
-  payload: WSPayloads[T];
+  payload: WSPayloads[T & keyof WSPayloads]
 }

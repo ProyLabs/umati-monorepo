@@ -1,8 +1,8 @@
-
+import CookieConsent from "@/components/blocks/cookie-consent";
 import { ThemeProvider } from "@/components/theme-provider";
 import { AppProviders } from "@/providers/app-provider";
 import { Analytics } from "@vercel/analytics/next";
-import { SpeedInsights } from "@vercel/speed-insights/next"
+import { SpeedInsights } from "@vercel/speed-insights/next";
 import type { Metadata } from "next";
 import { DM_Sans } from "next/font/google";
 import "./globals.css";
@@ -23,22 +23,27 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body
-        className={`${dmSans.variable} antialiased`}
-      >
- <ThemeProvider
-            attribute="class"
-            defaultTheme="dark"
-            enableSystem
-            disableTransitionOnChange
-          >
-            <AppProviders>
-            {children}
-            </AppProviders>
-          </ThemeProvider>
-          <Analytics/> 
-          <SpeedInsights/>
+    <html
+      lang="en"
+      suppressHydrationWarning
+      style={{
+        cursor: `var(--cursor-pointer)`,
+      }}
+    >
+      <body className={`${dmSans.variable} antialiased`}>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <AppProviders>{children}</AppProviders>
+        </ThemeProvider>
+        <Analytics />
+        <SpeedInsights />
+        {/* <CookieConsent
+          variant="small"
+        /> */}
       </body>
     </html>
   );

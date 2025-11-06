@@ -11,7 +11,7 @@ import {
   VolumeX,
   WifiHighIcon,
   WifiIcon,
-  WifiLowIcon
+  WifiLowIcon,
 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import { useTheme } from "next-themes";
@@ -187,7 +187,12 @@ export const BeforeWeBegin = () => {
       >
         Let's Play
       </Fbutton>
-      <Fbutton size="sm" variant="outline" className="max-w-xs mx-auto w-full" onClick={cancelGame}>
+      <Fbutton
+        size="sm"
+        variant="outline"
+        className="max-w-xs mx-auto w-full"
+        onClick={cancelGame}
+      >
         Back to Lobby
       </Fbutton>
     </div>
@@ -269,7 +274,7 @@ export const JoinLobbyCode = ({
 
         <div className="flex flex-col gap-2 flex-1 items-center">
           <p className="text-lg font-semibold">Or Join by Code</p>
-          <p className="text-7xl font-bold">{lobby?.code}</p>
+          <p className="text-6xl font-bold">{lobby?.code}</p>
         </div>
       </div>
       <CopyLinkButton />
@@ -362,7 +367,11 @@ export const PlayerAvatar = ({
 }) => {
   return (
     <motion.div className="flex flex-col items-center">
-      <Avatar className={cn("size-30 ring-2 ring-foreground shadow-md hover:scale-110 transition-transform mb-2 relative")}>
+      <Avatar
+        className={cn(
+          "size-30 ring-2 ring-foreground shadow-md hover:scale-110 transition-transform mb-2 relative"
+        )}
+      >
         <AvatarImage src={avatar} alt={displayName} />
         <AvatarFallback>{displayName?.[0]}</AvatarFallback>
       </Avatar>
@@ -571,5 +580,19 @@ export const PlayerReactionLayer = () => {
         ))}
       </AnimatePresence>
     </div>
+  );
+};
+
+export const Reconnecting = () => {
+  const { reconnecting } = useLobbyPlayer();
+
+  return (
+    <AnimatePresence>
+      {reconnecting && (
+        <div className="w-full h-full absolute z-10 bg-black/40 inset-0 flex flex-col items-center justify-center">
+          <p className="font-semibold text-xl">Reconnecting...</p>
+        </div>
+      )}
+    </AnimatePresence>
   );
 };

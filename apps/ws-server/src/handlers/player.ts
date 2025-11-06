@@ -22,6 +22,16 @@ export async function handlePlayerConnect(
     return;
   }
 
+  if(room.players.some(p=> p.id === playerId)){
+  logInfo(`🔁 Player ${playerId} reconnected to room ${roomId}`);
+  RoomManager.addPlayer(roomId, {
+    id: playerId,
+    displayName: room.players.find(p => p.id === playerId)?.displayName ?? "Unknown",
+    avatar: room.players.find(p => p.id === playerId)?.avatar ?? "",
+    connected: true,
+  }, ws);
+  }
+
   ws.send(
     JSON.stringify({
       event: WSEvent.ROOM_STATE,

@@ -5,7 +5,7 @@ import Image from "next/image";
 import React from "react";
 
 const gameCardVariants = cva(
-  "border-2 border-foreground/20 rounded-3xl p-6 bg-gradient-to-b flex flex-col shadow-xl text-white",
+  "border-2 border-foreground/20 rounded-xl md:rounded-3xl p-4 md:p-6 gap-6 bg-gradient-to-b flex flex-col shadow-xl text-white",
   {
     variants: {
       variant: {
@@ -38,17 +38,17 @@ function GameCard({
 }) {
   return (
     <div className={cn(gameCardVariants({ variant, size,  className }))} {...props}>
-      <div className="flex items-start justify-between gap-4">
+      <div className="flex items-start justify-between gap-4 mb-6">
         <div className="">
-          <h2 className="text-3xl font-bold">{title}</h2>
-          <p className="">Multiplayer</p>
+          <h2 className="text-2xl md:text-3xl font-bold leading-none">{title}</h2>
+          <p className="text-sm md:text-lg">Multiplayer</p>
         </div>
         <div className="bg-black/30 rounded-lg flex items-center justify-center p-1 gap-1 text-white">
-            <RiMedalFill size={18} className="" />
-          <span className="mr-1 font-semibold text-sm">4.7</span>
+            <RiMedalFill className="size-3.5 md:size-4.5" />
+          <span className="mr-1 font-semibold text-xs md:text-sm">4.7</span>
         </div>
       </div>
-      <Image src="/games/trivia-logo.png" alt="Game Image" width={350} height={100} className="mt-auto" />
+      <Image src="/games/trivia-logo.png" alt="Game Image" width={150} height={100} className="mt-auto md:size-50 mx-auto" />
     </div>
   );
 }

@@ -25,20 +25,21 @@ import {
 } from "react";
 import { toast } from "sonner";
 
-/**
- * 🎮 Host Lobby Context
- */
+/* -------------------------------------------------------------------------- */
+/* 🎮 Context Type                                                           */
+/* -------------------------------------------------------------------------- */
+
 interface LobbyHostContextType {
   lobby: Lobby | null;
   players: Player[];
-  reactions: Record<string, string | null>; // playerId → emoji
+  reactions: Record<string, string | null>;
   loading: boolean;
-  uiState: RoomState,
+  reconnecting: boolean; // 👈 new
+  uiState: RoomState;
   joinUrl: string;
   rankings: Ranking[];
-  game: GameLobbyMeta|null;
+  game: GameLobbyMeta | null;
 
-  //
   wsClient: WSClient | null;
 
   changeUiState: (state: RoomState) => void;
@@ -50,16 +51,12 @@ interface LobbyHostContextType {
   setupGame: (gameId: string, options: any) => void;
 }
 
-/**
- * 🧩 Context
- */
-const LobbyHostContext = createContext<LobbyHostContextType | undefined>(
-  undefined
-);
+const LobbyHostContext = createContext<LobbyHostContextType | undefined>(undefined);
 
-/**
- * 🏠 Provider Component
- */
+/* -------------------------------------------------------------------------- */
+/* 🏠 Provider                                                                */
+/* -------------------------------------------------------------------------- */
+
 export function LobbyHostProvider({ children }: { children: ReactNode }) {
   const { identifier } = useParams() as { identifier: string };
   const router = useRouter();
@@ -70,61 +67,49 @@ export function LobbyHostProvider({ children }: { children: ReactNode }) {
   const [reactions, setReactions] = useState<Record<string, string | null>>({});
   const [uiState, setUiState] = useState<RoomState>("INIT");
   const [rankings, setRankings] = useState<Ranking[]>([]);
-  const [game, setGame] = useState<GameLobbyMeta|null>(null);
+  const [game, setGame] = useState<GameLobbyMeta | null>(null);
+  const [reconnecting, setReconnecting] = useState(false); // 👈 new
 
   const wsRef = useRef<WSClient | null>(null);
+  const initializedRef = useRef(false);
 
-
-  // --------------------------------------------------------------------------
-  // ⚡ WebSocket event handling
-  // --------------------------------------------------------------------------
+  /* ------------------------------------------------------------------------ */
+  /* ⚡ Event Handling                                                        */
+  /* ------------------------------------------------------------------------ */
   const handleMessage = useCallback(
-  (event: WSEvent, payload: any) => {
-      console.log("🚀 ~ LobbyHostProvider ~ event:", event);
+    (event: WSEvent, payload: any) => {
       switch (event) {
         case WSEvent.OPEN:
           console.log("✅ Host WS connected");
+          setReconnecting(false);
           wsRef.current?.send(WSEvent.ROOM_INIT, { roomId: identifier });
           break;
 
-        case WSEvent.ROOM_STATE:
+        case WSEvent.ROOM_STATE: {
           const data = payload as WSPayloads[WSEvent.ROOM_STATE];
-          (setLobby(data), setPlayers(data!.players));
-          setUiState(data!.state);
-          setRankings(data!.rankings ?? []);
-          setGame(data!.game);
+          if (!data) return;
+          setLobby(data);
+          setPlayers(data.players);
+          setUiState(data.state);
+          setRankings(data.rankings ?? []);
+          setGame(data.game ?? null);
           setLoading(false);
           break;
+        }
 
         case WSEvent.PLAYER_JOIN:
           toast.success(`${payload?.displayName} joined the lobby`);
           break;
 
-        // case WSEvent.PLAYER_LEFT:
-        //   console.log("🚀 ~ LobbyHostProvider ~ players:", players);
-        //   // removePlayer(payload.playerId);
-        //   setPlayers((prev) => prev.filter((p) => p.playerId !== payload.playerId));
-        //   break;
-
         case WSEvent.PLAYER_REACTION:
-          setReactions((prev) => ({
-            ...prev,
-            [payload.playerId]: payload.emoji,
-          }));
+          setReactions((prev) => ({ ...prev, [payload.playerId]: payload.emoji }));
           setTimeout(() => {
             setReactions((prev) => ({ ...prev, [payload.playerId]: null }));
           }, 3000);
           break;
 
-        // case WSEvent.PLAYER_KICKED:
-        //   toast.info(`Player ${payload.playerId} was kicked`);
-        //   setPlayers((prev) =>
-        //     prev.filter((p) => p.playerId !== payload.playerId)
-        //   );
-        //   break;
-
         case WSEvent.ROOM_CLOSED:
-          toast.info(payload.reason);
+          toast.info(payload.reason ?? "Lobby closed");
           router.replace("/");
           break;
 
@@ -133,121 +118,127 @@ export function LobbyHostProvider({ children }: { children: ReactNode }) {
           break;
       }
     },
-    [router]
+    [identifier, router]
   );
 
-  // --------------------------------------------------------------------------
-  // 🔌 WebSocket connection setup
-  // --------------------------------------------------------------------------
+  /* ------------------------------------------------------------------------ */
+  /* 🔌 WebSocket Setup + Reconnect Handling                                 */
+  /* ------------------------------------------------------------------------ */
   useEffect(() => {
     if (!identifier) return;
+    if (initializedRef.current) {
+      console.log("⚠️ WS already initialized — skipping");
+      return;
+    }
 
-    const wsUrl = getWsUrl();
-    const ws = new WSClient(wsUrl);
+    initializedRef.current = true;
+    console.log("🔌 Initializing WS connection for host:", identifier);
+
+    const ws = new WSClient(getWsUrl());
     wsRef.current = ws;
 
     ws.onConnectionChange((state) => {
-      if (state === "open") console.log("✅ Host WS connected");
-      if (state === "reconnecting") toast.info("Reconnecting...");
-      if (state === "closed") toast.error("WS disconnected");
+      switch (state) {
+        case "open":
+          setReconnecting(false);
+          console.log("✅ WS open");
+          break;
+        case "reconnecting":
+          if (!reconnecting) toast.info("Reconnecting...");
+          setReconnecting(true);
+          break;
+        case "closed":
+          setReconnecting(false);
+          toast.error("WS disconnected");
+          break;
+      }
     });
 
-    // Register handlers
-    ws.on(WSEvent.OPEN, (p) => handleMessage(WSEvent.OPEN, p));
-    ws.on(WSEvent.ROOM_STATE, (p) => handleMessage(WSEvent.ROOM_STATE, p));
-    ws.on(WSEvent.ROOM_CLOSED, (p) => handleMessage(WSEvent.ROOM_CLOSED, p));
-
-    ws.on(WSEvent.PLAYER_JOIN, (p) => handleMessage(WSEvent.PLAYER_JOIN, p));
-    // ws.on(WSEvent.PLAYER_LEFT, (p) => handleMessage(WSEvent.PLAYER_LEFT, p));
-    ws.on(WSEvent.PLAYER_REACTION, (p) =>
-      handleMessage(WSEvent.PLAYER_REACTION, p)
-    );
-    ws.on(WSEvent.PLAYER_KICKED, (p) =>
-      handleMessage(WSEvent.PLAYER_KICKED, p)
-    );
-    // ws.on(WSEvent.GAME_QUESTION, (p) =>
-    //   handleMessage(WSEvent.GAME_QUESTION, p)
-    // );
-    // ws.on(WSEvent.GAME_ROUND_ENDED, (p) =>
-    //   handleMessage(WSEvent.GAME_ROUND_ENDED, p)
-    // );
+    const events: WSEvent[] = [
+      WSEvent.OPEN,
+      WSEvent.ROOM_STATE,
+      WSEvent.ROOM_CLOSED,
+      WSEvent.PLAYER_JOIN,
+      WSEvent.PLAYER_REACTION,
+      WSEvent.PLAYER_KICKED,
+    ];
+    for (const ev of events) ws.on(ev as keyof WSPayloads, (payload) => handleMessage(ev, payload));
 
     return () => {
-      wsRef.current?.close();
+      console.log("🧹 Cleaning up WS connection");
+      initializedRef.current = false;
+      ws.close();
       wsRef.current = null;
     };
-  }, []);
+  }, [identifier, handleMessage, reconnecting]);
 
-  // --------------------------------------------------------------------------
-  // 🧩 Derived values
-  // --------------------------------------------------------------------------
-
+  /* ------------------------------------------------------------------------ */
+  /* 🧩 Derived Values                                                       */
+  /* ------------------------------------------------------------------------ */
   const joinUrl = useMemo(() => {
-    if (!lobby) return "";
-    if (typeof window === "undefined") return "";
-    // ✅ Use your Next.js route convention here
-    // return `http://192.168.1.120:3000/lobby/${lobby.id}`;
+    if (!lobby || typeof window === "undefined") return "";
     return `${window.location.origin}/lobby/${lobby.id}`;
   }, [lobby]);
 
-  // --------------------------------------------------------------------------
-  // 🎮 Host Actions
-  // --------------------------------------------------------------------------
-  const setupGame = useCallback((gameId: string, options: any) => {
-    wsRef.current?.send(WSEvent.GAME_INIT, {
-      roomId: identifier,
-      options: {
-        type: gameId as any,
-        config: options
-      },
-    });
-  }, []);
+  /* ------------------------------------------------------------------------ */
+  /* 🎮 Host Actions                                                         */
+  /* ------------------------------------------------------------------------ */
+const send = useCallback(
+  <E extends WSEvent>(event: E, payload: WSPayloads[E & keyof WSPayloads]) => {
+    wsRef.current?.send(event, payload);
+  },
+  []
+);
 
-  const startGame = useCallback(() => {
-    wsRef.current?.send(WSEvent.GAME_START, {
-      roomId: identifier,
-    });
-  }, []);
+  const setupGame = useCallback(
+    (gameId: string, options: any) =>
+      send(WSEvent.GAME_INIT, {
+        roomId: identifier,
+        options: { type: gameId as any, config: options },
+      }),
+    [identifier, send]
+  );
 
-  const cancelGame = useCallback(()=>{
-wsRef.current?.send(WSEvent.GAME_CANCEL, {roomId: identifier})
-  }, [])
+  const startGame = useCallback(() => send(WSEvent.GAME_START, { roomId: identifier }), [identifier, send]);
 
-  const changeUiState = useCallback((uiState: RoomState) => {
-    wsRef.current?.send(WSEvent.ROOM_STATE_CHANGE, {
-      roomId: identifier,
-      state: uiState,
-    });
-  }, []);
+  const cancelGame = useCallback(() => send(WSEvent.GAME_CANCEL, { roomId: identifier }), [identifier, send]);
 
-  const sendAnnouncement = useCallback((message: string) => {
-    wsRef.current?.send(WSEvent.SYSTEM_ANNOUNCEMENT, {
-      message,
-      level: "info",
-    });
-  }, []);
+  const changeUiState = useCallback(
+    (state: RoomState) =>
+      send(WSEvent.ROOM_STATE_CHANGE, { roomId: identifier, state }),
+    [identifier, send]
+  );
 
-  const kickPlayer = useCallback((playerId: string, reason?: string) => {
-    wsRef.current?.send(WSEvent.PLAYER_KICKED, { playerId, reason });
-  }, []);
+  const sendAnnouncement = useCallback(
+    (message: string) => send(WSEvent.SYSTEM_ANNOUNCEMENT, { message, level: "info" }),
+    [send]
+  );
 
-  const closeLobby = useCallback(() => {
-    wsRef.current?.send(WSEvent.ROOM_CLOSED_ME, {
-      roomId: identifier,
-      reason: "Host closed lobby",
-    });
-  }, [identifier, router]);
+  const kickPlayer = useCallback(
+    (playerId: string, reason?: string) =>
+      send(WSEvent.PLAYER_KICKED, { playerId, reason }),
+    [send]
+  );
 
-  // --------------------------------------------------------------------------
-  // 💾 Context Value
-  // --------------------------------------------------------------------------
+  const closeLobby = useCallback(
+    () =>
+      send(WSEvent.ROOM_CLOSED_ME, {
+        roomId: identifier,
+        reason: "Host closed lobby",
+      }),
+    [identifier, send]
+  );
 
-  const value = useMemo(
+  /* ------------------------------------------------------------------------ */
+  /* 💾 Context Value                                                        */
+  /* ------------------------------------------------------------------------ */
+  const value = useMemo<LobbyHostContextType>(
     () => ({
       lobby,
       players,
       reactions,
       loading,
+      reconnecting, // 👈 new
       uiState,
       joinUrl,
       rankings,
@@ -266,11 +257,11 @@ wsRef.current?.send(WSEvent.GAME_CANCEL, {roomId: identifier})
       players,
       reactions,
       loading,
+      reconnecting,
       uiState,
       joinUrl,
       rankings,
       game,
-      wsRef,
       changeUiState,
       sendAnnouncement,
       kickPlayer,
@@ -288,12 +279,12 @@ wsRef.current?.send(WSEvent.GAME_CANCEL, {roomId: identifier})
   );
 }
 
-/**
- * 🪄 Hook to use host lobby context
- */
+/* -------------------------------------------------------------------------- */
+/* 🪄 Hook                                                                    */
+/* -------------------------------------------------------------------------- */
+
 export function useLobbyHost() {
   const ctx = useContext(LobbyHostContext);
-  if (!ctx)
-    throw new Error("useLobbyHost must be used within a LobbyHostProvider");
+  if (!ctx) throw new Error("useLobbyHost must be used within a LobbyHostProvider");
   return ctx;
 }

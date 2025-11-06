@@ -1,35 +1,30 @@
-"use client"
-import React from 'react'
-import { Button } from '../ui/button'
-import { Volume2Icon, VolumeIcon } from 'lucide-react'
-import { Moon, Sun } from "lucide-react"
-import { useTheme } from "next-themes"
+"use client";
+import React from "react";
+import { Button } from "../ui/button";
+import { Volume2Icon, VolumeIcon } from "lucide-react";
+import { Moon, Sun } from "lucide-react";
+import { useTheme } from "next-themes";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "../ui/dropdown-menu"
-
+} from "../ui/dropdown-menu";
 
 function SettingsBar() {
   return (
     <>
-         <Button  variant="outline" size="icon">
-              <Volume2Icon className="size-5" />
-            </Button>
-
-            <ModeToggle />
-            </>
-
-  )
+      <Button variant="outline" size="icon">
+        <Volume2Icon className="size-5" />
+      </Button>
+    </>
+  );
 }
 
-export default SettingsBar
-
+export default SettingsBar;
 
 export function ModeToggle() {
-  const { setTheme } = useTheme()
+  const { setTheme } = useTheme();
 
   return (
     <DropdownMenu>
@@ -52,5 +47,5 @@ export function ModeToggle() {
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
-  )
+  );
 }
