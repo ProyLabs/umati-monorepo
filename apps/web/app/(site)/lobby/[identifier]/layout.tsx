@@ -35,7 +35,7 @@ export default function LobbyLayout({
   if (isHostRoute) {
     return (
       <LobbyHostProvider>
-        <section className="w-full h-dvh flex flex-1 flex-col text-foreground relative z-10">
+        <section className="w-full h-dvh flex flex-1 flex-col text-foreground z-10 fixed">
           {children}
           <HostLobbyFooter />
           <PlayerReactionLayer />
@@ -48,7 +48,7 @@ export default function LobbyLayout({
   // 🎮 Player view (mobile + desktop)
   return (
     <LobbyPlayerProvider>
-      <section className="w-full h-dvh flex flex-1 flex-col text-foreground relative z-10">
+      <section className="w-full h-dvh flex flex-1 flex-col text-foreground z-10 fixed">
         {children}
         <Reconnecting />
       </section>
