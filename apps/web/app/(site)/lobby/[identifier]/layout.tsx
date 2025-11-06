@@ -1,13 +1,10 @@
 "use client";
 
 import { DesktopOnly, HostLobbyFooter, PlayerReactionLayer, Reconnecting } from "@/components/lobby/widgets";
-import { Fbutton } from "@/components/ui/fancy-button";
-import UmatiLogo from "@/components/ui/logo";
 import { BubbleBackground } from "@/components/ui/shadcn-io/bubble-background";
 import { Particles } from "@/components/ui/shadcn-io/particles";
 import { LobbyHostProvider } from "@/providers/lobby-host-provider";
 import { LobbyPlayerProvider } from "@/providers/lobby-player-provider";
-import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 

@@ -1,8 +1,8 @@
-import { auth } from "../../lib/auth";
+import { auth } from "@/lib/auth";
 import { headers } from "next/headers";
 import Link from "next/link";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
-import { Fbutton } from "../ui/fancy-button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Fbutton } from "@/components/ui/fancy-button";
 
 export default async function UserAvatar() {
   const session = await auth.api.getSession({

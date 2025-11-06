@@ -68,19 +68,19 @@ export default function JoinLobby() {
 
       <CardContent>
         <div className="grid gap-4">
-          <div className="space">
+          <div className="space-y-6">
             <InputOTP
               maxLength={6}
               value={lobbyCode}
               onChange={(value) => setLobbyCode(value)}
             >
               <InputOTPGroup className="justify-between w-full gap-2">
-                <InputOTPSlot index={0} className="text-2xl font-bold h-14 max-w-3/4 w-full" />
-                <InputOTPSlot index={1} className="text-2xl font-bold h-14 max-w-3/4 w-full" />
-                <InputOTPSlot index={2} className="text-2xl font-bold h-14 max-w-3/4 w-full" />
-                <InputOTPSlot index={3} className="text-2xl font-bold h-14 max-w-3/4 w-full" />
-                <InputOTPSlot index={4} className="text-2xl font-bold h-14 max-w-3/4 w-full" />
-                <InputOTPSlot index={5} className="text-2xl font-bold h-14 max-w-3/4 w-full" />
+                <InputOTPSlot index={0} className="text-2xl font-bold h-14" />
+                <InputOTPSlot index={1} className="text-2xl font-bold h-14" />
+                <InputOTPSlot index={2} className="text-2xl font-bold h-14" />
+                <InputOTPSlot index={3} className="text-2xl font-bold h-14" />
+                <InputOTPSlot index={4} className="text-2xl font-bold h-14" />
+                <InputOTPSlot index={5} className="text-2xl font-bold h-14" />
               </InputOTPGroup>
             </InputOTP>
           </div>

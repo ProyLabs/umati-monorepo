@@ -2,8 +2,10 @@
 
 import Navbar from '@/components/landing/navbar';
 import CreateLobby from '@/components/lobby/create';
-import { DesktopOnly } from '@/components/lobby/widgets';
+import { Fbutton } from '@/components/ui/fancy-button';
+import UmatiLogo from '@/components/ui/logo';
 import { Particles } from '@/components/ui/shadcn-io/particles';
+import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
 export default function Page() {
@@ -25,7 +27,7 @@ export default function Page() {
 
     
   return (
-    <main className="flex min-h-screen flex-col items-center ">
+    <main className="flex h-dvh flex-col items-center ">
       <Navbar />
        <section className="flex flex-col justify-center items-center flex-1 w-full h-[calc(100vh-68px)] md:h-[calc(100vh-80px)] overflow-clip gap-16 px-4">
         <CreateLobby />
@@ -40,3 +42,23 @@ export default function Page() {
       </main>
   )
 }
+
+
+
+const DesktopOnly = () => {
+  return (
+    <div className="flex flex-col items-center justify-center h-dvh bg-black text-white text-center p-6">
+      <UmatiLogo className="w-8 text-foreground block md:hidden" />
+      <div className="my-auto">
+        <h1 className="text-3xl font-bold mb-4">Desktop Only</h1>
+        <p className="text-lg max-w-md mb-6 w-full mx-auto">
+          Hosting is only supported on desktop devices. Please use a laptop or
+          desktop computer to access the host dashboard.
+        </p>
+        <Link href="/">
+          <Fbutton className="w-full max-w-xs">Go Back</Fbutton>
+        </Link>
+      </div>
+    </div>
+  );
+};
