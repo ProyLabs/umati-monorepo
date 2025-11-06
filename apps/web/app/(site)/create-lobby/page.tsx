@@ -1,9 +1,29 @@
-import Navbar from '@/components/landing/navbar'
-import CreateLobby from '@/components/lobby/create'
-import { Particles } from '@/components/ui/shadcn-io/particles'
-import React from 'react'
+"use client";
+
+import Navbar from '@/components/landing/navbar';
+import CreateLobby from '@/components/lobby/create';
+import { DesktopOnly } from '@/components/lobby/widgets';
+import { Particles } from '@/components/ui/shadcn-io/particles';
+import { useEffect, useState } from 'react';
 
 export default function Page() {
+   const [isMobile, setIsMobile] = useState(false);
+  
+    // Detect mobile device on client side
+    useEffect(() => {
+      const checkMobile = () => {
+        const userAgent = navigator.userAgent || navigator.vendor || (window as any).opera;
+        return /android|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(userAgent);
+      };
+      setIsMobile(checkMobile());
+    }, []);
+  
+    // 🧱 Show block screen if host is on mobile
+    if (isMobile) {
+      return <DesktopOnly />
+    }
+
+    
   return (
     <main className="flex min-h-screen flex-col items-center ">
       <Navbar />

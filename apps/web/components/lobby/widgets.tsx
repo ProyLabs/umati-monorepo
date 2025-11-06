@@ -35,6 +35,7 @@ import UmatiLogo, { UmatiFullLogo } from "../ui/logo";
 import { Separator } from "../ui/separator";
 import { QRCode } from "../ui/shadcn-io/qr-code";
 import { Slider } from "../ui/slider";
+import Link from "next/link";
 
 export const CopyLinkButton = () => {
   const { joinUrl } = useLobbyHost();
@@ -594,5 +595,23 @@ export const Reconnecting = () => {
         </div>
       )}
     </AnimatePresence>
+  );
+};
+
+export const DesktopOnly = () => {
+  return (
+    <div className="flex flex-col items-center justify-center h-dvh bg-black text-white text-center p-6">
+      <UmatiLogo className="w-8 text-foreground block md:hidden" />
+      <div className="my-auto">
+        <h1 className="text-3xl font-bold mb-4">Desktop Only</h1>
+        <p className="text-lg max-w-md mb-6 w-full mx-auto">
+          Hosting is only supported on desktop devices. Please use a laptop or
+          desktop computer to access the host dashboard.
+        </p>
+        <Link href="/">
+          <Fbutton className="w-full max-w-xs">Go Back</Fbutton>
+        </Link>
+      </div>
+    </div>
   );
 };
