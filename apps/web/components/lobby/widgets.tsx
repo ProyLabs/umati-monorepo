@@ -167,10 +167,10 @@ export const Latency = ({ ms }: { ms: number }) => {
   );
 };
 
-export const BeforeWeBegin = () => {
-  const { startGame, cancelGame } = useLobbyHost();
+export const BeforeWeBegin = ({dark}: {dark?: boolean}) => {
+  const { startGame, cancelGame, game } = useLobbyHost();
   return (
-    <div className="max-w-screen-2xl mx-auto w-full py-4 flex flex-col gap-8 px-4 items-center justify-center h-full">
+    <div className={"max-w-screen-2xl mx-auto w-full py-4 flex flex-col gap-8 px-4 items-center justify-center h-full"}>
       <h3 className="text-5xl font-bold text-center">Before We Begin</h3>
       <ul className="text-3xl font-semibold list-decimal list-inside max-w-2xl mx-auto py-24 space-y-4">
         <p>Some instructions...</p>
@@ -183,14 +183,14 @@ export const BeforeWeBegin = () => {
       </ul>
       <Fbutton
         className="max-w-xs mx-auto w-full"
-        variant="secondary"
+        variant={dark ? "dark" : "secondary"}
         onClick={startGame}
       >
         Let's Play
       </Fbutton>
       <Fbutton
         size="sm"
-        variant="outline"
+        variant={dark ? "dark-outline":"outline"}
         className="max-w-xs mx-auto w-full"
         onClick={cancelGame}
       >
@@ -209,7 +209,7 @@ export const HostLobbyFooter = () => {
           <SettingsBar />
           {/* <Latency ms={34} /> */}
           {!loading && uiState === "LOBBY" && (
-            <Fbutton variant="outline" className="w-60" onClick={closeLobby}>
+            <Fbutton variant="default" className="w-60" onClick={closeLobby}>
               Close Lobby
             </Fbutton>
           )}
@@ -323,6 +323,7 @@ const gameCardVariants = cva(
         blue: "from-[var(--umati-blue)] to-[#446BF5]",
         red: "from-[#FE566B] to-[var(--umati-red)] ",
         purple: "from-[#9856FE] to-[var(--umati-purple)] ",
+        lime: "from-lime-500 to-green-600"
       },
     },
   }
@@ -332,10 +333,14 @@ export function GameCard({
   className,
   variant,
   title,
+  description,
+  src,
   ...props
 }: React.ComponentProps<"div"> &
   VariantProps<typeof gameCardVariants> & {
     title?: string;
+    description?: string;
+    src?: string;
   }) {
   return (
     <div className={cn(gameCardVariants({ variant, className }))} {...props}>
@@ -343,13 +348,13 @@ export function GameCard({
         <h2 className="text-lg font-bold ">{title}</h2>
         <p className="text-sm">Multiplayer</p>
       </div>
-      <Image
-        src="/games/trivia-logo.png"
+     { <Image
+        src={src!}
         alt="Game Image"
         width={80}
         height={80}
         className="ml-auto"
-      />
+      />}
 
       <div className="bg-black/30 rounded-md flex items-center justify-center p-1 gap-1 absolute bottom-4 left-4">
         <RiMedalFill size={16} className="" />

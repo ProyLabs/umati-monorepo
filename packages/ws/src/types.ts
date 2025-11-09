@@ -46,6 +46,9 @@ export type RoomState = (typeof RoomState)[keyof typeof RoomState];
 // Game-level state machine (handled internally by game logic)
 export const GameState = {
   BEFORE: "BEFORE",
+  ROUND_SETUP: "ROUND_SETUP",   // 👈 New: Chameleon (setup phase)
+  SPEAKING: "SPEAKING",         // 👈 New: Chameleon (each player says a clue)
+  VOTING: "VOTING",             // 👈 New: Chameleon (players vote)
   ROUND: "ROUND",
   ROUND_END: "ROUND_END",
   LEADERBOARD: "LEADERBOARD",
@@ -88,8 +91,19 @@ export interface Room {
 }
 export interface GameLobbyMeta {
   id: string;
-  type: "trivia" | "emojiRace" | "bibleQuest";
+  type: GameType
 }
+
+export const GameType = {
+  TRIVIA: "trivia",
+  DRAWIT: "drawit",
+  OOO: "oddoneout",
+  HM: "herdmentality",
+  CHAMELEON: "chameleon",
+} as const;
+
+export type GameType = (typeof GameType)[keyof typeof GameType];
+
 
 export type Score = { id: string; displayName: string; score: number };
 export type Scores = Score[];
@@ -97,17 +111,19 @@ export type Scores = Score[];
 export interface Game {
   roomId: string;
   noOfRounds: number;
-  data: DataItem[];
+  data: TriviaDataItem[];
   currentRound: number;
   scores: Scores;
   randomize: Randomize;
 }
 
-export interface DataItem {
+export interface TriviaDataItem {
   question: string;
   choices: string[];
   answer: string;
 }
+
+
 interface Randomize {}
 
 export interface TriviaRound {
@@ -121,7 +137,7 @@ export interface TriviaRound {
   answer: string | null;
 }
 
-export type PlayerAnswer = {
+export type TruviaPlayerAnswer = {
   answer: TriviaOptions;
   timeTaken: number;
 };
@@ -134,3 +150,33 @@ export const TriviaOptions = {
 } as const;
 
 export type TriviaOptions = (typeof TriviaOptions)[keyof typeof TriviaOptions];
+
+
+export interface HerdMentalityRound {
+  number: number;
+  totalRounds: number;
+  question: string;
+  choices: string[];
+  duration: number; // seconds
+  startedAt: number; // timestamp (ms)
+}
+
+export type HerdMentalityDataItem = {
+    question: string;
+    choices: string[];
+}
+
+export type HerdMentalityPlayerAnswer = {
+  answer: HerdMentalityOptions;
+};
+
+export const HerdMentalityOptions = {
+  0: 0,
+  1: 1,
+  2: 2,
+  3: 3,
+  4:4,
+  5:5
+} as const;
+
+export type HerdMentalityOptions = (typeof HerdMentalityOptions)[keyof typeof HerdMentalityOptions];

@@ -1,9 +1,7 @@
-
-export type GameType = "trivia" | "emojiRace" | "bibleQuest";
-
-import { TriviaOptions } from "@umati/ws";
+import { HerdMentalityOptions, TriviaOptions, GameType } from "@umati/ws";
 import { BaseGame } from "./games/base";
 import { TriviaGame } from "./games/trivia-game";
+import { HerdMentality } from "./games/herd-mentality";
 
 
 const games = new Map<string, BaseGame>();
@@ -12,8 +10,11 @@ export const GameManager = {
   create(roomId: string, type: GameType, options: any) {
     let game: BaseGame;
     switch (type) {
-      case "trivia":
+      case GameType.TRIVIA:
         game = new TriviaGame(roomId, options);
+        break;
+      case GameType.HM:
+        game = new HerdMentality(roomId, options);
         break;
       // case "emojiRace": game = new EmojiRaceGame(roomId, options); break;
       default:
@@ -30,6 +31,7 @@ export const GameManager = {
   remove(gameId: string) {
     games.delete(gameId);
   },
+
   toGameState(gameId: string) {
     const game = games.get(gameId);
     if (!game) return null;
@@ -37,19 +39,23 @@ export const GameManager = {
       id: game.id,
       type: game.type,
       state: game.state,
-      round: (game as TriviaGame).round,
-      scores: (game as TriviaGame).scores
+      round: (game as TriviaGame | HerdMentality).round,
+      scores: game.scores
     };
   },
-  submitAnswer(gameId: string, playerId: string, answer: TriviaOptions){
+
+  submitAnswer(gameId: string, playerId: string, answer: TriviaOptions | HerdMentalityOptions){
     const game = games.get(gameId);
     if(!game) return;
     console.log("🚀 ~ game:", game)
     console.log("🚀 ~ answer:", answer)
 
-    if(game.type === 'trivia'){
+    if(game.type === GameType.TRIVIA){
       const triviaGame = game as TriviaGame;
-      triviaGame.submitAnswer(playerId, answer);
+      triviaGame.submitAnswer(playerId, answer as TriviaOptions);
+    } else if(game.type === GameType.HM){
+      const herdMentalityGame = game as HerdMentality;
+      herdMentalityGame.submitAnswer(playerId, answer)
     }
   }
 };

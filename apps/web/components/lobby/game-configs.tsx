@@ -1,13 +1,14 @@
-import { useLobbyHost } from "@/providers/lobby-host-provider";
+import { Games, GameType } from "@umati/ws";
+import { useState } from "react";
 import { useModal } from "../../providers/modal-provider";
 import ButtonOptions from "../ui/button-options";
 import { Fbutton } from "../ui/fancy-button";
 import { Label } from "../ui/label";
-import { useState } from "react";
 
+type GameConfigAction = (options: Record<string, any>) => void
 type GameConfigProps = {
-  game: { id: string; title: string; color: string };
-  action: (gameId: string, options: any) => void
+  game: typeof Games[0]
+  action: GameConfigAction
 };
 
 function GameConfig({ game, action }: GameConfigProps) {
@@ -18,12 +19,14 @@ function GameConfig({ game, action }: GameConfigProps) {
 
       {(() => {
         switch (game.id) {
-          case "trivia":
+          case GameType.TRIVIA:
             return <TriviaGameConfig action={action} />;
-          case "drawit":
+          case GameType.DRAWIT:
             return <DrawItGameConfig />;
-          case "oddoneout":
+          case GameType.OOO:
             return <OddOneOutGameConfig />;
+          case GameType.HM:
+            return <HMGameConfig action={action} />
           default:
             return null;
         }
@@ -34,7 +37,7 @@ function GameConfig({ game, action }: GameConfigProps) {
 
 export default GameConfig;
 
-const TriviaGameConfig = ({action}: { action: (gameId: string, options: any) => void}) => {
+const TriviaGameConfig = ({action}: { action: GameConfigAction}) => {
   console.log("🚀 ~ TriviaGameConfig ~ action:", action)
   const { closeModal } = useModal();
   const [noOfRounds, setNoOfRounds] = useState(10);
@@ -54,7 +57,7 @@ const TriviaGameConfig = ({action}: { action: (gameId: string, options: any) => 
           variant="secondary"
           className="w-full"
           onClick={async () => {
-            await action("trivia", {
+            await action({
               noOfRounds,
             });
           }}
@@ -97,6 +100,42 @@ const DrawItGameConfig = () => {
           Start Game
         </Fbutton>
         <Fbutton variant="outline" className="w-full" onClick={closeModal}>
+          Cancel
+        </Fbutton>
+      </div>
+    </div>
+  );
+};
+
+const HMGameConfig = ({action}: { action: GameConfigAction}) => {
+  console.log("🚀 ~ HMGameConfig ~ action:", action)
+  const { closeModal } = useModal();
+  const [noOfRounds, setNoOfRounds] = useState(10);
+  return (
+    <div className="grid gap-8">
+      <div className="grid gap-2">
+        <Label htmlFor="lobby-code">Number of Rounds</Label>
+        <ButtonOptions
+          value={noOfRounds}
+          options={[3, 5, 10, 15, 20]}
+          onChange={(val) => setNoOfRounds(val as number)}
+          variant="dark-outline"
+        />
+      </div>
+      <div className="grid gap-2">
+        <Fbutton
+          type="submit"
+          variant="secondary"
+          className="w-full"
+          onClick={async () => {
+            await action({
+              noOfRounds,
+            });
+          }}
+        >
+          Start Game
+        </Fbutton>
+        <Fbutton variant="dark-outline" className="w-full" onClick={closeModal}>
           Cancel
         </Fbutton>
       </div>

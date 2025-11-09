@@ -4,13 +4,14 @@ import Navbar from "@/components/landing/navbar";
 import CardFan from "@/components/ui/card-fan";
 import { Fbutton } from "@/components/ui/fancy-button";
 import Link from "next/link";
+import { Games } from "@umati/ws";
 
 export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center relative">
       <Navbar />
-      <section className="flex flex-col w-full items-center justify-between pt-10 md:pt-16 h-[calc(100vh-68px)] md:h-[calc(100vh-80px)] overflow-clip gap-16">
-        <div className=" max-w-3xl mx-auto text-center mb-8 px-5 md:px-0 ">
+      <section className="flex flex-col w-full items-center justify-between h-[calc(100vh-68px)] md:h-[calc(100vh-80px)] overflow-clip">
+        <div className=" max-w-3xl mx-auto text-center mb-8 px-5 md:px-0 py-5 h-full">
           <h1 className="text-5xl md:text-7xl font-bold text-center mb-8">
             Bring the crowd together.
           </h1>
@@ -33,11 +34,11 @@ export default function Home() {
         </div>
 
         <CardFan>
-          <GameCard title="OddOneOut" variant="purple" />
-          <GameCard title="Trivia Mania" variant="red" />
-          <GameCard title="DrawIt!" variant="sky" />
-          <GameCard title="Herd Mentality" variant="aqua" />
-          <GameCard title="Chameleon" variant="blue" />
+          {
+            Games.map((game)=> {
+              return <GameCard key={game.id} title={game.title} variant={game.color as any} description={game.description} src={game.src} />
+            })
+          }
         </CardFan>
 
       </section>

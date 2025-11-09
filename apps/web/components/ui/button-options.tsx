@@ -14,6 +14,7 @@ interface ButtonOptionsProps<T extends string | number = string | number> {
   options?: PrimitiveOption<T>[];
   onChange?: (value: T) => void;
   className?: string;
+  variant?: 'outline' | 'dark-outline';
 }
 
 
@@ -22,6 +23,7 @@ const ButtonOptions: React.FC<ButtonOptionsProps> = ({
   value,
   onChange,
   className,
+  variant
 }) => {
   const [selectedValue, setSelectedValue] = React.useState<string | number| undefined>(value);
 
@@ -50,7 +52,7 @@ const ButtonOptions: React.FC<ButtonOptionsProps> = ({
       {normalizedOptions.map((option, index) => (
         <Fbutton
           key={index}
-          variant={selectedValue === option.value ? "secondary" : "outline"}
+          variant={selectedValue === option.value ? (variant === "dark-outline" ? "dark" : "secondary") : variant}
           className="whitespace-nowrap flex-1"
           onClick={() => handleOptionClick(option.value)}
         >

@@ -1,5 +1,6 @@
 "use client";
 
+import { GameResolverPlayer } from "@/components/games/game-resolver";
 import TriviaPlayer from "@/components/games/trivia/player";
 import Loading from "@/components/lobby/loading";
 import PlayerLobby from "@/components/lobby/player-lobby.";
@@ -17,11 +18,7 @@ export default function LobbyPage() {
   } else if (uiState === "INIT" || uiState === "LOBBY") {
     return <PlayerLobby />;
   } else if (uiState === "PLAYING") {
-    return (
-      <TriviaPlayerProvider>
-        <TriviaPlayer />
-      </TriviaPlayerProvider>
-    );
+   return  <GameResolverPlayer/>
   }
   // return <BeforeWeBegin/>
   return "";

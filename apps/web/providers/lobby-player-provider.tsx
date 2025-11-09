@@ -84,6 +84,10 @@ export function LobbyPlayerProvider({ children }: { children: ReactNode }) {
   const handleMessage = useCallback(
     (event: WSEvent, payload: any) => {
       switch (event) {
+        // case WSEvent.NOT_FOUND:
+        //   router.push("/not-found");
+        //   break;
+
         case WSEvent.OPEN:
           console.log(`✅ Player ${user?.id} WS connected`);
           setReconnecting(false);
@@ -141,6 +145,9 @@ export function LobbyPlayerProvider({ children }: { children: ReactNode }) {
           setReconnecting(false);
           // toast.error("WS disconnected");
           break;
+        // case "error": 
+        //   router.push("/not-found");
+        //   break;
       }
     });
 

@@ -1,8 +1,9 @@
 import type { WebSocket } from "ws";
-import { WSEvent, WSPayloads } from "@umati/ws";
+import { GameType, WSEvent, WSPayloads } from "@umati/ws";
 import { RoomManager } from "../lib/room-manager";
 import { logInfo } from "../utils/logger";
 import { GameManager } from "../lib/game-manager";
+import { HerdMentality } from "../lib/games/herd-mentality";
 
 /** When a player connects to a room */
 export async function handlePlayerConnect(
@@ -15,7 +16,7 @@ export async function handlePlayerConnect(
   if (!room) {
     ws.send(
       JSON.stringify({
-        event: WSEvent.ERROR,
+        event: WSEvent.NOT_FOUND,
         payload: { message: "Room not found" },
       })
     );
@@ -50,7 +51,23 @@ export async function handlePlayerConnect(
           payload: GameManager.toGameState(game.id),
         })
       );
-    }, 200);
+
+      //game.type === GameType.TRIVIA ||
+
+      console.log("🚀 ~ handlePlayerConnect ~ game.type :", game.type )
+      if( game.type === GameType.HM){
+        const myAnswer = (game as HerdMentality).myAnswer(playerId)
+        if(myAnswer){
+           ws.send(
+        JSON.stringify({
+          event: WSEvent.GAME_MY_ANSWER,
+          payload: {answer: myAnswer},
+        })
+      );
+        }
+      }
+
+    }, 100);
 
     return;
   }

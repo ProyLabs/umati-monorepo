@@ -1,28 +1,21 @@
 
+import { cn } from '@/lib/utils'
+import { useLobbyHost } from '@/providers/lobby-host-provider'
+import { useModal } from '@/providers/modal-provider'
+import { Games } from '@umati/ws/src/games'
+import { EmblaCarouselType, EmblaOptionsType } from 'embla-carousel'
+import useEmblaCarousel from 'embla-carousel-react'
+import { ChevronLeftIcon, ChevronRightIcon } from 'lucide-react'
 import React, {
   ComponentPropsWithRef,
   useCallback,
   useEffect,
   useState
 } from 'react'
-import { EmblaCarouselType } from 'embla-carousel'
-import { EmblaOptionsType } from 'embla-carousel'
-import useEmblaCarousel from 'embla-carousel-react'
 import { Fbutton } from '../ui/fancy-button'
-import { GameCard } from './widgets'
-import { ArrowRightIcon, ChevronLeftIcon, ChevronRightIcon } from 'lucide-react'
-import { useModal } from '../../providers/modal-provider'
 import GameConfig from './game-configs'
-import { cn } from '../../lib/utils'
-import { useLobbyHost } from '@/providers/lobby-host-provider'
+import { GameCard } from './widgets'
 
-const Games = [
-  {id: "trivia", title: 'Trivia', color: 'red', className: 'from-[#FE566B] to-[var(--umati-red)]' },
-  {id: "drawit", title: 'Draw It!', color: 'purple', className: 'from-[#9856FE] to-[var(--umati-purple)]' },
-  {id: "oddoneout", title: 'Odd One Out', color: 'sky', className: 'from-[var(--umati-sky)] to-[#3A6EE4]' },
-  {id: "game4", title: 'Game 4', color: 'aqua', className: 'from-[var(--umati-aqua)] to-[#00D9D5] text-black' },
-  {id: "game-5", title: 'Game 5', color: 'blue', className: 'from-[var(--umati-blue)] to-[#446BF5]' },
-]
 
 type EmblaCarouselPropType = {
   games?: Array<typeof Games[0]>
@@ -50,11 +43,11 @@ const GameCarousel: React.FC<EmblaCarouselPropType> = (props) => {
           {games.map((game, index) => (
             <div className="embla__slide" key={index}>
            <GameCard key={game.id} variant={game.color as any} className="mx-2 flex-shrink-0"
-            title={game.title} onClick={()=> {
+            title={game.title} description={game.description} src={game.src} onClick={()=> {
               openModal({
                 title: `Configure ${game.title}`,
-                body: <GameConfig game={game} action={(gameId: string, options: any)=> {
-                  setupGame(gameId, options);
+                body: <GameConfig game={game} action={(options: any)=> {
+                  setupGame(game.id, options);
                   closeModal()
                 }} />,
                 containerClass: cn('bg-gradient-to-b', game.className),

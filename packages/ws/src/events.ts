@@ -10,13 +10,14 @@
  *  - 🔹 WSMessage: full message shape { event, payload }
  */
 
-import { Game, GameState, Lobby, LobbyFull, Player, Ranking, RoomState, Scores, TriviaOptions, TriviaRound } from "./types";
+import { Game, GameState, GameType, HerdMentalityOptions, HerdMentalityRound, Lobby, LobbyFull, Player, Ranking, RoomState, Scores, TriviaOptions, TriviaRound } from "./types";
 
 export enum WSEvent {
   // --- Core lifecycle ---
   OPEN = "OPEN",
   CLOSE = "CLOSE",
   ERROR = "ERROR",
+  NOT_FOUND = "NOT_FOUND",
   PING = "PING",
   PONG = "PONG",
 
@@ -52,6 +53,7 @@ export enum WSEvent {
   GAME_ROUND_ENDED = "GAME:round-ended",
   GAME_QUESTION = "GAME:question",
   GAME_ANSWER = "GAME:ANSWER",
+  GAME_MY_ANSWER = "GAME:MY:ANSWER",
   GAME_ANSWER_RECEIVED = "GAME:answer-received",
   GAME_END="GAME:END",
 
@@ -61,6 +63,13 @@ export enum WSEvent {
   TRIVIA_ROUND_ANSWER="GAME:TRIVIA:ROUND:ANSWER",
   TRIVIA_ROUND_ANSWERED="GAME:TRIVIA:ROUND:ANSWERED",
   TRIVIA_ROUND_END="GAME:TRIVIA:ROUND:END",
+
+  //Herd
+  HM_ROUND_START="GAME:HM:ROUND:START",
+  HM_ROUND_ANSWER="GAME:HM:ROUND:ANSWER",
+  HM_ROUND_ANSWERED="GAME:HM:ROUND:ANSWERED",
+  HM_ROUND_END="GAME:HM:ROUND:END",
+
 
   // --- System ---
   SYSTEM_ANNOUNCEMENT = "SYSTEM:announcement",
@@ -74,6 +83,7 @@ export interface WSPayloads {
   [WSEvent.OPEN]: { sid: string };
   [WSEvent.CLOSE]: {};
   [WSEvent.ERROR]: { message: string };
+  [WSEvent.NOT_FOUND]: { message: string };
   [WSEvent.PING]: {};
   [WSEvent.PONG]: {};
 
@@ -125,7 +135,7 @@ export interface WSPayloads {
   [WSEvent.GAME_INIT]: {
     roomId: string;
      options: {
-    type: "trivia" | "emojiRace" | "bibleQuest";
+    type: GameType;
     config: Record<string, any>; // e.g. { noOfRounds: 10, duration: 30 }
   };
   };
@@ -147,7 +157,12 @@ export interface WSPayloads {
   [WSEvent.TRIVIA_ROUND_ANSWERED]: { answer: TriviaOptions| null};
   [WSEvent.TRIVIA_ROUND_END]: {state: GameState, round: TriviaRound, scores: Scores, counts: Record<TriviaOptions, number>}
 
-  
+  //Herd actions
+   [WSEvent.HM_ROUND_START]: {state: GameState, round: HerdMentalityRound}
+  [WSEvent.HM_ROUND_ANSWER]: {roomId: string;playerId: string; answer: HerdMentalityOptions};
+  [WSEvent.HM_ROUND_ANSWERED]: { answer: HerdMentalityOptions| null};
+  [WSEvent.HM_ROUND_END]: {state: GameState, round: HerdMentalityRound, scores: Scores, counts: Record<HerdMentalityOptions, number>}
+
 
   [WSEvent.GAME_STARTED]: {
     roomId: string;
@@ -176,6 +191,7 @@ export interface WSPayloads {
     correct: boolean;
     score: number;
   };
+  [WSEvent.GAME_MY_ANSWER]: {answer: HerdMentalityOptions | TriviaOptions}
   [WSEvent.GAME_END]: {}
 
 

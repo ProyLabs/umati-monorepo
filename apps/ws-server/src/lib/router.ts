@@ -55,10 +55,8 @@ export async function handleMessage(ws: WebSocket, msg: WSMessage, sid: string) 
       break;
 
     case WSEvent.GAME_ANSWER:
-      await handleGameAnswer(ws, msg.payload as WSPayloads[WSEvent.GAME_ANSWER]);
-      break;
-
     case WSEvent.TRIVIA_ROUND_ANSWER:
+    case WSEvent.HM_ROUND_ANSWER:
       await handleGameAnswer(ws, msg.payload as WSPayloads[WSEvent.GAME_ANSWER]);
       break;
 

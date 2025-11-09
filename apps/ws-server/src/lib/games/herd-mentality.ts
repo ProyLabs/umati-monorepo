@@ -1,36 +1,39 @@
+import { Randomize } from "js-randomize";
+import { BaseGame } from "./base";
+
+import { herdmentalityquestions } from "./herd-mentality-questions";
+import { RoomManager } from "../room-manager";
 import {
   GameState,
-  TruviaPlayerAnswer,
+  GameType,
+  HerdMentalityDataItem,
+  HerdMentalityOptions,
+  HerdMentalityPlayerAnswer,
+  HerdMentalityRound,
   RoomState,
-  TriviaOptions,
-  TriviaRound,
+  TruviaPlayerAnswer,
   WSEvent,
-  type TriviaDataItem
 } from "@umati/ws";
 import { GameManager } from "../game-manager";
-import { RoomManager } from "../room-manager";
-import { BaseGame } from "./base";
-import { triviaquestions } from "./trivia-questions";
 
-export class TriviaGame extends BaseGame {
+export class HerdMentality extends BaseGame {
   static maxNumberOfRounds = 20;
-
+  static basePoints = 100;
   public noOfRounds: number;
-  public data: TriviaDataItem[] = [];
-  public currentRound = 0;
-  private answers: Map<string, TruviaPlayerAnswer> = new Map();
-  public round?: TriviaRound | null;
 
- 
+  public data: HerdMentalityDataItem[] = [];
+  public currentRound = 0;
+  private answers: Map<string, HerdMentalityPlayerAnswer> = new Map();
+  public round?: HerdMentalityRound | null;
 
   constructor(
     roomId: string,
     options: { noOfRounds: number; duration?: number }
   ) {
-    super(roomId, "trivia");
+    super(roomId, GameType.HM);
     this.noOfRounds = Math.min(
       options.noOfRounds,
-      TriviaGame.maxNumberOfRounds
+      HerdMentality.maxNumberOfRounds
     );
     this.roundDuration = (options.duration ?? 30) * 1000;
     this.init();
@@ -43,19 +46,11 @@ export class TriviaGame extends BaseGame {
 
   private selectQuestions() {
     this.data = this.randomize
-      .sample(triviaquestions, this.noOfRounds)
+      .sample(herdmentalityquestions, this.noOfRounds)
       .map((s) => {
-        const options = [
-          ...this.randomize.sample(
-            s.options.filter((o) => o !== s.correctAnswer),
-            3
-          ),
-          s.correctAnswer,
-        ];
         return {
           question: s.question,
-          choices: this.randomize.shuffle(options),
-          answer: s.correctAnswer,
+          choices: this.randomize.shuffle(s.options),
         };
       });
   }
@@ -64,17 +59,21 @@ export class TriviaGame extends BaseGame {
     const room = RoomManager.get(this.roomId);
     if (!room) return;
     room.players.forEach((p) => {
-      this.addPlayer(p.id);
+      this.gameScore.set(p.id, {
+        id: p.id,
+        displayName: p.displayName,
+        score: 0,
+      });
     });
   }
 
-  override addPlayer(playerId: string) {
+   override addPlayer(playerId: string) {
     super.addPlayer(playerId);
 
     if (this.state === GameState.ROUND) {
-      this.broadcast(WSEvent.TRIVIA_ROUND_START, {
+      this.broadcast(WSEvent.HM_ROUND_START, {
         state: this.state,
-        round: { ...this.round!, correctAnswer: null },
+        round: this.round!,
       });
     } else if (this.state === GameState.ROUND_END) {
       let counts = {
@@ -82,13 +81,15 @@ export class TriviaGame extends BaseGame {
         1: 0,
         2: 0,
         3: 0,
+        4: 0,
+        5: 0,
       };
 
       for (const { answer } of this.answers.values()) {
         counts[answer]++;
       }
 
-      this.broadcast(WSEvent.TRIVIA_ROUND_END, {
+      this.broadcast(WSEvent.HM_ROUND_END, {
         state: this.state,
         round: this.round!,
         scores: this.scores.sort((a, b) => b.score - a.score),
@@ -99,11 +100,9 @@ export class TriviaGame extends BaseGame {
     } else {
       this.broadcast(WSEvent.GAME_STATE, GameManager.toGameState(this.id)!);
     }
-
   }
 
-  // -- Required override --
-  public startGame() {
+  public startGame(): void {
     this.state = GameState.ROUND;
     this.setRoomState(RoomState.PLAYING);
     this.startRound();
@@ -122,26 +121,22 @@ export class TriviaGame extends BaseGame {
       choices: q?.choices!,
       duration: this.roundDuration / 1000,
       startedAt: this.roundStartTime,
-      correctAnswer: q?.answer!,
-      answer: null,
     };
     this.roundTimer = setTimeout(() => {
       this.endRound();
     }, this.roundDuration);
-    console.log("🚀 ~ TriviaGame ~ startRound ~ this.state:", this.state);
 
-    this.broadcast(WSEvent.TRIVIA_ROUND_START, {
+    this.broadcast(WSEvent.HM_ROUND_START, {
       state: this.state,
-      round: { ...this.round, correctAnswer: null },
+      round: this.round!,
     });
   }
 
-  public submitAnswer(playerId: string, answer: TriviaOptions) {
+  public submitAnswer(playerId: string, answer: HerdMentalityOptions) {
     const exists = this.answers.get(playerId);
     if (exists) return;
-    const timeTaken = Date.now() - this.roundStartTime;
-    this.answers.set(playerId, { answer, timeTaken });
-    this.toPlayer(playerId, WSEvent.TRIVIA_ROUND_ANSWERED, {
+    this.answers.set(playerId, { answer });
+    this.toPlayer(playerId, WSEvent.HM_ROUND_ANSWERED, {
       answer: this.answers.get(playerId)?.answer ?? null,
     });
 
@@ -155,49 +150,54 @@ export class TriviaGame extends BaseGame {
 
   private endRound() {
     this.state = GameState.ROUND_END;
+
     const q = this.data[this.currentRound];
-    const correctIndex = q?.choices.indexOf(q.answer);
-    const basePoints = 200;
-    const timeBonusFactor = 0.5;
+    if (!q) return;
 
-    for (const [playerId, answer] of this.answers) {
-      if (answer.answer === correctIndex) {
-        const bonus = Math.max(
-          0,
-          (1 - answer.timeTaken / this.roundDuration) *
-            basePoints *
-            timeBonusFactor
-        );
-
-        // Round to whole number
-        const points = Math.round(basePoints + bonus);
-
-        this.updateScore(playerId, points)
-      }
-    }
-
-    let counts = {
+    // 1. Count how many players picked each answer option
+    const counts: Record<HerdMentalityOptions, number> = {
       0: 0,
       1: 0,
       2: 0,
       3: 0,
+      4: 0,
+      5: 0,
     };
 
     for (const { answer } of this.answers.values()) {
       counts[answer]++;
     }
 
-    this.broadcast(WSEvent.TRIVIA_ROUND_END, {
+    // 2. Find the highest vote count
+    const maxVotes = Math.max(...Object.values(counts));
+
+    // 3. Get the option(s) with the highest votes
+    const mostVotedAnswers = Object.entries(counts)
+      .filter(([_, count]) => count === maxVotes)
+      .map(([index]) => Number(index));
+
+    // 4. Award points to players who picked one of the most-voted options
+    
+    for (const [playerId, playerAnswer] of this.answers) {
+      if (mostVotedAnswers.includes(playerAnswer.answer)) {
+        this.updateScore(playerId, HerdMentality.basePoints);
+      }
+    }
+
+    // 5. Broadcast end of round with updated scores
+    this.broadcast(WSEvent.HM_ROUND_END, {
       state: this.state,
       round: this.round!,
       scores: this.scores.sort((a, b) => b.score - a.score),
       counts: counts,
     });
 
+    // 6. Move to leaderboard after short delay
     setTimeout(() => this.showLeaderboard(), 5000);
   }
 
-  private showLeaderboard() {
+
+   private showLeaderboard() {
     if (++this.currentRound >= this.noOfRounds) {
       this.state = GameState.LEADERBOARD;
       this.broadcast(WSEvent.GAME_STATE, GameManager.toGameState(this.id)!);
@@ -235,4 +235,10 @@ export class TriviaGame extends BaseGame {
       }, 5000);
     }
   }
+
+
+  public myAnswer(playerId: string): HerdMentalityOptions | undefined {
+    return this.answers.get(playerId)?.answer;
+  }
+
 }

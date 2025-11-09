@@ -3,6 +3,7 @@
 import {
   Game,
   GameLobbyMeta,
+  GameType,
   getWsUrl,
   Lobby,
   Player,
@@ -48,7 +49,7 @@ interface LobbyHostContextType {
   closeLobby: () => void;
   startGame: () => void;
   cancelGame: () => void;
-  setupGame: (gameId: string, options: any) => void;
+  setupGame: (gameId: GameType, options: any) => void;
 }
 
 const LobbyHostContext = createContext<LobbyHostContextType | undefined>(undefined);
@@ -79,6 +80,10 @@ export function LobbyHostProvider({ children }: { children: ReactNode }) {
   const handleMessage = useCallback(
     (event: WSEvent, payload: any) => {
       switch (event) {
+        // case WSEvent.NOT_FOUND:
+        //   router.push("/not-found");
+        //   break;
+
         case WSEvent.OPEN:
           console.log("✅ Host WS connected");
           setReconnecting(false);
@@ -177,7 +182,8 @@ export function LobbyHostProvider({ children }: { children: ReactNode }) {
   /* ------------------------------------------------------------------------ */
   const joinUrl = useMemo(() => {
     if (!lobby || typeof window === "undefined") return "";
-    return `${window.location.origin}/lobby/${lobby.id}`;
+    return `http://192.168.1.135:3000/lobby/${lobby.id}`;
+    // return `${window.location.origin}/lobby/${lobby.id}`;
   }, [lobby]);
 
   /* ------------------------------------------------------------------------ */
@@ -191,10 +197,10 @@ const send = useCallback(
 );
 
   const setupGame = useCallback(
-    (gameId: string, options: any) =>
+    (gameId: GameType, options: any) =>
       send(WSEvent.GAME_INIT, {
         roomId: identifier,
-        options: { type: gameId as any, config: options },
+        options: { type: gameId, config: options },
       }),
     [identifier, send]
   );

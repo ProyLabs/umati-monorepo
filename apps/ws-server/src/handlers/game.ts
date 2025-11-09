@@ -1,5 +1,5 @@
 import type { WebSocket } from "ws";
-import { WSEvent, WSPayloads } from "@umati/ws";
+import { GameType, WSEvent, WSPayloads } from "@umati/ws";
 import { RoomManager } from "../lib/room-manager";
 import { logInfo } from "../utils/logger";
 import { GameManager } from "../lib/game-manager";
@@ -8,7 +8,7 @@ import { GameManager } from "../lib/game-manager";
 export async function handleInitGame(
   ws: WebSocket,
   payload: { roomId: string; options: {
-    type: "trivia" | "emojiRace" | "bibleQuest";
+    type: GameType;
     config: Record<string, any>; // e.g. { noOfRounds: 10, duration: 30 }
   }; }
 ) {
@@ -25,12 +25,17 @@ const room = RoomManager.get(roomId);
       })
     );
   }
-
+  try {
+    
 
   const game = GameManager.create(roomId, options.type, options.config);
   if(!game) return;
 
   RoomManager.setGame(roomId, {id: game.id, type: options.type})
+  } catch (error) {
+    console.log("🚀 ~ handleInitGame ~ error:", error)
+    
+  }
   return;
 }
 

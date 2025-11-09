@@ -60,7 +60,7 @@ export async function handleRoomInit(
     if (!lobby) {
       ws.send(
         JSON.stringify({
-          event: WSEvent.ERROR,
+          event: WSEvent.NOT_FOUND,
           payload: { message: "Lobby not found" },
         })
       );

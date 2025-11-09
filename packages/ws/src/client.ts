@@ -315,7 +315,7 @@ export class WSClient {
 
 export function getWsUrl() {
   // const protocol = location.protocol === "https:" ? "wss" : "ws";
-  const host = process.env.NEXT_PUBLIC_WS_SERVER_URL ?? 'ws://192.168.1.120:4000'
+  const host = process.env.NEXT_PUBLIC_WS_SERVER_URL ?? 'ws://192.168.1.135:4000'
   return `${host}/ws`;
 } 
 
