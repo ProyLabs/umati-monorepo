@@ -1,7 +1,7 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState } from "react";
-import { createGuest } from "../lib/guest";
+import { createGuest, getGuest } from "../lib/guest";
 import { useLocalStorage } from "usehooks-ts"; // 👈 lightweight hook library
 
 interface AuthUser {
@@ -33,16 +33,40 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    async function init() {
+useEffect(() => {
+  async function init() {
+    try {
+      // No user stored → create new guest
       if (!storedUser) {
         const guest = await createGuest();
         setStoredUser({ ...guest, type: "guest" });
+        return;
       }
+
+      // User exists → verify guest exists on server
+      const { id, displayName, avatar } = storedUser;
+      const res = await getGuest(id);
+
+      if (!res || res.error) {
+        // Guest not found → recreate it with old name/avatar
+        const newGuest = await createGuest(displayName, avatar);
+        setStoredUser({ ...newGuest, type: "guest" });
+      }
+    } catch (err) {
+      // If anything fails → recreate guest for safety
+      const newGuest = await createGuest();
+      setStoredUser({ ...newGuest, type: "guest" });
+    } finally {
       setIsLoading(false);
     }
-    init();
-  }, [storedUser, setStoredUser]);
+  }
+
+  init();
+  // ⚠️ Only run once after mount
+  // storedUser must NOT be a dependency or it loops
+}, []);
+
+
 
   const updateUser = (displayName?: string, avatar?: string) => {
     setStoredUser((prev) => {
