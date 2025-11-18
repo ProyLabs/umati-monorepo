@@ -1,8 +1,7 @@
-import { cn } from "../../lib/utils";
-import { RiMedalFill } from "@remixicon/react";
 import { cva, VariantProps } from "class-variance-authority";
 import Image from "next/image";
 import React from "react";
+import { cn } from "../../lib/utils";
 
 const gameCardVariants = cva(
   "border-2 border-foreground/20 rounded-xl md:rounded-3xl p-4 md:p-6 gap-6 bg-gradient-to-b flex flex-col shadow-xl text-white",
@@ -48,12 +47,12 @@ function GameCard({
           <h2 className="text-2xl md:text-3xl font-bold leading-none">{title}</h2>
           <p className="text-sm md:text-lg">{description}</p>
         </div>
-        <div className="bg-black/30 rounded-lg flex items-center justify-center p-1 gap-1 text-white">
+        {/* <div className="bg-black/30 rounded-lg flex items-center justify-center p-1 gap-1 text-white">
             <RiMedalFill className="size-3.5 md:size-4.5" />
           <span className="mr-1 font-semibold text-xs md:text-sm">4.7</span>
-        </div>
+        </div> */}
       </div>
-     {src && <Image src={src} alt={title} width={150} height={100} className="mt-auto md:size-50 mx-auto" />}
+     {src && <Image src={src} alt={title} width={150} height={100} className="mb-auto md:size-50 mx-auto" />}
     </div>
   );
 }

@@ -11,7 +11,7 @@ export abstract class BaseGame {
   public readonly randomize = new Randomize(); 
   protected gameScore: Map<string, Score> = new Map();
   public currentRound = 0;
-  public roundDuration: number = 30;
+  public roundDuration: number = 30000;
   public roundStartTime = 0;
   public roundTimer?: NodeJS.Timeout;
 

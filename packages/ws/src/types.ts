@@ -49,6 +49,7 @@ export const GameState = {
   ROUND_SETUP: "ROUND_SETUP",   // 👈 New: Chameleon (setup phase)
   SPEAKING: "SPEAKING",         // 👈 New: Chameleon (each player says a clue)
   VOTING: "VOTING",             // 👈 New: Chameleon (players vote)
+  REVEAL: "REVEAL",             // 👈 New: Chameleon (players vote)
   ROUND: "ROUND",
   ROUND_END: "ROUND_END",
   LEADERBOARD: "LEADERBOARD",
@@ -100,6 +101,7 @@ export const GameType = {
   OOO: "oddoneout",
   HM: "herdmentality",
   CHAMELEON: "chameleon",
+  JL: "jaroflies",
 } as const;
 
 export type GameType = (typeof GameType)[keyof typeof GameType];
@@ -180,3 +182,32 @@ export const HerdMentalityOptions = {
 } as const;
 
 export type HerdMentalityOptions = (typeof HerdMentalityOptions)[keyof typeof HerdMentalityOptions];
+
+export const ChameleonRoundRole = {
+  HOST: "HOST",
+  CIVILIAN: "CIVILIAN",
+  CHAMELEON: "CHAMELEON"
+} as const;
+export type ChameleonRoundRole = (typeof ChameleonRoundRole)[keyof typeof ChameleonRoundRole];
+
+export type ChameleonRound = {
+  number: number;
+  totalRounds: number;
+  category: ChameleonCategory
+  roles: Record<string, ChameleonRoundRole>
+  roll: string; 
+  speakingOrder?: {starter: Player; direction: "CLOCKWISE"|"ANTICLOCKWISE"};
+  timer: {
+    duration: number; // seconds
+  startedAt: number; // timestamp (ms)
+  }
+  votes: Record<string, string>;
+  counts?: Record<string, number>;
+}
+
+export type ChameleonCategory = {
+  title: string;
+  words: string[]
+}
+
+export type ChameleonCategories = ChameleonCategory[]

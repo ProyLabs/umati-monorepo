@@ -85,10 +85,18 @@ export function handleCancelGame(ws: WebSocket, payload: WSPayloads[WSEvent.GAME
 
 
 /** When a player answers */
-export async function handleGameAnswer(ws: WebSocket, payload: WSPayloads[WSEvent.GAME_ANSWER]|WSPayloads[WSEvent.TRIVIA_ROUND_ANSWER]) {
+export async function handleGameAnswer(ws: WebSocket, payload: WSPayloads[WSEvent.TRIVIA_ROUND_ANSWER| WSEvent.HM_ROUND_ANSWER|WSEvent.CH_ROUND_VOTE] ) {
     const {roomId, playerId, answer} = payload;
     const room = RoomManager.get(roomId);
     if(!room) return;
     if(!room.game) return;
     GameManager.submitAnswer(room.game.id, playerId, answer);
+}
+
+export async function handleGameStateChange(ws: WebSocket, payload: WSPayloads[WSEvent.GAME_STATE_CHANGE]|WSPayloads[WSEvent.CH_ROUND_STATE_CHANGE]) {
+   const {roomId, state} = payload;
+    const room = RoomManager.get(roomId);
+    if(!room) return;
+    if(!room.game) return;
+    GameManager.updateState(room.game.id, state);
 }

@@ -21,7 +21,7 @@ function Navbar() {
         <div className="flex-1 w-full flex gap-4 items-center justify-end">
           <CoinXp />
           <SettingsBar />
-          <UserAvatar />
+          {/* <UserAvatar /> */}
         </div>
       </div>
     </div>

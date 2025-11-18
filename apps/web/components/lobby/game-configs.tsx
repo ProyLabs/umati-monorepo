@@ -27,6 +27,8 @@ function GameConfig({ game, action }: GameConfigProps) {
             return <OddOneOutGameConfig />;
           case GameType.HM:
             return <HMGameConfig action={action} />
+          case GameType.CHAMELEON:
+            return <ChameleonGameConfig action={action} />
           default:
             return null;
         }
@@ -145,4 +147,40 @@ const HMGameConfig = ({action}: { action: GameConfigAction}) => {
 
 const OddOneOutGameConfig = () => {
   return <div>Odd One Out Game Config</div>;
+};
+
+
+
+const ChameleonGameConfig = ({action}: { action: GameConfigAction}) => {
+  const { closeModal } = useModal();
+  const [noOfRounds, setNoOfRounds] = useState(8);
+  return (
+    <div className="grid gap-8">
+      <div className="grid gap-2">
+        <Label htmlFor="lobby-code">Number of Rounds</Label>
+        <ButtonOptions
+          value={noOfRounds}
+          options={[3, 5, 8, 10, 12]}
+          onChange={(val) => setNoOfRounds(val as number)}
+        />
+      </div>
+      <div className="grid gap-2">
+        <Fbutton
+          type="submit"
+          variant="secondary"
+          className="w-full"
+          onClick={async () => {
+            await action({
+              noOfRounds,
+            });
+          }}
+        >
+          Start Game
+        </Fbutton>
+        <Fbutton variant="outline"  className="w-full" onClick={closeModal}>
+          Cancel
+        </Fbutton>
+      </div>
+    </div>
+  );
 };

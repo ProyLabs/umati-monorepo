@@ -1,11 +1,10 @@
-import { useTriviaPlayer } from "@/providers/games/trivia/trivia-player-provider";
-import {
-  PlayerRound,
-  PlayerRoundEnd,
-  HmTitleScreen
-} from "./widgets";
-import { PlayerPodium } from "../shared";
 import { useHerdMentalityPlayer } from "@/providers/games/herd-mentality/hm-player-provider";
+import { PlayerPodium } from "../shared";
+import {
+  HmTitleScreen,
+  PlayerRound,
+  PlayerRoundEnd
+} from "./widgets";
 
 export default function HerdMentalityPlayer() {
   const { state, scores } = useHerdMentalityPlayer();

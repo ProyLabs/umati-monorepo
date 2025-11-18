@@ -15,8 +15,9 @@ const fbuttonVariants = cva(
         red: "text-primary-foreground before:bg-[#FE566B] text-red-900 [&_span]:text-white",
         aqua: "text-primary-foreground before:bg-[#09DEAE] text-[#059C7A] [&_span]:text-black",
         purple:
-          "text-primary-foreground before:bg-[#9856FE] text-[#7B35F7] [&_span]:text-white",
-        sky: "text-primary-foreground before:bg-[var(--umati-sky)] text-[#3A6EE4] [&_span]:text-white",
+          "text-primary-foreground before:bg-[#9856FE] text-violet-700 [&_span]:text-white",
+        sky: "text-primary-foreground before:bg-[var(--umati-sky)] text-sky-700 [&_span]:text-white",
+        lime: "text-primary-foreground before:bg-lime-500 text-lime-700 [&_span]:text-white",
         secondary:
           "text-primary-foreground before:bg-white hover:before:brightness-90 before:shadow-md before:shadow-[0_4px_0] before:border-[2px] before:border-[#e5e5e5] text-[#e5e5e5] [&_span]:text-foreground dark:[&_span]:text-background",
         outline:

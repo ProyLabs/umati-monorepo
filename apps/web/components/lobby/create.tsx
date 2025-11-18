@@ -26,6 +26,11 @@ export default function CreateLobby() {
   const { user } = useAuth();
 
   async function handleCreate(isPrivate = false, pin?: string) {
+    if(!lobbyName){
+      return toast.error("Lobby Name is required");
+    }
+
+
     try {
       setLoading(true);
       const data = {
@@ -91,6 +96,7 @@ export default function CreateLobby() {
           <div className="grid gap-2">
             <Label htmlFor="maxPlayers">Max Number of Players</Label>
             <ButtonOptions
+            variant="outline"
               value={maxPlayers}
               onChange={(value) => setMaxPlayers(Number(value))}
               options={[4, 8, 10]}
@@ -100,6 +106,8 @@ export default function CreateLobby() {
           <Fbutton
             type="submit"
             className="w-full mt-6"
+               variant="purple"
+
             loading={loading}
             onClick={async () => {
               await handleCreate();
@@ -113,7 +121,7 @@ export default function CreateLobby() {
         <div className="flex justify-center w-full border-t py-4">
           <Link href="/join-lobby" className="w-full">
             <Fbutton
-              variant="secondary"
+              variant="outline"
               className="w-full"
               onClick={async () => {}}
             >

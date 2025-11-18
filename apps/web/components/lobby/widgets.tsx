@@ -1,7 +1,7 @@
 "use client";
 
 import { useAuth } from "@/providers/auth-provider";
-import { RiHeart3Line, RiMedalFill } from "@remixicon/react";
+import { RiGroup3Fill, RiGroup3Line, RiHeart3Line, RiMedalFill } from "@remixicon/react";
 import { cva, VariantProps } from "class-variance-authority";
 import {
   Maximize2Icon,
@@ -36,6 +36,7 @@ import { Separator } from "../ui/separator";
 import { QRCode } from "../ui/shadcn-io/qr-code";
 import { Slider } from "../ui/slider";
 import Link from "next/link";
+import { Game, Games, RoomState } from "@umati/ws";
 
 export const CopyLinkButton = () => {
   const { joinUrl } = useLobbyHost();
@@ -284,7 +285,7 @@ export const JoinLobbyCode = ({
 };
 
 export const WaitingForPlayers = ({ className }: { className?: string }) => {
-  const { players, lobby } = useLobbyHost();
+  const { players, lobby, uiState } = useLobbyHost();
 
   return (
     <div
@@ -299,16 +300,24 @@ export const WaitingForPlayers = ({ className }: { className?: string }) => {
 
       <div className="relative w-full  h-fit overflow-visible rounded-xl flex flex-wrap gap-3 justify-center">
         {players.map((player, i) => (
-          <div key={player.id} className="flex flex-col w-fit">
-            <Avatar className="size-16 sm:size-16 ring-2 ring-background shadow-md hover:scale-110 transition-transform">
+          <div key={player.id} className="flex flex-col w-fit items-center">
+            <Avatar className={cn("ring-2 ring-background shadow-md hover:scale-110 transition-transform", {
+              "size-16": uiState === RoomState.INIT,
+              "size-12": uiState === RoomState.LOBBY,
+            })}>
               <AvatarImage src={player.avatar} alt={player.displayName} />
               <AvatarFallback>{player.displayName?.[0]}</AvatarFallback>
             </Avatar>
-            <p className="text-center">{player.displayName}</p>
+            <p className={cn("text-center font-semibold", {
+              "text-sm mt-1": uiState === RoomState.INIT,
+              "text-xs mt-0.5": uiState === RoomState.LOBBY,
+            })}>{player.displayName}</p>
           </div>
         ))}
       </div>
-      <p className="m-auto animate-pulse">Waiting for players...</p>
+     {players.length < (lobby?.maxPlayers!/2) && <p className="m-auto animate-pulse">Waiting for players...</p>}
+     {(players.length === lobby?.maxPlayers! && uiState === RoomState.INIT) && <p className="m-auto">Everyone is here 🥳</p>}
+
     </div>
   );
 };
@@ -332,24 +341,20 @@ const gameCardVariants = cva(
 export function GameCard({
   className,
   variant,
-  title,
-  description,
-  src,
+  game,
   ...props
 }: React.ComponentProps<"div"> &
   VariantProps<typeof gameCardVariants> & {
-    title?: string;
-    description?: string;
-    src?: string;
+    game: typeof Games[0]
   }) {
   return (
     <div className={cn(gameCardVariants({ variant, className }))} {...props}>
       <div className="flex flex-col">
-        <h2 className="text-lg font-bold ">{title}</h2>
-        <p className="text-sm">Multiplayer</p>
+        <h2 className="text-lg font-bold ">{game.title}</h2>
+        <p className="text-sm">{game?.description}</p>
       </div>
      { <Image
-        src={src!}
+        src={game?.src!}
         alt="Game Image"
         width={80}
         height={80}
@@ -357,8 +362,8 @@ export function GameCard({
       />}
 
       <div className="bg-black/30 rounded-md flex items-center justify-center p-1 gap-1 absolute bottom-4 left-4">
-        <RiMedalFill size={16} className="" />
-        <span className="mr-1 font-semibold text-xs">4.7</span>
+        <RiGroup3Fill size={16} className="" />
+        <span className="mr-1 font-semibold text-xs">{game?.min} - 10</span>
       </div>
     </div>
   );
@@ -367,15 +372,17 @@ export function GameCard({
 export const PlayerAvatar = ({
   displayName,
   avatar,
+  className
 }: {
   displayName: string;
   avatar: string;
+  className?: string;
 }) => {
   return (
     <motion.div className="flex flex-col items-center">
       <Avatar
         className={cn(
-          "size-30 ring-2 ring-foreground shadow-md hover:scale-110 transition-transform mb-2 relative"
+          "size-30 ring-2 ring-foreground shadow-md hover:scale-110 transition-transform mb-2 relative", className
         )}
       >
         <AvatarImage src={avatar} alt={displayName} />
@@ -408,6 +415,8 @@ export const PlayerJoinLobby = () => {
     }
   };
 
+  const MAX_DISPLAY_NAME_LENGTH = 15;
+
   return (
     <div className="max-w-screen-2xl mx-auto w-full md:py-8 flex flex-col gap-8 px-5 items-center justify-center md:justify-center h-dvh">
       <UmatiFullLogo className="w-32 text-foreground " />
@@ -431,11 +440,15 @@ export const PlayerJoinLobby = () => {
                 id="display-name"
                 placeholder="Enter Name"
                 required
+                maxLength={MAX_DISPLAY_NAME_LENGTH}
                 onChange={(e) => {
                   setDisplayName(e.target.value);
                 }}
                 value={displayName}
               />
+              <div className="flex items-center justify-end">
+                <span className="text-xs opacity-55">{displayName.length}/{MAX_DISPLAY_NAME_LENGTH}</span>
+              </div>
             </div>
 
             <Fbutton

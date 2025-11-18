@@ -98,6 +98,16 @@ export async function handlePlayerJoin(
     return;
   }
 
+  if(room.players.length === room.meta.maxPlayers) {
+    ws.send(
+      JSON.stringify({
+        event: WSEvent.ERROR,
+        payload: { message: "Room is already at capacity" },
+      })
+    );
+    return;
+  }
+
   RoomManager.addPlayer(
     roomId,
     {

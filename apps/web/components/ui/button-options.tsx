@@ -23,7 +23,7 @@ const ButtonOptions: React.FC<ButtonOptionsProps> = ({
   value,
   onChange,
   className,
-  variant
+  variant="outline"
 }) => {
   const [selectedValue, setSelectedValue] = React.useState<string | number| undefined>(value);
 

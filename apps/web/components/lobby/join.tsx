@@ -10,7 +10,7 @@ import {
 } from "../ui/card";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 import { Fbutton } from "../ui/fancy-button";
 import { InputOTP, InputOTPGroup, InputOTPSlot } from "../ui/input-otp";
@@ -46,14 +46,21 @@ export default function JoinLobby() {
         router.push(`/lobby/${data.lobbyIdentifier}`);
       } else {
         toast.error("Invalid response from server");
+        setLoading(false);
       }
     } catch (err) {
       console.error("Error joining lobby:", err);
       toast.error("Could not connect to server");
-    } finally {
       setLoading(false);
     }
   }
+
+  useEffect(() => {
+   if (lobbyCode.length < 6) return;
+  handleJoin();
+
+  }, [lobbyCode])
+  
 
   return (
     <Card className="z-50 rounded-2xl max-w-md w-full">
@@ -72,15 +79,41 @@ export default function JoinLobby() {
             <InputOTP
               maxLength={6}
               value={lobbyCode}
-              onChange={(value) => setLobbyCode(value)}
+              onChange={async (value) => {
+               await setLobbyCode(value)
+              }}
             >
-              <InputOTPGroup className="justify-between w-full gap-2">
-                <InputOTPSlot index={0} className="text-2xl font-bold h-14" />
-                <InputOTPSlot index={1} className="text-2xl font-bold h-14" />
-                <InputOTPSlot index={2} className="text-2xl font-bold h-14" />
-                <InputOTPSlot index={3} className="text-2xl font-bold h-14" />
-                <InputOTPSlot index={4} className="text-2xl font-bold h-14" />
-                <InputOTPSlot index={5} className="text-2xl font-bold h-14" />
+              <InputOTPGroup className="gap-2">
+                <InputOTPSlot
+                  index={0}
+                  className="text-2xl font-bold"
+                  aria-disabled={loading}
+                />
+                <InputOTPSlot
+                  index={1}
+                  className="text-2xl font-bold"
+                  aria-disabled={loading}
+                />
+                <InputOTPSlot
+                  index={2}
+                  className="text-2xl font-bold"
+                  aria-disabled={loading}
+                />
+                <InputOTPSlot
+                  index={3}
+                  className="text-2xl font-bold"
+                  aria-disabled={loading}
+                />
+                <InputOTPSlot
+                  index={4}
+                  className="text-2xl font-bold"
+                  aria-disabled={loading}
+                />
+                <InputOTPSlot
+                  index={5}
+                  className="text-2xl font-bold"
+                  aria-disabled={loading}
+                />
               </InputOTPGroup>
             </InputOTP>
           </div>
@@ -88,6 +121,7 @@ export default function JoinLobby() {
           <Fbutton
             type="submit"
             className="w-full"
+            variant="sky"
             loading={loading}
             onClick={handleJoin}
           >
@@ -99,7 +133,7 @@ export default function JoinLobby() {
       <CardFooter>
         <div className="flex justify-center w-full border-t py-4">
           <Link href="/create-lobby" className="w-full">
-            <Fbutton variant="secondary" className="w-full" disabled={loading}>
+            <Fbutton variant="outline" className="w-full" disabled={loading}>
               Create a Lobby
             </Fbutton>
           </Link>

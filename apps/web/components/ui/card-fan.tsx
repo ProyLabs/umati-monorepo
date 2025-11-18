@@ -37,14 +37,7 @@ const CardFan: React.FC<CardFanProps> = ({ children }) => {
   return (
     <div
       ref={containerRef}
-      className={`relative w-full flex justify-center ${
-        isMobile ? "items-center" : "items-start"
-      } overflow-clip`}
-      style={{
-        minHeight: "90%",
-        height: "90%",
-        maxHeight: "100dvh",
-      }}
+      className={`relative w-full flex justify-center mmax-h-[100dvh] max-w-7xl h-2/5 items-end overflow-clip select-none` }
     >
       {childArray.map((child, index) => {
         const normalizedIndex = index - middle;
@@ -61,12 +54,10 @@ const CardFan: React.FC<CardFanProps> = ({ children }) => {
           <motion.div
             key={index}
             className={`${
-              isMobile
-                ? "relative cursor-pointer"
-                : "absolute top-0 cursor-pointer"
+               "absolute top-0 cursor-pointer scale-75 md:scale-100"
             }`}
             style={{
-              zIndex: 100 - distanceFromCenter,
+              zIndex: 50 - distanceFromCenter,
               transformOrigin: "bottom center",
             }}
             initial={{
@@ -77,9 +68,10 @@ const CardFan: React.FC<CardFanProps> = ({ children }) => {
               rotate: 0,
             }}
             animate={
-              isMobile
-                ? { opacity: 1, y: 0, x: 0, rotate: 0, scale: 1 }
-                : {
+              // isMobile
+              //   ? { opacity: 1, y: 0, x: 0, rotate: 0, scale: 1 }
+                // :
+                 {
                     opacity: 1,
                     y: translateY,
                     x: translateX,

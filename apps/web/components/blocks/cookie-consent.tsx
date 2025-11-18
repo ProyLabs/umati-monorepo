@@ -90,10 +90,10 @@ const CookieConsent = React.forwardRef<HTMLDivElement, CookieConsentProps>(
 
     const Buttons = (
       <>
-        <Fbutton onClick={handleDecline} variant="secondary" className="flex-1">
+        <Fbutton onClick={handleDecline} variant="outline" className="flex-1">
           Decline
         </Fbutton>
-        <Fbutton onClick={handleAccept} className="flex-1">
+        <Fbutton onClick={handleAccept}variant="secondary"  className="flex-1">
           Accept
         </Fbutton>
       </>

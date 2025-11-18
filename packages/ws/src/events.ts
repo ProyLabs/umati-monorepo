@@ -10,7 +10,7 @@
  *  - 🔹 WSMessage: full message shape { event, payload }
  */
 
-import { Game, GameState, GameType, HerdMentalityOptions, HerdMentalityRound, Lobby, LobbyFull, Player, Ranking, RoomState, Scores, TriviaOptions, TriviaRound } from "./types";
+import { ChameleonRound, Game, GameState, GameType, HerdMentalityOptions, HerdMentalityRound, Lobby, LobbyFull, Player, Ranking, RoomState, Scores, TriviaOptions, TriviaRound } from "./types";
 
 export enum WSEvent {
   // --- Core lifecycle ---
@@ -55,6 +55,7 @@ export enum WSEvent {
   GAME_ANSWER = "GAME:ANSWER",
   GAME_MY_ANSWER = "GAME:MY:ANSWER",
   GAME_ANSWER_RECEIVED = "GAME:answer-received",
+  GAME_STATE_CHANGE = "GAME:STATE:CHANGE",
   GAME_END="GAME:END",
 
 
@@ -69,6 +70,16 @@ export enum WSEvent {
   HM_ROUND_ANSWER="GAME:HM:ROUND:ANSWER",
   HM_ROUND_ANSWERED="GAME:HM:ROUND:ANSWERED",
   HM_ROUND_END="GAME:HM:ROUND:END",
+
+  //Chameleon
+  CH_ROUND_START="GAME:CH:ROUND:START",
+  CH_ROUND_STATE_CHANGE="GAME:CH:ROUND:STATE:CHANGE",
+  CH_ROUND_VOTE="GAME:CH:ROUND:VOTE",
+  CH_ROUND_VOTED="GAME:CH:ROUND:VOTED",
+  CH_ROUND_END="GAME:CH:ROUND:END",
+
+
+
 
 
   // --- System ---
@@ -159,9 +170,16 @@ export interface WSPayloads {
 
   //Herd actions
    [WSEvent.HM_ROUND_START]: {state: GameState, round: HerdMentalityRound}
-  [WSEvent.HM_ROUND_ANSWER]: {roomId: string;playerId: string; answer: HerdMentalityOptions};
+  [WSEvent.HM_ROUND_ANSWER]: {roomId: string; playerId: string; answer: HerdMentalityOptions};
   [WSEvent.HM_ROUND_ANSWERED]: { answer: HerdMentalityOptions| null};
   [WSEvent.HM_ROUND_END]: {state: GameState, round: HerdMentalityRound, scores: Scores, counts: Record<HerdMentalityOptions, number>}
+
+  [WSEvent.CH_ROUND_START]: {state: GameState, round: ChameleonRound}
+  [WSEvent.CH_ROUND_STATE_CHANGE]: {roomId: string; state: GameState,}
+  [WSEvent.CH_ROUND_VOTE]: {roomId: string; playerId: string; answer: string }
+  [WSEvent.CH_ROUND_VOTED]: {vote: string; }
+  [WSEvent.CH_ROUND_END]: {state: GameState, round: ChameleonRound, scores: Scores,}
+
 
 
   [WSEvent.GAME_STARTED]: {
@@ -169,7 +187,7 @@ export interface WSPayloads {
     options: any;
   };
 
-
+ [WSEvent.GAME_STATE_CHANGE]: {roomId: string; state: GameState,}
   [WSEvent.GAME_ANSWER]: {
     roomId: string;
     playerId: string;

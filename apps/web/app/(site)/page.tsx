@@ -11,7 +11,7 @@ export default function Home() {
     <main className="flex min-h-screen flex-col items-center relative">
       <Navbar />
       <section className="flex flex-col w-full items-center justify-between h-[calc(100vh-68px)] md:h-[calc(100vh-80px)] overflow-clip">
-        <div className=" max-w-3xl mx-auto text-center mb-8 px-5 md:px-0 py-5 h-full">
+        <div className="flex flex-col items-center justify-center max-w-3xl mx-auto text-center px-5 md:px-0 py-3 h-full">
           <h1 className="text-5xl md:text-7xl font-bold text-center mb-8">
             Bring the crowd together.
           </h1>
@@ -21,9 +21,9 @@ export default function Home() {
             browser.
           </p>
 
-          <div className="grid grid-cols-2 gap-4 mt-8 max-w-lg mx-auto">
+          <div className="grid grid-cols-2 gap-4 mt-8 max-w-lg w-full mx-auto">
             <Link href="/create-lobby">
-              <Fbutton className="w-full">Create a Lobby</Fbutton>
+              <Fbutton variant="secondary" className="w-full">Create a Lobby</Fbutton>
             </Link>
             <Link href="/join-lobby">
               <Fbutton variant="outline" className="w-full">

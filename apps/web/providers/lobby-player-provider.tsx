@@ -24,6 +24,7 @@ import {
   GameLobbyMeta,
   TriviaOptions,
 } from "@umati/ws";
+import { useAlertDialog } from "./modal-provider";
 
 /* -------------------------------------------------------------------------- */
 /* 🧩 Context Type                                                           */
@@ -67,12 +68,16 @@ export function LobbyPlayerProvider({ children }: { children: ReactNode }) {
 
   const wsRef = useRef<WSClient | null>(null);
   const initializedRef = useRef(false);
+  const alertDialog = useAlertDialog();
 
   /* ------------------------------------------------------------------------ */
   /* 🧠 Strongly Typed Send Helper                                            */
   /* ------------------------------------------------------------------------ */
   const send = useCallback(
-    <E extends WSEvent>(event: E, payload: WSPayloads[E & keyof WSPayloads]) => {
+    <E extends WSEvent>(
+      event: E,
+      payload: WSPayloads[E & keyof WSPayloads]
+    ) => {
       wsRef.current?.send(event, payload);
     },
     []
@@ -83,10 +88,18 @@ export function LobbyPlayerProvider({ children }: { children: ReactNode }) {
   /* ------------------------------------------------------------------------ */
   const handleMessage = useCallback(
     (event: WSEvent, payload: any) => {
+      console.log(event);
       switch (event) {
         // case WSEvent.NOT_FOUND:
         //   router.push("/not-found");
         //   break;
+
+        case WSEvent.ERROR:
+          console.log(payload.message);
+          alertDialog({
+            title: "Oops!",
+            description: payload.message,
+          });
 
         case WSEvent.OPEN:
           console.log(`✅ Player ${user?.id} WS connected`);
@@ -145,7 +158,8 @@ export function LobbyPlayerProvider({ children }: { children: ReactNode }) {
           setReconnecting(false);
           // toast.error("WS disconnected");
           break;
-        // case "error": 
+        // case "error":
+        //   console.log(state)
         //   router.push("/not-found");
         //   break;
       }
@@ -155,8 +169,13 @@ export function LobbyPlayerProvider({ children }: { children: ReactNode }) {
       WSEvent.OPEN,
       WSEvent.ROOM_STATE,
       WSEvent.ROOM_CLOSED,
+      WSEvent.ERROR,
+      WSEvent.NOT_FOUND
     ];
-    for (const ev of events) ws.on(ev as WSEvent & keyof WSPayloads, (payload) => handleMessage(ev, payload));
+    for (const ev of events)
+      ws.on(ev as WSEvent & keyof WSPayloads, (payload) =>
+        handleMessage(ev, payload)
+      );
 
     return () => {
       console.log("🧹 Cleaning up WS connection");
@@ -274,6 +293,7 @@ export function LobbyPlayerProvider({ children }: { children: ReactNode }) {
 /* -------------------------------------------------------------------------- */
 export function useLobbyPlayer() {
   const ctx = useContext(LobbyPlayerContext);
-  if (!ctx) throw new Error("useLobbyPlayer must be used within a LobbyPlayerProvider");
+  if (!ctx)
+    throw new Error("useLobbyPlayer must be used within a LobbyPlayerProvider");
   return ctx;
 }

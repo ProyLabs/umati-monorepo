@@ -1,8 +1,13 @@
-import { HerdMentalityOptions, TriviaOptions, GameType } from "@umati/ws";
+import {
+  HerdMentalityOptions,
+  TriviaOptions,
+  GameType,
+  GameState,
+} from "@umati/ws";
 import { BaseGame } from "./games/base";
 import { TriviaGame } from "./games/trivia-game";
 import { HerdMentality } from "./games/herd-mentality";
-
+import { Chameleon } from "./games/chameleon";
 
 const games = new Map<string, BaseGame>();
 
@@ -15,6 +20,9 @@ export const GameManager = {
         break;
       case GameType.HM:
         game = new HerdMentality(roomId, options);
+        break;
+      case GameType.CHAMELEON:
+        game = new Chameleon(roomId, options);
         break;
       // case "emojiRace": game = new EmojiRaceGame(roomId, options); break;
       default:
@@ -39,27 +47,50 @@ export const GameManager = {
       id: game.id,
       type: game.type,
       state: game.state,
-      round: (game as TriviaGame | HerdMentality).round,
-      scores: game.scores
+      round: (game as TriviaGame | HerdMentality | Chameleon).round,
+      scores: game.scores,
     };
   },
 
-  submitAnswer(gameId: string, playerId: string, answer: TriviaOptions | HerdMentalityOptions){
+  submitAnswer(
+    gameId: string,
+    playerId: string,
+    answer: TriviaOptions | HerdMentalityOptions | string
+  ) {
     const game = games.get(gameId);
-    if(!game) return;
-    console.log("🚀 ~ game:", game)
-    console.log("🚀 ~ answer:", answer)
+    if (!game) return;
 
-    if(game.type === GameType.TRIVIA){
+    if (game.type === GameType.TRIVIA) {
       const triviaGame = game as TriviaGame;
       triviaGame.submitAnswer(playerId, answer as TriviaOptions);
-    } else if(game.type === GameType.HM){
+    } else if (game.type === GameType.HM) {
       const herdMentalityGame = game as HerdMentality;
-      herdMentalityGame.submitAnswer(playerId, answer)
+      herdMentalityGame.submitAnswer(playerId, answer as HerdMentalityOptions);
+    } else if (game.type === GameType.CHAMELEON){
+      const chameleonGame = game as Chameleon;
+      chameleonGame.castVote(playerId, answer as string);
     }
-  }
-};
+  },
 
+  updateState(gameId: string, state: GameState) {
+    const game = games.get(gameId);
+    if (!game) return;
+
+     if (game.type === GameType.CHAMELEON) {
+      const chameleonGame = game as Chameleon;
+        switch (state) {
+          case GameState.SPEAKING:
+            chameleonGame.startSpeaking()
+            break;
+          case GameState.VOTING:
+            chameleonGame.startVoting()
+          default:
+            break;
+        }
+     }
+
+  },
+};
 
 // export const GameManager = {
 //   create(roomId: string, gameType: GameType, payload: any) {
@@ -86,4 +117,3 @@ export const GameManager = {
 
 //   }
 // };
-

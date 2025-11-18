@@ -2,13 +2,11 @@
 
 
 import { GameResolverHost } from "@/components/games/game-resolver";
-import TriviaHost from "@/components/games/trivia/host";
 import HostLobby from "@/components/lobby/host-lobby";
 import HostWaitingLobby from "@/components/lobby/host-waiting-lobby";
 import Loading from "@/components/lobby/loading";
-import { BeforeWeBegin } from "@/components/lobby/widgets";
-import { TriviaHostProvider } from "@/providers/games/trivia/trivia-host-provider";
 import { useLobbyHost } from "@/providers/lobby-host-provider";
+
 
 
 export default function LobbyPage() {
@@ -24,7 +22,6 @@ export default function LobbyPage() {
     } else if(uiState === 'LOBBY'){
         return <HostLobby />
     } else if (uiState === 'PLAYING'){
-        console.log("🚀 ~ LobbyPage ~ uiState:", uiState)
       return  <GameResolverHost/>
     }
 
