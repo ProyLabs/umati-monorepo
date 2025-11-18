@@ -1,6 +1,19 @@
+'use client';
+import { useEffect, useState } from "react";
 import { cn } from "../../lib/utils";
+import { Fbutton } from "../ui/fancy-button";
 
 export default function Loading({size=128, className}: {size?: number, className?: string}) {
+  const [showRefresh, setShowRefresh] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setShowRefresh(true), 15000);
+    return () => clearTimeout(timer);
+  }, []);
+
+  function handleRefresh() {
+    window.location.reload();
+  }
   // You can add any UI inside Loading, including a Skeleton.
   return (
     <div className="flex flex-col items-center justify-center m-auto">
@@ -52,6 +65,15 @@ export default function Loading({size=128, className}: {size?: number, className
       </rect>
     </svg>
     <p className="text-xl animate-pulse">Loading..</p>
+    {/* {showRefresh && ( */}
+        <Fbutton
+        variant="outline"
+          onClick={handleRefresh}
+          className="mt-4 max-w-md w-full"
+        >
+          Refresh
+        </Fbutton>
+      {/* )} */}
     </div>
   );
 }

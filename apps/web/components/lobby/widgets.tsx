@@ -462,6 +462,8 @@ export const PlayerJoinLobby = () => {
           </div>
         </CardContent>
       </Card>
+
+      <Link href="/" className="text-center text-white font-medium hover:underline">Back to Homepage</Link>
     </div>
   );
 };

@@ -5,7 +5,12 @@ import { cn } from "@/lib/utils";
 import { useChameleonHost } from "@/providers/games/chameleon/chameleon-host-provider";
 import { useChameleonPlayer } from "@/providers/games/chameleon/chameleon-player-provider";
 import { useLobbyPlayer } from "@/providers/lobby-player-provider";
-import { ChameleonRound, ChameleonRoundRole, GameState, Player } from "@umati/ws";
+import {
+  ChameleonRound,
+  ChameleonRoundRole,
+  GameState,
+  Player,
+} from "@umati/ws";
 import { BellRingIcon } from "lucide-react";
 import Image from "next/image";
 import React, { use, useCallback, useEffect, useMemo, useState } from "react";
@@ -34,7 +39,7 @@ export const Setup = () => {
       </h1>
       <div className="max-w-3xl w-full h-full max-h-100">
         <FlipCard
-          front={<GridCard words={round?.category?.words!} />} 
+          front={<GridCard words={round?.category?.words!} />}
           back={<CountdownCard round={round} />}
           flipped={state === GameState.SPEAKING}
           onToggle={() => {}}
@@ -66,23 +71,33 @@ export const PlayerSetup = () => {
 
 export const VotingRound = () => {
   const { players } = useLobbyHost();
-  const { counts } = useChameleonHost();
+  const { counts, state, round } = useChameleonHost();
   return (
     <div className="flex flex-col items-center justify-center h-full gap-8">
       <div className="mb-16 ">
-      <h1 className="text-6xl font-bold text-center max-w-4xl mx-auto w-full">
-        It's time to vote
-      </h1>
-      <h2 className="text-4xl font-semibold text-center">
-        Who do you think is the chameleon?
-      </h2>
+        <h1 className="text-6xl font-bold text-center max-w-4xl mx-auto w-full">
+          It's time to vote
+        </h1>
+        <h2 className="text-4xl font-semibold text-center">
+          Who do you think is the chameleon?
+        </h2>
       </div>
 
       <div className="grid grid-cols-2 gap-4 max-w-2xl w-full">
         {players?.map((p) => {
-          return <VotingGridCard player={p} key={p.id} count={counts ? counts![p.id] : 0} />;
+          return (
+            <VotingGridCard
+              player={p}
+              key={p.id}
+              count={
+                counts && state === GameState.ROUND_END ? counts![p.id] : 0
+              }
+            />
+          );
         })}
       </div>
+
+    { state === GameState.ROUND_END && <Timer variant="compact" duration={round?.timer?.duration!} startTime={round?.timer?.startedAt!} />}
     </div>
   );
 };
@@ -91,47 +106,39 @@ export const GetReady = () => {
   return (
     <div className="flex flex-col items-center justify-center h-full gap-8">
       <div className="mb-16 ">
-      <h1 className="text-6xl font-bold text-center max-w-4xl mx-auto w-full">
-       Get ready for the next round
-      </h1>
-      <h2 className="text-4xl font-semibold text-center">
-     Remeber, There's a new chameleon this round!
-      </h2>
+        <h1 className="text-6xl font-bold text-center max-w-4xl mx-auto w-full">
+          Get ready for the next round
+        </h1>
+        <h2 className="text-4xl font-semibold text-center">
+          Remeber, There's a new chameleon this round!
+        </h2>
       </div>
     </div>
   );
 };
 export const Reveal = () => {
-  const {players } = useLobbyHost();
-  const {round} = useChameleonHost();
+  const { players } = useLobbyHost();
+  const { round } = useChameleonHost();
 
-
-  const chameleon = useMemo(() => { 
-    return players.find((p) => round?.roles[p.id] === ChameleonRoundRole.CHAMELEON);
+  const chameleon = useMemo(() => {
+    return players.find(
+      (p) => round?.roles[p.id] === ChameleonRoundRole.CHAMELEON
+    );
   }, [players, round]);
-
 
   return (
     <div className="flex flex-col items-center justify-center h-full gap-8">
-      <div className="mb-16 ">
-      <h1 className="text-6xl font-bold text-center max-w-4xl mx-auto w-full">
-      The chameleon is: 
-      </h1>
-      <h2 className="text-4xl font-semibold text-center">
-     Remeber, There's a new chameleon this round!
-      </h2>
+      <div className="bg-white rounded-2xl p-4 w-full flex flex-col items-center justify-center text-center max-w-lg  h-[50dvh] max-h-80 shadow-2xl">
+        <Image
+          src="https://img.icons8.com/?size=400&id=iy7s412RVvVR&format=png&color=000000"
+          height={150}
+          width={150}
+          alt={""}
+        />
+        <h6 className="text-lime-500 font-bold text-2xl">
+          {chameleon?.displayName} is the Chameleon
+        </h6>
       </div>
-          <div className="bg-white rounded-2xl p-4 w-full flex flex-col items-center justify-center text-center max-w-lg  h-[50dvh] max-h-80 shadow-2xl">
-      <Image
-        src="https://img.icons8.com/?size=400&id=iy7s412RVvVR&format=png&color=000000"
-        height={150}
-        width={150}
-        alt={""}
-      />
-      <h6 className="text-lime-500 font-bold text-2xl">
-        {chameleon?.displayName} is the Chameleon
-      </h6>
-    </div>
     </div>
   );
 };
@@ -139,7 +146,7 @@ export const Reveal = () => {
 export const VotingRoundPlayer = () => {
   const { players, player } = useLobbyPlayer();
   const { submitVote, myVote } = useChameleonPlayer();
-  const [vote, setVote] = useState<string|null>(myVote);
+  const [vote, setVote] = useState<string | null>(myVote);
 
   const handleVote = (id: string) => {
     // console.log("🚀 ~ handleVote ~ id:", id)
@@ -159,29 +166,41 @@ export const VotingRoundPlayer = () => {
   return (
     <div className="flex flex-col items-center justify-center h-full gap-8 px-5 max-w-md mx-auto w-full">
       <div className="">
-      <h2 className="text-3xl font-bold text-center max-w-4xl mx-auto w-full">
-       {vote ? "You have cast your vote." : "Who do you think is the chameleon?"}
-      </h2>
-     {vote && <p className="text-center animate-pulse">Waiting for others...</p>}
-</div>
+        <h2 className="text-3xl font-bold text-center max-w-4xl mx-auto w-full">
+          {vote
+            ? "You have cast your vote."
+            : "Who do you think is the chameleon?"}
+        </h2>
+        {vote && (
+          <p className="text-center animate-pulse">Waiting for others...</p>
+        )}
+      </div>
       <div className="grid grid-cols-3 gap-4 max-w-2xl w-full">
-        {players?.filter((p)=>p.id !==player?.id)?.map((p) => {
-          return (
-            <VotingGridPlayerCard
-              key={p.id}
-              player={p}
-              selected={vote === p.id}
-              disabled={!!vote}
-              onClick={()=> handleVote(p.id)}
-            />
-          );
-        })}
+        {players
+          ?.filter((p) => p.id !== player?.id)
+          ?.map((p) => {
+            return (
+              <VotingGridPlayerCard
+                key={p.id}
+                player={p}
+                selected={vote === p.id}
+                disabled={!!vote}
+                onClick={() => handleVote(p.id)}
+              />
+            );
+          })}
       </div>
     </div>
   );
 };
 
-export const VotingGridCard = ({ player, count }: { player: Player, count: number }) => {
+export const VotingGridCard = ({
+  player,
+  count,
+}: {
+  player: Player;
+  count: number;
+}) => {
   return (
     <div className="flex gap-4 bg-white/20 border-2 border-white/50 rounded-xl w-full p-3">
       <motion.div className="flex flex-col items-center">
@@ -196,7 +215,7 @@ export const VotingGridCard = ({ player, count }: { player: Player, count: numbe
       </motion.div>
       <div className="flex-1 flex flex-col">
         <p className="text-xl font-semibold">{player.displayName}</p>
-       {count > 0 &&  <Votes count={count} />}
+        {count > 0 && <Votes count={count} />}
       </div>
     </div>
   );
@@ -211,10 +230,10 @@ export const VotingGridPlayerCard = ({
   player: Player;
   selected?: boolean;
   disabled?: boolean;
-  onClick?: VoidFunction
+  onClick?: VoidFunction;
 }) => {
   const handleClick = () => {
-    if(disabled || selected) return;
+    if (disabled || selected) return;
     if (onClick) {
       onClick();
     }
@@ -225,7 +244,8 @@ export const VotingGridPlayerCard = ({
         "flex flex-col gap-2 bg-white/20 hover:bg-white/30 cursor-pointer border-2 border-white/50 rounded-xl w-full p-3 select-none",
         {
           "bg-white/20": selected,
-          "opacity-20 cursor-not-allowed hover:bg-white/20": disabled && !selected,
+          "opacity-20 cursor-not-allowed hover:bg-white/20":
+            disabled && !selected,
         }
       )}
       onClick={handleClick}
@@ -376,7 +396,7 @@ export const CivilianCard = () => {
   );
 };
 
-export const CountdownCard = ({round}: {round?: ChameleonRound}) => {
+export const CountdownCard = ({ round }: { round?: ChameleonRound }) => {
   const starter = round?.speakingOrder?.starter;
   return (
     <>
@@ -416,9 +436,11 @@ export const SpeakingCard = () => {
 export const Timer = ({
   duration,
   startTime,
+  variant = "default",
 }: {
   startTime: number | Date;
   duration: number;
+  variant?: "default" | "compact";
 }) => {
   const startTimestamp =
     startTime instanceof Date ? startTime.getTime() : startTime;
@@ -475,6 +497,32 @@ export const Timer = ({
 
   // ... (SVG and return statement)
 
+  if (variant === "compact") {
+    return (
+      <div className="w-full max-w-3xl relative flex items-center justify-center h-16">
+        {/* Left bar */}
+        <div className="h-4 w-full rounded-l-full bg-white/10 relative overflow-clip flex items-center justify-end -mr-1">
+          <div
+            className="absolute h-full bg-white inset-y-0 origin-[right_center_0px] rounded-l-full transition-all duration-1000 ease-linear"
+            style={{ width: `${progress}%` }}
+          />
+        </div>
+
+        {/* Center display */}
+        <div className="rounded-full size-16 aspect-square border-6 border-white flex items-center justify-center z-10">
+          <p className="text-4xl font-bold">{seconds ?? 0}</p>
+        </div>
+
+        {/* Right bar */}
+        <div className="h-4 w-full rounded-r-full bg-white/10 relative overflow-clip -ml-1">
+          <div
+            className="absolute h-full bg-white inset-y-0 origin-left rounded-r-full transition-all duration-1000 ease-linear"
+            style={{ width: `${progress}%` }}
+          />
+        </div>
+      </div>
+    );
+  }
   return (
     <div className="w-full max-w-3xl relative flex items-center justify-center h-30">
       {/* PROGRESS RING */}
@@ -498,7 +546,7 @@ export const Timer = ({
           cx={size / 2}
           cy={size / 2}
           r={radius}
-          stroke={seconds <= 10 ? '#EF4444' : '#84CC16'} // red or lime
+          stroke={seconds <= 10 ? "#EF4444" : "#84CC16"} // red or lime
           strokeWidth={strokeWidth}
           fill="transparent"
           strokeLinecap="round"
@@ -510,11 +558,11 @@ export const Timer = ({
           }}
           transition={{
             duration: 1,
-            ease: 'linear',
+            ease: "linear",
           }}
           style={{
-            transform: 'rotate(-90deg)',
-            transformOrigin: '50% 50%',
+            transform: "rotate(-90deg)",
+            transformOrigin: "50% 50%",
           }}
         />
       </svg>
