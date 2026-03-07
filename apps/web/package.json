@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
+    "prebuild": "pnpm db:generate",
     "build": "next build --turbopack",
     "start": "next start",
     "db:generate": "pnpm --filter @umati/prisma prisma:generate"
