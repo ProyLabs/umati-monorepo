@@ -5,7 +5,8 @@
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",
-    "start": "next start"
+    "start": "next start",
+    "db:generate": "pnpm --filter @umati/prisma prisma:generate"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
