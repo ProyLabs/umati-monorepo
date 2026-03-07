@@ -249,7 +249,7 @@ export const Rankings = () => {
   }, [rankings]);
 
   return (
-    <div className="flex flex-col items-center w-full h-full max-h-70">
+    <div className="flex flex-col items-center w-full h-full max-h-140">
       <h2 className="text-2xl font-bold text-left w-full mb-2">🏅 Rankings</h2>
 
       {rankings.length > 0 ? (

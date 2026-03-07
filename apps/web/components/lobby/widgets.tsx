@@ -24,7 +24,12 @@ import { cn, getRandomAvatarUrl } from "../../lib/utils";
 import { useLobbyHost } from "../../providers/lobby-host-provider";
 import { useLobbyPlayer } from "../../providers/lobby-player-provider";
 import { useSettings } from "../../providers/settings-provider";
-import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarGroupCount,
+  AvatarImage,
+} from "../ui/avatar";
 import AvatarSelect from "../ui/avatar-select";
 import { Button } from "../ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
@@ -295,8 +300,8 @@ export const WaitingForPlayers = ({ className }: { className?: string }) => {
   return (
     <div
       className={cn(
-        "bg-foreground/5 w-full aspect-video rounded-2xl h-full p-4 flex flex-col",
-        className
+        "bg-foreground/5 w-full aspect-video rounded-2xl h-full p-4 flex flex-col flex-1",
+        className,
       )}
     >
       <p className="font-bold text-2xl text-center mb-4">
@@ -304,25 +309,50 @@ export const WaitingForPlayers = ({ className }: { className?: string }) => {
       </p>
 
       <div className="relative w-full  h-fit overflow-visible rounded-xl flex flex-wrap gap-3 justify-center">
-        {players.map((player, i) => (
+        {players.slice(0, 24).map((player, i) => (
           <div key={player.id} className="flex flex-col w-fit items-center">
-            <Avatar className={cn("ring-2 ring-background shadow-md hover:scale-110 transition-transform", {
-              "size-16": uiState === RoomState.INIT,
-              "size-12": uiState === RoomState.LOBBY,
-            })}>
+            <Avatar
+              className={cn(
+                "ring-2 ring-background shadow-md hover:scale-110 transition-transform",
+                {
+                  "size-16": uiState === RoomState.INIT,
+                  "size-12": uiState === RoomState.LOBBY,
+                },
+              )}
+            >
               <AvatarImage src={player.avatar} alt={player.displayName} />
               <AvatarFallback>{player.displayName?.[0]}</AvatarFallback>
             </Avatar>
-            <p className={cn("text-center font-semibold", {
-              "text-sm mt-1": uiState === RoomState.INIT,
-              "text-xs mt-0.5": uiState === RoomState.LOBBY,
-            })}>{player.displayName}</p>
+            <p
+              className={cn("text-center font-semibold", {
+                "text-sm mt-1": uiState === RoomState.INIT,
+                "text-xs mt-0.5": uiState === RoomState.LOBBY,
+              })}
+            >
+              {player.displayName}
+            </p>
           </div>
         ))}
+        {players.length > 24 && (
+          <AvatarGroupCount
+            className={cn(
+              "ring-2 ring-background shadow-md hover:scale-110 transition-transform",
+              {
+                "size-16": uiState === RoomState.INIT,
+                "size-12": uiState === RoomState.LOBBY,
+              },
+            )}
+          >
+            +{Math.max(players.length - 24, 0)}
+          </AvatarGroupCount>
+        )}
       </div>
-     {players.length < (lobby?.maxPlayers!/2) && <p className="m-auto animate-pulse">Waiting for players...</p>}
-     {(players.length === lobby?.maxPlayers! && uiState === RoomState.INIT) && <p className="m-auto">Everyone is here 🥳</p>}
-
+      {players.length < lobby?.maxPlayers! / 2 && (
+        <p className="m-auto animate-pulse">Waiting for players...</p>
+      )}
+      {players.length === lobby?.maxPlayers! && uiState === RoomState.INIT && (
+        <p className="m-auto">Everyone is here 🥳</p>
+      )}
     </div>
   );
 };
@@ -358,17 +388,21 @@ export function GameCard({
         <h2 className="text-lg font-bold ">{game.title}</h2>
         <p className="text-sm">{game?.description}</p>
       </div>
-     { <Image
-        src={game?.src!}
-        alt="Game Image"
-        width={80}
-        height={80}
-        className="ml-auto"
-      />}
+      {
+        <Image
+          src={game?.src!}
+          alt="Game Image"
+          width={80}
+          height={80}
+          className="ml-auto"
+        />
+      }
 
       <div className="bg-black/30 rounded-md flex items-center justify-center p-1 gap-1 absolute bottom-4 left-4">
         <RiGroup3Fill size={16} className="" />
-        <span className="mr-1 font-semibold text-xs">{game?.min} - 10</span>
+        <span className="mr-1 font-semibold text-xs">
+          {game?.min} - {game?.max ?? 60}
+        </span>
       </div>
     </div>
   );
