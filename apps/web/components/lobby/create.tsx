@@ -99,7 +99,7 @@ export default function CreateLobby() {
               variant="outline"
               value={maxPlayers}
               onChange={(value) => setMaxPlayers(Number(value))}
-              options={[10, 20, 50]}
+              options={[10, 20, 60]}
             />
           </div>
 
