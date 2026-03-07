@@ -52,10 +52,10 @@ export async function POST(req: Request) {
     }
 
     const maxAllowed = maxPlayers ?? 8;
-    if (maxAllowed < 2 || maxAllowed > 20) {
+    if (maxAllowed < 2 || maxAllowed > 60) {
       return NextResponse.json(
-        { error: "maxPlayers must be between 2 and 20." },
-        { status: 400 }
+        { error: "maxPlayers must be between 2 and 60." },
+        { status: 400 },
       );
     }
 

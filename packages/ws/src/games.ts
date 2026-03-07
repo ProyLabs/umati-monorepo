@@ -8,6 +8,7 @@ type Game = {
   className: string;
   src?: string;
   min?: number
+  instructions?: string;
 };
 
 export const Games: Game[] = [
@@ -19,6 +20,16 @@ export const Games: Game[] = [
     className: "from-lime-500 to-green-600",
     src: "https://img.icons8.com/?size=400&id=iy7s412RVvVR&format=png&color=000000",
     min: 3,
+    instructions: `
+  <ul>
+    <li>Make sure this screen is being shared on Zoom (or others) or a TV.</li>
+    <li>A category and a secret word will appear on this screen.</li>
+    <li>Everyone except the Chameleon will see the secret word.</li>
+    <li>Use your device to submit a one-word clue related to the secret word.</li>
+    <li>Discuss and try to identify who the Chameleon is.</li>
+    <li>The Chameleon wins if they blend in or guess the secret word!</li>
+  </ul>
+`
   },
   {
     id: "jaroflies",
@@ -34,7 +45,15 @@ export const Games: Game[] = [
     color: "red",
     className: "from-[#FE566B] to-[var(--umati-red)]",
     src: "https://img.icons8.com/?size=400&id=OQQN8J666Pau&format=png&color=000000",
-     min:1
+     min:1,
+     instructions: `
+  <ul>
+    <li>Make sure this screen is being shared on Zoom (or others) or a TV.</li>
+    <li>Questions will appear on this screen.</li>
+    <li>Answer using the device you've joined with.</li>
+    <li>The faster you answer, the more points you'll get.</li>
+  </ul>
+`
   },
   {
     id: "drawit",
@@ -51,5 +70,15 @@ export const Games: Game[] = [
     className: "from-(--umati-aqua) to-[#00D9D5] text-black",
     src: "https://img.icons8.com/?size=400&id=9186&format=png&color=000000",
     min:3,
+    instructions: `
+  <ul>
+    <li>Make sure this screen is being shared on Zoom (or others) or a TV.</li>
+    <li>A prompt will appear on this screen.</li>
+    <li>Answer using the device you've joined with.</li>
+    <li>Your goal is to match the majority answer!</li>
+    <li>If you're with the herd, you score points. If you're the odd one out, you don’t!</li>
+  </ul>`
   },
 ];
+
+

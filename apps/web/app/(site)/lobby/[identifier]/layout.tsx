@@ -1,6 +1,6 @@
 "use client";
 
-import { DesktopOnly, HostLobbyFooter, PlayerReactionLayer, Reconnecting } from "@/components/lobby/widgets";
+import { DesktopOnly, HostLobbyFooter, PlayerJoinAnimationLayer, PlayerReactionLayer, Reconnecting } from "@/components/lobby/widgets";
 import { BubbleBackground } from "@/components/ui/shadcn-io/bubble-background";
 import { Particles } from "@/components/ui/shadcn-io/particles";
 import { LobbyHostProvider } from "@/providers/lobby-host-provider";
@@ -39,6 +39,7 @@ export default function LobbyLayout({
           {children}
           <HostLobbyFooter />
           <PlayerReactionLayer />
+          <PlayerJoinAnimationLayer />
         </section>
         <BubbleBackground className="absolute inset-0 flex items-center justify-center rounded-xl !z-0" />
       </LobbyHostProvider>

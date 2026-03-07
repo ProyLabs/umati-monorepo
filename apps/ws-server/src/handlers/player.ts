@@ -163,6 +163,9 @@ export async function handlePlayerLeft(
   const room = RoomManager.get(roomId);
   if (!room) return;
 
+  const player = room.players.find((p) => p.id === playerId);
+  if (!player) return;
+
   RoomManager.removePlayer(roomId, playerId, true);
   logInfo(`🚪 Player ${playerId} left room ${roomId}`);
 
@@ -171,12 +174,20 @@ export async function handlePlayerLeft(
     WSEvent.ROOM_STATE,
     RoomManager.toLobbyState(roomId)
   );
+  
   ws.send(
     JSON.stringify({
       event: WSEvent.ROOM_STATE,
       payload: RoomManager.toLobbyState(roomId),
     })
   );
+
+  RoomManager.toHost(roomId, WSEvent.PLAYER_LEAVE, {
+    roomId,
+    playerId: player.id,
+    displayName: player.displayName,
+    avatar: player.avatar!,
+  });
 }
 
 /** When a player sends a reaction */

@@ -96,18 +96,17 @@ export default function CreateLobby() {
           <div className="grid gap-2">
             <Label htmlFor="maxPlayers">Max Number of Players</Label>
             <ButtonOptions
-            variant="outline"
+              variant="outline"
               value={maxPlayers}
               onChange={(value) => setMaxPlayers(Number(value))}
-              options={[4, 8, 10]}
+              options={[10, 20, 50]}
             />
           </div>
 
           <Fbutton
             type="submit"
             className="w-full mt-6"
-               variant="purple"
-
+            variant="purple"
             loading={loading}
             onClick={async () => {
               await handleCreate();

@@ -129,6 +129,10 @@
   .cursor-pointer {
     cursor: var(--cursor-pointer) !important;
   }
+
+  .rules ul {
+    @apply text-2xl font-semibold list-decimal list-inside max-w-3xl mx-auto py-24 space-y-4
+  }
 }
 
 .embla {

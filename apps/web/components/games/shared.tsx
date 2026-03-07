@@ -3,7 +3,7 @@ import { LightbulbIcon } from "lucide-react";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion, useAnimation } from "motion/react";
 import confetti from "canvas-confetti";
-import { cn } from "../../lib/utils";
+import { cn, formatList, rankScores } from "../../lib/utils";
 import { useLobbyHost } from "@/providers/lobby-host-provider";
 import { Scores } from "@umati/ws";
 import { useLobbyPlayer } from "@/providers/lobby-player-provider";
@@ -113,12 +113,7 @@ type Player = {
 
 export const Podium = ({ scores }: { scores: Scores }) => {
   // Sort & slice top 3
-  const topThree = [...scores]
-    .sort((a, b) => b.score - a.score)
-    .slice(0, 3)
-    .map((p, i) => {
-      return { ...p, position: i + 1 };
-    });
+  const topThree = rankScores(scores).slice(0, 3);
 
   // Determine heights
   const heights: Record<number, string> = {
@@ -176,7 +171,7 @@ export const Podium = ({ scores }: { scores: Scores }) => {
           <PodiumItem
             key={player?.position}
             position={player?.position!}
-            name={player?.displayName!}
+            name={player?.names!}
             height={heights[player?.position!] ?? "60%"}
           />
         ))}
@@ -191,7 +186,7 @@ export const PodiumItem = ({
   height,
 }: {
   position: number;
-  name: string;
+  name: string[];
   height: string;
 }) => {
   const colors: Record<number, string> = {
@@ -222,7 +217,7 @@ export const PodiumItem = ({
         animate={showName ? { opacity: 1, y: 0 } : { opacity: 0 }}
         transition={{ duration: 0.4 }}
       >
-        {name}
+        {formatList(name)}
       </motion.p>
 
       <motion.div

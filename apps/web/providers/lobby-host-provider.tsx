@@ -52,7 +52,9 @@ interface LobbyHostContextType {
   setupGame: (gameId: GameType, options: any) => void;
 }
 
-const LobbyHostContext = createContext<LobbyHostContextType | undefined>(undefined);
+const LobbyHostContext = createContext<LobbyHostContextType | undefined>(
+  undefined
+);
 
 /* -------------------------------------------------------------------------- */
 /* 🏠 Provider                                                                */
@@ -103,11 +105,22 @@ export function LobbyHostProvider({ children }: { children: ReactNode }) {
         }
 
         case WSEvent.PLAYER_JOIN:
-          toast.success(`${payload?.displayName} joined the lobby`);
+          toast.success(`${payload?.displayName} joined the lobby`, {
+            position: "bottom-right",
+          });
+          break;
+        case WSEvent.PLAYER_LEAVE:
+          console.log("📤 Player left:", payload);
+          toast.success(`${payload?.displayName} left the lobby`, {
+            position: "bottom-right",
+          });
           break;
 
         case WSEvent.PLAYER_REACTION:
-          setReactions((prev) => ({ ...prev, [payload.playerId]: payload.emoji }));
+          setReactions((prev) => ({
+            ...prev,
+            [payload.playerId]: payload.emoji,
+          }));
           setTimeout(() => {
             setReactions((prev) => ({ ...prev, [payload.playerId]: null }));
           }, 3000);
@@ -146,15 +159,15 @@ export function LobbyHostProvider({ children }: { children: ReactNode }) {
       switch (state) {
         case "open":
           setReconnecting(false);
-          console.log("✅ WS open");
+          // console.log("✅ WS open");
           break;
         case "reconnecting":
-          if (!reconnecting) toast.info("Reconnecting...");
+          // if (!reconnecting) toast.info("Reconnecting...");
           setReconnecting(true);
           break;
         case "closed":
           setReconnecting(false);
-          toast.error("WS disconnected");
+          // toast.error("WS disconnected");
           break;
       }
     });
@@ -164,10 +177,12 @@ export function LobbyHostProvider({ children }: { children: ReactNode }) {
       WSEvent.ROOM_STATE,
       WSEvent.ROOM_CLOSED,
       WSEvent.PLAYER_JOIN,
+      WSEvent.PLAYER_LEAVE,
       WSEvent.PLAYER_REACTION,
       WSEvent.PLAYER_KICKED,
     ];
-    for (const ev of events) ws.on(ev as keyof WSPayloads, (payload) => handleMessage(ev, payload));
+    for (const ev of events)
+      ws.on(ev as keyof WSPayloads, (payload) => handleMessage(ev, payload));
 
     return () => {
       console.log("🧹 Cleaning up WS connection");
@@ -189,12 +204,15 @@ export function LobbyHostProvider({ children }: { children: ReactNode }) {
   /* ------------------------------------------------------------------------ */
   /* 🎮 Host Actions                                                         */
   /* ------------------------------------------------------------------------ */
-const send = useCallback(
-  <E extends WSEvent>(event: E, payload: WSPayloads[E & keyof WSPayloads]) => {
-    wsRef.current?.send(event, payload);
-  },
-  []
-);
+  const send = useCallback(
+    <E extends WSEvent>(
+      event: E,
+      payload: WSPayloads[E & keyof WSPayloads]
+    ) => {
+      wsRef.current?.send(event, payload);
+    },
+    []
+  );
 
   const setupGame = useCallback(
     (gameId: GameType, options: any) =>
@@ -205,9 +223,15 @@ const send = useCallback(
     [identifier, send]
   );
 
-  const startGame = useCallback(() => send(WSEvent.GAME_START, { roomId: identifier }), [identifier, send]);
+  const startGame = useCallback(
+    () => send(WSEvent.GAME_START, { roomId: identifier }),
+    [identifier, send]
+  );
 
-  const cancelGame = useCallback(() => send(WSEvent.GAME_CANCEL, { roomId: identifier }), [identifier, send]);
+  const cancelGame = useCallback(
+    () => send(WSEvent.GAME_CANCEL, { roomId: identifier }),
+    [identifier, send]
+  );
 
   const changeUiState = useCallback(
     (state: RoomState) =>
@@ -216,7 +240,8 @@ const send = useCallback(
   );
 
   const sendAnnouncement = useCallback(
-    (message: string) => send(WSEvent.SYSTEM_ANNOUNCEMENT, { message, level: "info" }),
+    (message: string) =>
+      send(WSEvent.SYSTEM_ANNOUNCEMENT, { message, level: "info" }),
     [send]
   );
 
@@ -291,6 +316,7 @@ const send = useCallback(
 
 export function useLobbyHost() {
   const ctx = useContext(LobbyHostContext);
-  if (!ctx) throw new Error("useLobbyHost must be used within a LobbyHostProvider");
+  if (!ctx)
+    throw new Error("useLobbyHost must be used within a LobbyHostProvider");
   return ctx;
 }

@@ -106,7 +106,12 @@ export interface WSPayloads {
     displayName: string;
     avatar: string;
   };
-  [WSEvent.PLAYER_LEAVE]: { roomId: string; playerId: string };
+  [WSEvent.PLAYER_LEAVE]: {
+    roomId: string;
+    playerId: string;
+    displayName: string;
+    avatar: string;
+  };
   [WSEvent.PLAYER_UPDATED]: {
     playerId: string;
     data: Record<string, any>;

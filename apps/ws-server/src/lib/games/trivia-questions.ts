@@ -1,674 +1,7702 @@
 export const triviaquestions = [
   {
-    "category": "Geography",
+    "category": "Sports",
     "difficulty": "easy",
-    "question": "What is the capital city of Australia?",
-    "correctAnswer": "Canberra",
-    "options": ["Canberra", "Sydney", "Melbourne", "Brisbane", "Perth", "Adelaide"]
+    "question": "How many players are on a soccer team on the field at one time?",
+    "correctAnswer": "11",
+    "options": [
+      "11",
+      "9",
+      "10",
+      "12",
+      "7",
+      "8"
+    ]
   },
   {
-    "category": "Science",
+    "category": "Sports",
     "difficulty": "medium",
-    "question": "What is the chemical symbol for potassium?",
-    "correctAnswer": "K",
-    "options": ["K", "P", "Pt", "Po", "Ka", "Kr"]
+    "question": "Which country won the FIFA World Cup in 2018?",
+    "correctAnswer": "France",
+    "options": [
+      "France",
+      "Croatia",
+      "Brazil",
+      "Germany",
+      "Argentina",
+      "Spain"
+    ]
+  },
+  {
+    "category": "Sports",
+    "difficulty": "easy",
+    "question": "How many players are on a soccer team on the field at one time?",
+    "correctAnswer": "11",
+    "options": [
+      "11",
+      "9",
+      "10",
+      "12",
+      "7",
+      "8"
+    ]
+  },
+  {
+    "category": "Sports",
+    "difficulty": "medium",
+    "question": "Which country won the FIFA World Cup in 2018?",
+    "correctAnswer": "France",
+    "options": [
+      "France",
+      "Croatia",
+      "Brazil",
+      "Germany",
+      "Argentina",
+      "Spain"
+    ]
+  },
+  {
+    "category": "Sports",
+    "difficulty": "easy",
+    "question": "How many players are on a soccer team on the field at one time?",
+    "correctAnswer": "11",
+    "options": [
+      "11",
+      "9",
+      "10",
+      "12",
+      "7",
+      "8"
+    ]
+  },
+  {
+    "category": "Sports",
+    "difficulty": "medium",
+    "question": "Which country won the FIFA World Cup in 2018?",
+    "correctAnswer": "France",
+    "options": [
+      "France",
+      "Croatia",
+      "Brazil",
+      "Germany",
+      "Argentina",
+      "Spain"
+    ]
+  },
+  {
+    "category": "Sports",
+    "difficulty": "easy",
+    "question": "How many players are on a soccer team on the field at one time?",
+    "correctAnswer": "11",
+    "options": [
+      "11",
+      "9",
+      "10",
+      "12",
+      "7",
+      "8"
+    ]
+  },
+  {
+    "category": "Sports",
+    "difficulty": "medium",
+    "question": "Which country won the FIFA World Cup in 2018?",
+    "correctAnswer": "France",
+    "options": [
+      "France",
+      "Croatia",
+      "Brazil",
+      "Germany",
+      "Argentina",
+      "Spain"
+    ]
+  },
+  {
+    "category": "Sports",
+    "difficulty": "easy",
+    "question": "How many players are on a soccer team on the field at one time?",
+    "correctAnswer": "11",
+    "options": [
+      "11",
+      "9",
+      "10",
+      "12",
+      "7",
+      "8"
+    ]
+  },
+  {
+    "category": "Sports",
+    "difficulty": "medium",
+    "question": "Which country won the FIFA World Cup in 2018?",
+    "correctAnswer": "France",
+    "options": [
+      "France",
+      "Croatia",
+      "Brazil",
+      "Germany",
+      "Argentina",
+      "Spain"
+    ]
+  },
+  {
+    "category": "Sports",
+    "difficulty": "easy",
+    "question": "How many players are on a soccer team on the field at one time?",
+    "correctAnswer": "11",
+    "options": [
+      "11",
+      "9",
+      "10",
+      "12",
+      "7",
+      "8"
+    ]
+  },
+  {
+    "category": "Sports",
+    "difficulty": "medium",
+    "question": "Which country won the FIFA World Cup in 2018?",
+    "correctAnswer": "France",
+    "options": [
+      "France",
+      "Croatia",
+      "Brazil",
+      "Germany",
+      "Argentina",
+      "Spain"
+    ]
+  },
+  {
+    "category": "Sports",
+    "difficulty": "easy",
+    "question": "How many players are on a soccer team on the field at one time?",
+    "correctAnswer": "11",
+    "options": [
+      "11",
+      "9",
+      "10",
+      "12",
+      "7",
+      "8"
+    ]
+  },
+  {
+    "category": "Sports",
+    "difficulty": "medium",
+    "question": "Which country won the FIFA World Cup in 2018?",
+    "correctAnswer": "France",
+    "options": [
+      "France",
+      "Croatia",
+      "Brazil",
+      "Germany",
+      "Argentina",
+      "Spain"
+    ]
+  },
+  {
+    "category": "Sports",
+    "difficulty": "easy",
+    "question": "How many players are on a soccer team on the field at one time?",
+    "correctAnswer": "11",
+    "options": [
+      "11",
+      "9",
+      "10",
+      "12",
+      "7",
+      "8"
+    ]
+  },
+  {
+    "category": "Sports",
+    "difficulty": "medium",
+    "question": "Which country won the FIFA World Cup in 2018?",
+    "correctAnswer": "France",
+    "options": [
+      "France",
+      "Croatia",
+      "Brazil",
+      "Germany",
+      "Argentina",
+      "Spain"
+    ]
+  },
+  {
+    "category": "Sports",
+    "difficulty": "easy",
+    "question": "How many players are on a soccer team on the field at one time?",
+    "correctAnswer": "11",
+    "options": [
+      "11",
+      "9",
+      "10",
+      "12",
+      "7",
+      "8"
+    ]
+  },
+  {
+    "category": "Sports",
+    "difficulty": "medium",
+    "question": "Which country won the FIFA World Cup in 2018?",
+    "correctAnswer": "France",
+    "options": [
+      "France",
+      "Croatia",
+      "Brazil",
+      "Germany",
+      "Argentina",
+      "Spain"
+    ]
+  },
+  {
+    "category": "Sports",
+    "difficulty": "easy",
+    "question": "How many players are on a soccer team on the field at one time?",
+    "correctAnswer": "11",
+    "options": [
+      "11",
+      "9",
+      "10",
+      "12",
+      "7",
+      "8"
+    ]
+  },
+  {
+    "category": "Sports",
+    "difficulty": "medium",
+    "question": "Which country won the FIFA World Cup in 2018?",
+    "correctAnswer": "France",
+    "options": [
+      "France",
+      "Croatia",
+      "Brazil",
+      "Germany",
+      "Argentina",
+      "Spain"
+    ]
+  },
+  {
+    "category": "Sports",
+    "difficulty": "easy",
+    "question": "How many players are on a soccer team on the field at one time?",
+    "correctAnswer": "11",
+    "options": [
+      "11",
+      "9",
+      "10",
+      "12",
+      "7",
+      "8"
+    ]
+  },
+  {
+    "category": "Sports",
+    "difficulty": "medium",
+    "question": "Which country won the FIFA World Cup in 2018?",
+    "correctAnswer": "France",
+    "options": [
+      "France",
+      "Croatia",
+      "Brazil",
+      "Germany",
+      "Argentina",
+      "Spain"
+    ]
+  },
+  {
+    "category": "Sports",
+    "difficulty": "easy",
+    "question": "How many players are on a soccer team on the field at one time?",
+    "correctAnswer": "11",
+    "options": [
+      "11",
+      "9",
+      "10",
+      "12",
+      "7",
+      "8"
+    ]
+  },
+  {
+    "category": "Sports",
+    "difficulty": "medium",
+    "question": "Which country won the FIFA World Cup in 2018?",
+    "correctAnswer": "France",
+    "options": [
+      "France",
+      "Croatia",
+      "Brazil",
+      "Germany",
+      "Argentina",
+      "Spain"
+    ]
+  },
+  {
+    "category": "Sports",
+    "difficulty": "easy",
+    "question": "How many players are on a soccer team on the field at one time?",
+    "correctAnswer": "11",
+    "options": [
+      "11",
+      "9",
+      "10",
+      "12",
+      "7",
+      "8"
+    ]
+  },
+  {
+    "category": "Sports",
+    "difficulty": "medium",
+    "question": "Which country won the FIFA World Cup in 2018?",
+    "correctAnswer": "France",
+    "options": [
+      "France",
+      "Croatia",
+      "Brazil",
+      "Germany",
+      "Argentina",
+      "Spain"
+    ]
+  },
+  {
+    "category": "Sports",
+    "difficulty": "easy",
+    "question": "How many players are on a soccer team on the field at one time?",
+    "correctAnswer": "11",
+    "options": [
+      "11",
+      "9",
+      "10",
+      "12",
+      "7",
+      "8"
+    ]
+  },
+  {
+    "category": "Sports",
+    "difficulty": "medium",
+    "question": "Which country won the FIFA World Cup in 2018?",
+    "correctAnswer": "France",
+    "options": [
+      "France",
+      "Croatia",
+      "Brazil",
+      "Germany",
+      "Argentina",
+      "Spain"
+    ]
+  },
+  {
+    "category": "Sports",
+    "difficulty": "easy",
+    "question": "How many players are on a soccer team on the field at one time?",
+    "correctAnswer": "11",
+    "options": [
+      "11",
+      "9",
+      "10",
+      "12",
+      "7",
+      "8"
+    ]
+  },
+  {
+    "category": "Sports",
+    "difficulty": "medium",
+    "question": "Which country won the FIFA World Cup in 2018?",
+    "correctAnswer": "France",
+    "options": [
+      "France",
+      "Croatia",
+      "Brazil",
+      "Germany",
+      "Argentina",
+      "Spain"
+    ]
+  },
+  {
+    "category": "Sports",
+    "difficulty": "easy",
+    "question": "How many players are on a soccer team on the field at one time?",
+    "correctAnswer": "11",
+    "options": [
+      "11",
+      "9",
+      "10",
+      "12",
+      "7",
+      "8"
+    ]
+  },
+  {
+    "category": "Sports",
+    "difficulty": "medium",
+    "question": "Which country won the FIFA World Cup in 2018?",
+    "correctAnswer": "France",
+    "options": [
+      "France",
+      "Croatia",
+      "Brazil",
+      "Germany",
+      "Argentina",
+      "Spain"
+    ]
+  },
+  {
+    "category": "Sports",
+    "difficulty": "easy",
+    "question": "How many players are on a soccer team on the field at one time?",
+    "correctAnswer": "11",
+    "options": [
+      "11",
+      "9",
+      "10",
+      "12",
+      "7",
+      "8"
+    ]
+  },
+  {
+    "category": "Sports",
+    "difficulty": "medium",
+    "question": "Which country won the FIFA World Cup in 2018?",
+    "correctAnswer": "France",
+    "options": [
+      "France",
+      "Croatia",
+      "Brazil",
+      "Germany",
+      "Argentina",
+      "Spain"
+    ]
+  },
+  {
+    "category": "Sports",
+    "difficulty": "easy",
+    "question": "How many players are on a soccer team on the field at one time?",
+    "correctAnswer": "11",
+    "options": [
+      "11",
+      "9",
+      "10",
+      "12",
+      "7",
+      "8"
+    ]
+  },
+  {
+    "category": "Sports",
+    "difficulty": "medium",
+    "question": "Which country won the FIFA World Cup in 2018?",
+    "correctAnswer": "France",
+    "options": [
+      "France",
+      "Croatia",
+      "Brazil",
+      "Germany",
+      "Argentina",
+      "Spain"
+    ]
+  },
+  {
+    "category": "Sports",
+    "difficulty": "easy",
+    "question": "How many players are on a soccer team on the field at one time?",
+    "correctAnswer": "11",
+    "options": [
+      "11",
+      "9",
+      "10",
+      "12",
+      "7",
+      "8"
+    ]
+  },
+  {
+    "category": "Sports",
+    "difficulty": "medium",
+    "question": "Which country won the FIFA World Cup in 2018?",
+    "correctAnswer": "France",
+    "options": [
+      "France",
+      "Croatia",
+      "Brazil",
+      "Germany",
+      "Argentina",
+      "Spain"
+    ]
+  },
+  {
+    "category": "Sports",
+    "difficulty": "easy",
+    "question": "How many players are on a soccer team on the field at one time?",
+    "correctAnswer": "11",
+    "options": [
+      "11",
+      "9",
+      "10",
+      "12",
+      "7",
+      "8"
+    ]
+  },
+  {
+    "category": "Sports",
+    "difficulty": "medium",
+    "question": "Which country won the FIFA World Cup in 2018?",
+    "correctAnswer": "France",
+    "options": [
+      "France",
+      "Croatia",
+      "Brazil",
+      "Germany",
+      "Argentina",
+      "Spain"
+    ]
+  },
+  {
+    "category": "Sports",
+    "difficulty": "easy",
+    "question": "How many players are on a soccer team on the field at one time?",
+    "correctAnswer": "11",
+    "options": [
+      "11",
+      "9",
+      "10",
+      "12",
+      "7",
+      "8"
+    ]
+  },
+  {
+    "category": "Sports",
+    "difficulty": "medium",
+    "question": "Which country won the FIFA World Cup in 2018?",
+    "correctAnswer": "France",
+    "options": [
+      "France",
+      "Croatia",
+      "Brazil",
+      "Germany",
+      "Argentina",
+      "Spain"
+    ]
+  },
+  {
+    "category": "Sports",
+    "difficulty": "easy",
+    "question": "How many players are on a soccer team on the field at one time?",
+    "correctAnswer": "11",
+    "options": [
+      "11",
+      "9",
+      "10",
+      "12",
+      "7",
+      "8"
+    ]
+  },
+  {
+    "category": "Sports",
+    "difficulty": "medium",
+    "question": "Which country won the FIFA World Cup in 2018?",
+    "correctAnswer": "France",
+    "options": [
+      "France",
+      "Croatia",
+      "Brazil",
+      "Germany",
+      "Argentina",
+      "Spain"
+    ]
+  },
+  {
+    "category": "Sports",
+    "difficulty": "easy",
+    "question": "How many players are on a soccer team on the field at one time?",
+    "correctAnswer": "11",
+    "options": [
+      "11",
+      "9",
+      "10",
+      "12",
+      "7",
+      "8"
+    ]
+  },
+  {
+    "category": "Sports",
+    "difficulty": "medium",
+    "question": "Which country won the FIFA World Cup in 2018?",
+    "correctAnswer": "France",
+    "options": [
+      "France",
+      "Croatia",
+      "Brazil",
+      "Germany",
+      "Argentina",
+      "Spain"
+    ]
+  },
+  {
+    "category": "Sports",
+    "difficulty": "easy",
+    "question": "How many players are on a soccer team on the field at one time?",
+    "correctAnswer": "11",
+    "options": [
+      "11",
+      "9",
+      "10",
+      "12",
+      "7",
+      "8"
+    ]
+  },
+  {
+    "category": "Sports",
+    "difficulty": "medium",
+    "question": "Which country won the FIFA World Cup in 2018?",
+    "correctAnswer": "France",
+    "options": [
+      "France",
+      "Croatia",
+      "Brazil",
+      "Germany",
+      "Argentina",
+      "Spain"
+    ]
+  },
+  {
+    "category": "Sports",
+    "difficulty": "easy",
+    "question": "How many players are on a soccer team on the field at one time?",
+    "correctAnswer": "11",
+    "options": [
+      "11",
+      "9",
+      "10",
+      "12",
+      "7",
+      "8"
+    ]
+  },
+  {
+    "category": "Sports",
+    "difficulty": "medium",
+    "question": "Which country won the FIFA World Cup in 2018?",
+    "correctAnswer": "France",
+    "options": [
+      "France",
+      "Croatia",
+      "Brazil",
+      "Germany",
+      "Argentina",
+      "Spain"
+    ]
   },
   {
     "category": "History",
-    "difficulty": "hard",
-    "question": "Who was the first President of the United States to live in the White House?",
-    "correctAnswer": "John Adams",
-    "options": ["John Adams", "George Washington", "Thomas Jefferson", "James Madison", "Andrew Jackson", "James Monroe"]
+    "difficulty": "medium",
+    "question": "In what year did the Berlin Wall fall?",
+    "correctAnswer": "1989",
+    "options": [
+      "1989",
+      "1987",
+      "1988",
+      "1990",
+      "1991",
+      "1992"
+    ]
   },
   {
-    "category": "Entertainment",
+    "category": "History",
+    "difficulty": "easy",
+    "question": "Who was the first President of the United States?",
+    "correctAnswer": "George Washington",
+    "options": [
+      "George Washington",
+      "John Adams",
+      "Thomas Jefferson",
+      "James Madison",
+      "Abraham Lincoln",
+      "Andrew Jackson"
+    ]
+  },
+  {
+    "category": "History",
+    "difficulty": "medium",
+    "question": "In what year did the Berlin Wall fall?",
+    "correctAnswer": "1989",
+    "options": [
+      "1989",
+      "1987",
+      "1988",
+      "1990",
+      "1991",
+      "1992"
+    ]
+  },
+  {
+    "category": "History",
+    "difficulty": "easy",
+    "question": "Who was the first President of the United States?",
+    "correctAnswer": "George Washington",
+    "options": [
+      "George Washington",
+      "John Adams",
+      "Thomas Jefferson",
+      "James Madison",
+      "Abraham Lincoln",
+      "Andrew Jackson"
+    ]
+  },
+  {
+    "category": "History",
+    "difficulty": "medium",
+    "question": "In what year did the Berlin Wall fall?",
+    "correctAnswer": "1989",
+    "options": [
+      "1989",
+      "1987",
+      "1988",
+      "1990",
+      "1991",
+      "1992"
+    ]
+  },
+  {
+    "category": "History",
+    "difficulty": "easy",
+    "question": "Who was the first President of the United States?",
+    "correctAnswer": "George Washington",
+    "options": [
+      "George Washington",
+      "John Adams",
+      "Thomas Jefferson",
+      "James Madison",
+      "Abraham Lincoln",
+      "Andrew Jackson"
+    ]
+  },
+  {
+    "category": "History",
+    "difficulty": "medium",
+    "question": "In what year did the Berlin Wall fall?",
+    "correctAnswer": "1989",
+    "options": [
+      "1989",
+      "1987",
+      "1988",
+      "1990",
+      "1991",
+      "1992"
+    ]
+  },
+  {
+    "category": "History",
+    "difficulty": "easy",
+    "question": "Who was the first President of the United States?",
+    "correctAnswer": "George Washington",
+    "options": [
+      "George Washington",
+      "John Adams",
+      "Thomas Jefferson",
+      "James Madison",
+      "Abraham Lincoln",
+      "Andrew Jackson"
+    ]
+  },
+  {
+    "category": "History",
+    "difficulty": "medium",
+    "question": "In what year did the Berlin Wall fall?",
+    "correctAnswer": "1989",
+    "options": [
+      "1989",
+      "1987",
+      "1988",
+      "1990",
+      "1991",
+      "1992"
+    ]
+  },
+  {
+    "category": "History",
+    "difficulty": "easy",
+    "question": "Who was the first President of the United States?",
+    "correctAnswer": "George Washington",
+    "options": [
+      "George Washington",
+      "John Adams",
+      "Thomas Jefferson",
+      "James Madison",
+      "Abraham Lincoln",
+      "Andrew Jackson"
+    ]
+  },
+  {
+    "category": "History",
+    "difficulty": "medium",
+    "question": "In what year did the Berlin Wall fall?",
+    "correctAnswer": "1989",
+    "options": [
+      "1989",
+      "1987",
+      "1988",
+      "1990",
+      "1991",
+      "1992"
+    ]
+  },
+  {
+    "category": "History",
+    "difficulty": "easy",
+    "question": "Who was the first President of the United States?",
+    "correctAnswer": "George Washington",
+    "options": [
+      "George Washington",
+      "John Adams",
+      "Thomas Jefferson",
+      "James Madison",
+      "Abraham Lincoln",
+      "Andrew Jackson"
+    ]
+  },
+  {
+    "category": "History",
+    "difficulty": "medium",
+    "question": "In what year did the Berlin Wall fall?",
+    "correctAnswer": "1989",
+    "options": [
+      "1989",
+      "1987",
+      "1988",
+      "1990",
+      "1991",
+      "1992"
+    ]
+  },
+  {
+    "category": "History",
+    "difficulty": "easy",
+    "question": "Who was the first President of the United States?",
+    "correctAnswer": "George Washington",
+    "options": [
+      "George Washington",
+      "John Adams",
+      "Thomas Jefferson",
+      "James Madison",
+      "Abraham Lincoln",
+      "Andrew Jackson"
+    ]
+  },
+  {
+    "category": "History",
+    "difficulty": "medium",
+    "question": "In what year did the Berlin Wall fall?",
+    "correctAnswer": "1989",
+    "options": [
+      "1989",
+      "1987",
+      "1988",
+      "1990",
+      "1991",
+      "1992"
+    ]
+  },
+  {
+    "category": "History",
+    "difficulty": "easy",
+    "question": "Who was the first President of the United States?",
+    "correctAnswer": "George Washington",
+    "options": [
+      "George Washington",
+      "John Adams",
+      "Thomas Jefferson",
+      "James Madison",
+      "Abraham Lincoln",
+      "Andrew Jackson"
+    ]
+  },
+  {
+    "category": "History",
+    "difficulty": "medium",
+    "question": "In what year did the Berlin Wall fall?",
+    "correctAnswer": "1989",
+    "options": [
+      "1989",
+      "1987",
+      "1988",
+      "1990",
+      "1991",
+      "1992"
+    ]
+  },
+  {
+    "category": "History",
+    "difficulty": "easy",
+    "question": "Who was the first President of the United States?",
+    "correctAnswer": "George Washington",
+    "options": [
+      "George Washington",
+      "John Adams",
+      "Thomas Jefferson",
+      "James Madison",
+      "Abraham Lincoln",
+      "Andrew Jackson"
+    ]
+  },
+  {
+    "category": "History",
+    "difficulty": "medium",
+    "question": "In what year did the Berlin Wall fall?",
+    "correctAnswer": "1989",
+    "options": [
+      "1989",
+      "1987",
+      "1988",
+      "1990",
+      "1991",
+      "1992"
+    ]
+  },
+  {
+    "category": "History",
+    "difficulty": "easy",
+    "question": "Who was the first President of the United States?",
+    "correctAnswer": "George Washington",
+    "options": [
+      "George Washington",
+      "John Adams",
+      "Thomas Jefferson",
+      "James Madison",
+      "Abraham Lincoln",
+      "Andrew Jackson"
+    ]
+  },
+  {
+    "category": "History",
+    "difficulty": "medium",
+    "question": "In what year did the Berlin Wall fall?",
+    "correctAnswer": "1989",
+    "options": [
+      "1989",
+      "1987",
+      "1988",
+      "1990",
+      "1991",
+      "1992"
+    ]
+  },
+  {
+    "category": "History",
+    "difficulty": "easy",
+    "question": "Who was the first President of the United States?",
+    "correctAnswer": "George Washington",
+    "options": [
+      "George Washington",
+      "John Adams",
+      "Thomas Jefferson",
+      "James Madison",
+      "Abraham Lincoln",
+      "Andrew Jackson"
+    ]
+  },
+  {
+    "category": "History",
+    "difficulty": "medium",
+    "question": "In what year did the Berlin Wall fall?",
+    "correctAnswer": "1989",
+    "options": [
+      "1989",
+      "1987",
+      "1988",
+      "1990",
+      "1991",
+      "1992"
+    ]
+  },
+  {
+    "category": "History",
+    "difficulty": "easy",
+    "question": "Who was the first President of the United States?",
+    "correctAnswer": "George Washington",
+    "options": [
+      "George Washington",
+      "John Adams",
+      "Thomas Jefferson",
+      "James Madison",
+      "Abraham Lincoln",
+      "Andrew Jackson"
+    ]
+  },
+  {
+    "category": "History",
+    "difficulty": "medium",
+    "question": "In what year did the Berlin Wall fall?",
+    "correctAnswer": "1989",
+    "options": [
+      "1989",
+      "1987",
+      "1988",
+      "1990",
+      "1991",
+      "1992"
+    ]
+  },
+  {
+    "category": "History",
+    "difficulty": "easy",
+    "question": "Who was the first President of the United States?",
+    "correctAnswer": "George Washington",
+    "options": [
+      "George Washington",
+      "John Adams",
+      "Thomas Jefferson",
+      "James Madison",
+      "Abraham Lincoln",
+      "Andrew Jackson"
+    ]
+  },
+  {
+    "category": "History",
+    "difficulty": "medium",
+    "question": "In what year did the Berlin Wall fall?",
+    "correctAnswer": "1989",
+    "options": [
+      "1989",
+      "1987",
+      "1988",
+      "1990",
+      "1991",
+      "1992"
+    ]
+  },
+  {
+    "category": "History",
+    "difficulty": "easy",
+    "question": "Who was the first President of the United States?",
+    "correctAnswer": "George Washington",
+    "options": [
+      "George Washington",
+      "John Adams",
+      "Thomas Jefferson",
+      "James Madison",
+      "Abraham Lincoln",
+      "Andrew Jackson"
+    ]
+  },
+  {
+    "category": "History",
+    "difficulty": "medium",
+    "question": "In what year did the Berlin Wall fall?",
+    "correctAnswer": "1989",
+    "options": [
+      "1989",
+      "1987",
+      "1988",
+      "1990",
+      "1991",
+      "1992"
+    ]
+  },
+  {
+    "category": "History",
+    "difficulty": "easy",
+    "question": "Who was the first President of the United States?",
+    "correctAnswer": "George Washington",
+    "options": [
+      "George Washington",
+      "John Adams",
+      "Thomas Jefferson",
+      "James Madison",
+      "Abraham Lincoln",
+      "Andrew Jackson"
+    ]
+  },
+  {
+    "category": "History",
+    "difficulty": "medium",
+    "question": "In what year did the Berlin Wall fall?",
+    "correctAnswer": "1989",
+    "options": [
+      "1989",
+      "1987",
+      "1988",
+      "1990",
+      "1991",
+      "1992"
+    ]
+  },
+  {
+    "category": "History",
+    "difficulty": "easy",
+    "question": "Who was the first President of the United States?",
+    "correctAnswer": "George Washington",
+    "options": [
+      "George Washington",
+      "John Adams",
+      "Thomas Jefferson",
+      "James Madison",
+      "Abraham Lincoln",
+      "Andrew Jackson"
+    ]
+  },
+  {
+    "category": "History",
+    "difficulty": "medium",
+    "question": "In what year did the Berlin Wall fall?",
+    "correctAnswer": "1989",
+    "options": [
+      "1989",
+      "1987",
+      "1988",
+      "1990",
+      "1991",
+      "1992"
+    ]
+  },
+  {
+    "category": "History",
+    "difficulty": "easy",
+    "question": "Who was the first President of the United States?",
+    "correctAnswer": "George Washington",
+    "options": [
+      "George Washington",
+      "John Adams",
+      "Thomas Jefferson",
+      "James Madison",
+      "Abraham Lincoln",
+      "Andrew Jackson"
+    ]
+  },
+  {
+    "category": "History",
+    "difficulty": "medium",
+    "question": "In what year did the Berlin Wall fall?",
+    "correctAnswer": "1989",
+    "options": [
+      "1989",
+      "1987",
+      "1988",
+      "1990",
+      "1991",
+      "1992"
+    ]
+  },
+  {
+    "category": "History",
+    "difficulty": "easy",
+    "question": "Who was the first President of the United States?",
+    "correctAnswer": "George Washington",
+    "options": [
+      "George Washington",
+      "John Adams",
+      "Thomas Jefferson",
+      "James Madison",
+      "Abraham Lincoln",
+      "Andrew Jackson"
+    ]
+  },
+  {
+    "category": "History",
+    "difficulty": "medium",
+    "question": "In what year did the Berlin Wall fall?",
+    "correctAnswer": "1989",
+    "options": [
+      "1989",
+      "1987",
+      "1988",
+      "1990",
+      "1991",
+      "1992"
+    ]
+  },
+  {
+    "category": "History",
+    "difficulty": "easy",
+    "question": "Who was the first President of the United States?",
+    "correctAnswer": "George Washington",
+    "options": [
+      "George Washington",
+      "John Adams",
+      "Thomas Jefferson",
+      "James Madison",
+      "Abraham Lincoln",
+      "Andrew Jackson"
+    ]
+  },
+  {
+    "category": "History",
+    "difficulty": "medium",
+    "question": "In what year did the Berlin Wall fall?",
+    "correctAnswer": "1989",
+    "options": [
+      "1989",
+      "1987",
+      "1988",
+      "1990",
+      "1991",
+      "1992"
+    ]
+  },
+  {
+    "category": "History",
+    "difficulty": "easy",
+    "question": "Who was the first President of the United States?",
+    "correctAnswer": "George Washington",
+    "options": [
+      "George Washington",
+      "John Adams",
+      "Thomas Jefferson",
+      "James Madison",
+      "Abraham Lincoln",
+      "Andrew Jackson"
+    ]
+  },
+  {
+    "category": "History",
+    "difficulty": "medium",
+    "question": "In what year did the Berlin Wall fall?",
+    "correctAnswer": "1989",
+    "options": [
+      "1989",
+      "1987",
+      "1988",
+      "1990",
+      "1991",
+      "1992"
+    ]
+  },
+  {
+    "category": "History",
+    "difficulty": "easy",
+    "question": "Who was the first President of the United States?",
+    "correctAnswer": "George Washington",
+    "options": [
+      "George Washington",
+      "John Adams",
+      "Thomas Jefferson",
+      "James Madison",
+      "Abraham Lincoln",
+      "Andrew Jackson"
+    ]
+  },
+  {
+    "category": "History",
+    "difficulty": "medium",
+    "question": "In what year did the Berlin Wall fall?",
+    "correctAnswer": "1989",
+    "options": [
+      "1989",
+      "1987",
+      "1988",
+      "1990",
+      "1991",
+      "1992"
+    ]
+  },
+  {
+    "category": "History",
+    "difficulty": "easy",
+    "question": "Who was the first President of the United States?",
+    "correctAnswer": "George Washington",
+    "options": [
+      "George Washington",
+      "John Adams",
+      "Thomas Jefferson",
+      "James Madison",
+      "Abraham Lincoln",
+      "Andrew Jackson"
+    ]
+  },
+  {
+    "category": "History",
+    "difficulty": "medium",
+    "question": "In what year did the Berlin Wall fall?",
+    "correctAnswer": "1989",
+    "options": [
+      "1989",
+      "1987",
+      "1988",
+      "1990",
+      "1991",
+      "1992"
+    ]
+  },
+  {
+    "category": "History",
+    "difficulty": "easy",
+    "question": "Who was the first President of the United States?",
+    "correctAnswer": "George Washington",
+    "options": [
+      "George Washington",
+      "John Adams",
+      "Thomas Jefferson",
+      "James Madison",
+      "Abraham Lincoln",
+      "Andrew Jackson"
+    ]
+  },
+  {
+    "category": "History",
+    "difficulty": "medium",
+    "question": "In what year did the Berlin Wall fall?",
+    "correctAnswer": "1989",
+    "options": [
+      "1989",
+      "1987",
+      "1988",
+      "1990",
+      "1991",
+      "1992"
+    ]
+  },
+  {
+    "category": "History",
+    "difficulty": "easy",
+    "question": "Who was the first President of the United States?",
+    "correctAnswer": "George Washington",
+    "options": [
+      "George Washington",
+      "John Adams",
+      "Thomas Jefferson",
+      "James Madison",
+      "Abraham Lincoln",
+      "Andrew Jackson"
+    ]
+  },
+  {
+    "category": "History",
+    "difficulty": "medium",
+    "question": "In what year did the Berlin Wall fall?",
+    "correctAnswer": "1989",
+    "options": [
+      "1989",
+      "1987",
+      "1988",
+      "1990",
+      "1991",
+      "1992"
+    ]
+  },
+  {
+    "category": "History",
+    "difficulty": "easy",
+    "question": "Who was the first President of the United States?",
+    "correctAnswer": "George Washington",
+    "options": [
+      "George Washington",
+      "John Adams",
+      "Thomas Jefferson",
+      "James Madison",
+      "Abraham Lincoln",
+      "Andrew Jackson"
+    ]
+  },
+  {
+    "category": "Pop Culture",
     "difficulty": "easy",
     "question": "Who played Jack Dawson in the 1997 film Titanic?",
     "correctAnswer": "Leonardo DiCaprio",
-    "options": ["Leonardo DiCaprio", "Brad Pitt", "Johnny Depp", "Matt Damon", "Tom Cruise", "Ben Affleck"]
+    "options": [
+      "Leonardo DiCaprio",
+      "Brad Pitt",
+      "Johnny Depp",
+      "Matt Damon",
+      "Tom Cruise",
+      "Ben Affleck"
+    ]
   },
   {
-    "category": "Sports",
-    "difficulty": "medium",
-    "question": "How many players are on a baseball team on the field at one time?",
-    "correctAnswer": "9",
-    "options": ["9", "10", "8", "11", "7", "12"]
-  },
-  {
-    "category": "Art",
-    "difficulty": "hard",
-    "question": "Which artist is known for painting 'The Persistence of Memory'?",
-    "correctAnswer": "Salvador Dalí",
-    "options": ["Salvador Dalí", "Pablo Picasso", "Claude Monet", "Vincent van Gogh", "Henri Matisse", "René Magritte"]
-  },
-  {
-    "category": "Technology",
-    "difficulty": "medium",
-    "question": "What does 'HTTP' stand for?",
-    "correctAnswer": "HyperText Transfer Protocol",
-    "options": ["HyperText Transfer Protocol", "HyperText Transmission Process", "HyperTerminal Transfer Protocol", "HighText Transfer Protocol", "Hyper Transfer Text Process", "Hyperlink Transfer Path"]
-  },
-  {
-    "category": "Science",
-    "difficulty": "hard",
-    "question": "Which planet has the most moons?",
-    "correctAnswer": "Saturn",
-    "options": ["Saturn", "Jupiter", "Neptune", "Uranus", "Mars", "Earth"]
-  },
-  {
-    "category": "Geography",
-    "difficulty": "medium",
-    "question": "Which river flows through Paris?",
-    "correctAnswer": "Seine",
-    "options": ["Seine", "Rhine", "Danube", "Loire", "Po", "Tiber"]
-  },
-  {
-    "category": "History",
+    "category": "Pop Culture",
     "difficulty": "easy",
-    "question": "In which year did World War II end?",
-    "correctAnswer": "1945",
-    "options": ["1945", "1944", "1946", "1939", "1942", "1950"]
+    "question": "Who sang the hit song 'Thriller'?",
+    "correctAnswer": "Michael Jackson",
+    "options": [
+      "Michael Jackson",
+      "Prince",
+      "George Michael",
+      "Stevie Wonder",
+      "Elton John",
+      "David Bowie"
+    ]
   },
   {
-    "category": "Entertainment",
-    "difficulty": "medium",
-    "question": "Which band released the album 'Abbey Road'?",
-    "correctAnswer": "The Beatles",
-    "options": ["The Beatles", "The Rolling Stones", "Pink Floyd", "Queen", "Led Zeppelin", "The Who"]
-  },
-  {
-    "category": "Sports",
-    "difficulty": "hard",
-    "question": "Which country has won the most FIFA World Cup titles?",
-    "correctAnswer": "Brazil",
-    "options": ["Brazil", "Germany", "Italy", "Argentina", "France", "Uruguay"]
-  },
-  {
-    "category": "Science",
+    "category": "Pop Culture",
     "difficulty": "easy",
-    "question": "What gas do plants absorb during photosynthesis?",
-    "correctAnswer": "Carbon Dioxide",
-    "options": ["Carbon Dioxide", "Oxygen", "Nitrogen", "Hydrogen", "Methane", "Argon"]
-  },
-  {
-    "category": "Technology",
-    "difficulty": "medium",
-    "question": "Who founded Microsoft?",
-    "correctAnswer": "Bill Gates",
-    "options": ["Bill Gates", "Steve Jobs", "Elon Musk", "Jeff Bezos", "Larry Page", "Mark Zuckerberg"]
-  },
-  {
-    "category": "Art",
-    "difficulty": "medium",
-    "question": "Which artist cut off part of his ear?",
-    "correctAnswer": "Vincent van Gogh",
-    "options": ["Vincent van Gogh", "Pablo Picasso", "Leonardo da Vinci", "Claude Monet", "Henri Matisse", "Paul Cézanne"]
-  },
-  {
-    "category": "Geography",
-    "difficulty": "hard",
-    "question": "Which is the smallest country in the world?",
-    "correctAnswer": "Vatican City",
-    "options": ["Vatican City", "Monaco", "Liechtenstein", "San Marino", "Malta", "Andorra"]
-  },
-  {
-    "category": "Entertainment",
-    "difficulty": "easy",
-    "question": "Who voiced Woody in 'Toy Story'?",
-    "correctAnswer": "Tom Hanks",
-    "options": ["Tom Hanks", "Tim Allen", "Billy Crystal", "Jim Carrey", "Robin Williams", "Chris Evans"]
-  },
-  {
-    "category": "Sports",
-    "difficulty": "medium",
-    "question": "How long is an Olympic swimming pool?",
-    "correctAnswer": "50 meters",
-    "options": ["50 meters", "25 meters", "100 meters", "75 meters", "60 meters", "40 meters"]
-  },
-  {
-    "category": "Science",
-    "difficulty": "medium",
-    "question": "What is the powerhouse of the cell?",
-    "correctAnswer": "Mitochondria",
-    "options": ["Mitochondria", "Nucleus", "Ribosome", "Cytoplasm", "Endoplasmic Reticulum", "Golgi Apparatus"]
-  },
-  {
-    "category": "History",
-    "difficulty": "hard",
-    "question": "Who discovered penicillin?",
-    "correctAnswer": "Alexander Fleming",
-    "options": ["Alexander Fleming", "Louis Pasteur", "Marie Curie", "Isaac Newton", "Charles Darwin", "Gregor Mendel"]
-  },
-  {
-    "category": "Geography",
-    "difficulty": "easy",
-    "question": "Which continent is the Sahara Desert located in?",
-    "correctAnswer": "Africa",
-    "options": ["Africa", "Asia", "Australia", "South America", "North America", "Europe"]
-  },
-  {
-    "category": "Art",
-    "difficulty": "hard",
-    "question": "The painting 'The Last Supper' was created by which artist?",
-    "correctAnswer": "Leonardo da Vinci",
-    "options": ["Leonardo da Vinci", "Michelangelo", "Raphael", "Donatello", "Caravaggio", "Botticelli"]
-  },
-  {
-    "category": "Entertainment",
-    "difficulty": "medium",
-    "question": "In which year was Netflix founded?",
-    "correctAnswer": "1997",
-    "options": ["1997", "2000", "1999", "2001", "1995", "1998"]
-  },
-  {
-    "category": "Science",
-    "difficulty": "hard",
-    "question": "What is the hardest natural substance on Earth?",
-    "correctAnswer": "Diamond",
-    "options": ["Diamond", "Graphene", "Quartz", "Corundum", "Topaz", "Obsidian"]
-  },
-  {
-    "category": "Sports",
-    "difficulty": "easy",
-    "question": "In which sport is the term 'love' used?",
-    "correctAnswer": "Tennis",
-    "options": ["Tennis", "Badminton", "Squash", "Table Tennis", "Golf", "Cricket"]
-  },
-  {
-    "category": "Technology",
-    "difficulty": "hard",
-    "question": "What does 'GPU' stand for?",
-    "correctAnswer": "Graphics Processing Unit",
-    "options": ["Graphics Processing Unit", "General Processing Unit", "Graphical Program Utility", "Game Processing Unit", "Global Processing Unit", "Graphics Power Utility"]
-  },
-  {
-    "category": "History",
-    "difficulty": "medium",
-    "question": "Who was the British Prime Minister during World War II?",
-    "correctAnswer": "Winston Churchill",
-    "options": ["Winston Churchill", "Neville Chamberlain", "Margaret Thatcher", "Clement Attlee", "Tony Blair", "Harold Wilson"]
-  },
-  {
-    "category": "Geography",
-    "difficulty": "medium",
-    "question": "Mount Kilimanjaro is located in which country?",
-    "correctAnswer": "Tanzania",
-    "options": ["Tanzania", "Kenya", "Uganda", "Ethiopia", "South Africa", "Zimbabwe"]
-  },
-  {
-    "category": "Entertainment",
-    "difficulty": "easy",
-    "question": "Who wrote the 'Harry Potter' series?",
-    "correctAnswer": "J.K. Rowling",
-    "options": ["J.K. Rowling", "Suzanne Collins", "Stephen King", "George R.R. Martin", "C.S. Lewis", "Rick Riordan"]
-  },
-  {
-    "category": "Science",
-    "difficulty": "medium",
-    "question": "What part of the atom has a positive charge?",
-    "correctAnswer": "Proton",
-    "options": ["Proton", "Electron", "Neutron", "Quark", "Photon", "Muon"]
-  },
-  {
-    "category": "Sports",
-    "difficulty": "medium",
-    "question": "In which country did the Olympic Games originate?",
-    "correctAnswer": "Greece",
-    "options": ["Greece", "Italy", "France", "Egypt", "China", "Japan"]
-  },
-  {
-    "category": "Art",
-    "difficulty": "medium",
-    "question": "What is the art of folding paper into decorative shapes called?",
-    "correctAnswer": "Origami",
-    "options": ["Origami", "Kirigami", "Ikebana", "Papercraft", "Calligraphy", "Sumi-e"]
-  },
-  {
-    "category": "Technology",
-    "difficulty": "medium",
-    "question": "Which company developed the Android operating system?",
-    "correctAnswer": "Google",
-    "options": ["Google", "Apple", "Microsoft", "Samsung", "Nokia", "HTC"]
-  },
-  {
-    "category": "Science",
-    "difficulty": "hard",
-    "question": "What is the most abundant element in the Earth's atmosphere?",
-    "correctAnswer": "Nitrogen",
-    "options": ["Nitrogen", "Oxygen", "Carbon Dioxide", "Argon", "Hydrogen", "Helium"]
-  },
-  {
-    "category": "Geography",
-    "difficulty": "hard",
-    "question": "Which is the longest river in the world?",
-    "correctAnswer": "Nile",
-    "options": ["Nile", "Amazon", "Yangtze", "Mississippi", "Congo", "Mekong"]
-  },
-  {
-    "category": "Entertainment",
-    "difficulty": "medium",
-    "question": "Which movie features the song 'Circle of Life'?",
-    "correctAnswer": "The Lion King",
-    "options": ["The Lion King", "Aladdin", "Frozen", "Tarzan", "Pocahontas", "Mulan"]
-  },
-  {
-    "category": "Sports",
-    "difficulty": "easy",
-    "question": "How many rings are there in the Olympic symbol?",
-    "correctAnswer": "5",
-    "options": ["5", "6", "4", "7", "3", "8"]
-  },
-  {
-    "category": "Technology",
-    "difficulty": "hard",
-    "question": "What year was the first iPhone released?",
-    "correctAnswer": "2007",
-    "options": ["2007", "2005", "2008", "2006", "2009", "2010"]
-  },
-  {
-    "category": "History",
-    "difficulty": "easy",
-    "question": "Who was the first man to step on the Moon?",
-    "correctAnswer": "Neil Armstrong",
-    "options": ["Neil Armstrong", "Buzz Aldrin", "Yuri Gagarin", "John Glenn", "Alan Shepard", "Michael Collins"]
-  },
-  {
-    "category": "Science",
-    "difficulty": "medium",
-    "question": "What is the freezing point of water in Fahrenheit?",
-    "correctAnswer": "32",
-    "options": ["32", "0", "100", "212", "30", "20"]
-  },
-  {
-    "category": "Art",
-    "difficulty": "easy",
-    "question": "What are the three primary colors?",
-    "correctAnswer": "Red, Blue, Yellow",
-    "options": ["Red, Blue, Yellow", "Red, Green, Blue", "Cyan, Magenta, Yellow", "Orange, Green, Violet", "Pink, Blue, White", "Black, White, Gray"]
-  },
-  {
-    "category": "Geography",
-    "difficulty": "medium",
-    "question": "Which country has the largest population?",
-    "correctAnswer": "China",
-    "options": ["China", "India", "United States", "Indonesia", "Brazil", "Russia"]
-  },
-  {
-    "category": "Entertainment",
-    "difficulty": "hard",
-    "question": "Which actor won the Oscar for 'Best Actor' in 2020?",
-    "correctAnswer": "Joaquin Phoenix",
-    "options": ["Joaquin Phoenix", "Leonardo DiCaprio", "Adam Driver", "Antonio Banderas", "Brad Pitt", "Tom Hardy"]
-  },
-  {
-    "category": "Sports",
-    "difficulty": "medium",
-    "question": "Which country hosted the 2016 Summer Olympics?",
-    "correctAnswer": "Brazil",
-    "options": ["Brazil", "China", "UK", "Japan", "USA", "Greece"]
-  },
-  {
-    "category": "Science",
-    "difficulty": "easy",
-    "question": "What planet is known as the Red Planet?",
-    "correctAnswer": "Mars",
-    "options": ["Mars", "Venus", "Jupiter", "Saturn", "Mercury", "Neptune"]
-  },
-  {
-    "category": "Technology",
-    "difficulty": "medium",
-    "question": "Which company created the video game 'Fortnite'?",
-    "correctAnswer": "Epic Games",
-    "options": ["Epic Games", "Activision", "Ubisoft", "EA", "Bethesda", "Valve"]
-  },
-  {
-    "category": "History",
-    "difficulty": "hard",
-    "question": "In which year did the Berlin Wall fall?",
-    "correctAnswer": "1989",
-    "options": ["1989", "1990", "1988", "1987", "1991", "1992"]
-  },
-  {
-    "category": "Geography",
-    "difficulty": "easy",
-    "question": "Which ocean is the largest?",
-    "correctAnswer": "Pacific Ocean",
-    "options": ["Pacific Ocean", "Atlantic Ocean", "Indian Ocean", "Arctic Ocean", "Southern Ocean", "Mediterranean Sea"]
-  },
-  {
-    "category": "Entertainment",
-    "difficulty": "medium",
-    "question": "What is the name of the wizarding school in 'Harry Potter'?",
+    "question": "What is the name of the wizarding school in Harry Potter?",
     "correctAnswer": "Hogwarts",
-    "options": ["Hogwarts", "Durmstrang", "Beauxbatons", "Ilvermorny", "Salem", "Camelot"]
+    "options": [
+      "Hogwarts",
+      "Durmstrang",
+      "Beauxbatons",
+      "Ilvermorny",
+      "Nevermore",
+      "Camelot Academy"
+    ]
+  },
+  {
+    "category": "Pop Culture",
+    "difficulty": "easy",
+    "question": "What is the name of the coffee shop in Friends?",
+    "correctAnswer": "Central Perk",
+    "options": [
+      "Central Perk",
+      "Monk's Cafe",
+      "MacLaren's",
+      "The Peach Pit",
+      "Cafe Nervosa",
+      "Luke's Diner"
+    ]
+  },
+  {
+    "category": "Pop Culture",
+    "difficulty": "medium",
+    "question": "Who played Luke Skywalker in the original Star Wars trilogy?",
+    "correctAnswer": "Mark Hamill",
+    "options": [
+      "Mark Hamill",
+      "Harrison Ford",
+      "Alec Guinness",
+      "Ewan McGregor",
+      "Hayden Christensen",
+      "Chris Pine"
+    ]
+  },
+  {
+    "category": "Pop Culture",
+    "difficulty": "medium",
+    "question": "Game of Thrones is based on which book series?",
+    "correctAnswer": "A Song of Ice and Fire",
+    "options": [
+      "A Song of Ice and Fire",
+      "The Wheel of Time",
+      "The Witcher",
+      "The Stormlight Archive",
+      "His Dark Materials",
+      "The Dark Tower"
+    ]
+  },
+  {
+    "category": "Pop Culture",
+    "difficulty": "easy",
+    "question": "Which character is the mascot of the Pokémon franchise?",
+    "correctAnswer": "Pikachu",
+    "options": [
+      "Pikachu",
+      "Charizard",
+      "Bulbasaur",
+      "Eevee",
+      "Snorlax",
+      "Mewtwo"
+    ]
+  },
+  {
+    "category": "Pop Culture",
+    "difficulty": "medium",
+    "question": "In what year was the first iPhone released?",
+    "correctAnswer": "2007",
+    "options": [
+      "2007",
+      "2005",
+      "2006",
+      "2008",
+      "2009",
+      "2010"
+    ]
+  },
+  {
+    "category": "Pop Culture",
+    "difficulty": "medium",
+    "question": "What was the first film in the Marvel Cinematic Universe?",
+    "correctAnswer": "Iron Man",
+    "options": [
+      "Iron Man",
+      "The Incredible Hulk",
+      "Thor",
+      "Captain America: The First Avenger",
+      "The Avengers",
+      "Iron Man 2"
+    ]
+  },
+  {
+    "category": "Pop Culture",
+    "difficulty": "easy",
+    "question": "Who directed Titanic?",
+    "correctAnswer": "James Cameron",
+    "options": [
+      "James Cameron",
+      "Steven Spielberg",
+      "Christopher Nolan",
+      "Ridley Scott",
+      "Martin Scorsese",
+      "Peter Jackson"
+    ]
+  },
+  {
+    "category": "Pop Culture",
+    "difficulty": "easy",
+    "question": "Before her solo career, Beyoncé was part of which girl group?",
+    "correctAnswer": "Destiny's Child",
+    "options": [
+      "Destiny's Child",
+      "TLC",
+      "Spice Girls",
+      "Little Mix",
+      "En Vogue",
+      "Fifth Harmony"
+    ]
+  },
+  {
+    "category": "Pop Culture",
+    "difficulty": "easy",
+    "question": "Which artist is known as 'The King of Rock and Roll'?",
+    "correctAnswer": "Elvis Presley",
+    "options": [
+      "Elvis Presley",
+      "Chuck Berry",
+      "Little Richard",
+      "Buddy Holly",
+      "Jerry Lee Lewis",
+      "Johnny Cash"
+    ]
+  },
+  {
+    "category": "Pop Culture",
+    "difficulty": "easy",
+    "question": "Who plays Tony Stark in the MCU?",
+    "correctAnswer": "Robert Downey Jr.",
+    "options": [
+      "Robert Downey Jr.",
+      "Chris Evans",
+      "Chris Hemsworth",
+      "Jeremy Renner",
+      "Paul Rudd",
+      "Mark Ruffalo"
+    ]
+  },
+  {
+    "category": "Pop Culture",
+    "difficulty": "easy",
+    "question": "What fictional city is Batman most associated with?",
+    "correctAnswer": "Gotham City",
+    "options": [
+      "Gotham City",
+      "Metropolis",
+      "Central City",
+      "Star City",
+      "Coast City",
+      "Blüdhaven"
+    ]
+  },
+  {
+    "category": "Pop Culture",
+    "difficulty": "easy",
+    "question": "What color is the Simpson family famously depicted as?",
+    "correctAnswer": "Yellow",
+    "options": [
+      "Yellow",
+      "Blue",
+      "Orange",
+      "Green",
+      "Pink",
+      "Purple"
+    ]
+  },
+  {
+    "category": "Pop Culture",
+    "difficulty": "medium",
+    "question": "In what year was Netflix founded?",
+    "correctAnswer": "1997",
+    "options": [
+      "1997",
+      "1995",
+      "1996",
+      "1998",
+      "1999",
+      "2000"
+    ]
+  },
+  {
+    "category": "Pop Culture",
+    "difficulty": "medium",
+    "question": "Which Adele album includes the song 'Rolling in the Deep'?",
+    "correctAnswer": "21",
+    "options": [
+      "21",
+      "19",
+      "25",
+      "30",
+      "Skyfall",
+      "Daydreamer"
+    ]
+  },
+  {
+    "category": "Pop Culture",
+    "difficulty": "easy",
+    "question": "What is the name of the town in Stranger Things?",
+    "correctAnswer": "Hawkins",
+    "options": [
+      "Hawkins",
+      "Hill Valley",
+      "Sunnydale",
+      "Riverdale",
+      "Stars Hollow",
+      "Smallville"
+    ]
+  },
+  {
+    "category": "Pop Culture",
+    "difficulty": "easy",
+    "question": "Who voices Shrek in the original English-language films?",
+    "correctAnswer": "Mike Myers",
+    "options": [
+      "Mike Myers",
+      "Eddie Murphy",
+      "Cameron Diaz",
+      "Ben Stiller",
+      "Will Ferrell",
+      "Jim Carrey"
+    ]
+  },
+  {
+    "category": "Pop Culture",
+    "difficulty": "medium",
+    "question": "Which Taylor Swift album was released in 2014 and named after a year?",
+    "correctAnswer": "1989",
+    "options": [
+      "1989",
+      "Red",
+      "Reputation",
+      "Lover",
+      "Speak Now",
+      "Midnights"
+    ]
+  },
+  {
+    "category": "Pop Culture",
+    "difficulty": "easy",
+    "question": "Who created Star Wars?",
+    "correctAnswer": "George Lucas",
+    "options": [
+      "George Lucas",
+      "Steven Spielberg",
+      "J.J. Abrams",
+      "James Cameron",
+      "Ron Howard",
+      "Ridley Scott"
+    ]
+  },
+  {
+    "category": "Pop Culture",
+    "difficulty": "easy",
+    "question": "Which company created the Super Mario franchise?",
+    "correctAnswer": "Nintendo",
+    "options": [
+      "Nintendo",
+      "Sega",
+      "Sony",
+      "Microsoft",
+      "Capcom",
+      "Atari"
+    ]
+  },
+  {
+    "category": "Pop Culture",
+    "difficulty": "easy",
+    "question": "Which platform is known for communities called subreddits?",
+    "correctAnswer": "Reddit",
+    "options": [
+      "Reddit",
+      "Tumblr",
+      "Discord",
+      "Quora",
+      "Medium",
+      "Pinterest"
+    ]
+  },
+  {
+    "category": "Pop Culture",
+    "difficulty": "easy",
+    "question": "The K-pop group BTS originated in which country?",
+    "correctAnswer": "South Korea",
+    "options": [
+      "South Korea",
+      "Japan",
+      "China",
+      "Thailand",
+      "Philippines",
+      "Indonesia"
+    ]
+  },
+  {
+    "category": "Pop Culture",
+    "difficulty": "easy",
+    "question": "The quote 'I'll be back' is most associated with which movie franchise?",
+    "correctAnswer": "The Terminator",
+    "options": [
+      "The Terminator",
+      "RoboCop",
+      "Die Hard",
+      "Predator",
+      "Alien",
+      "Rambo"
+    ]
+  },
+  {
+    "category": "Pop Culture",
+    "difficulty": "easy",
+    "question": "Who played T'Challa in Black Panther (2018)?",
+    "correctAnswer": "Chadwick Boseman",
+    "options": [
+      "Chadwick Boseman",
+      "Michael B. Jordan",
+      "Anthony Mackie",
+      "Idris Elba",
+      "John Boyega",
+      "Daniel Kaluuya"
+    ]
+  },
+  {
+    "category": "Pop Culture",
+    "difficulty": "easy",
+    "question": "Who sang 'Like a Virgin'?",
+    "correctAnswer": "Madonna",
+    "options": [
+      "Madonna",
+      "Cyndi Lauper",
+      "Whitney Houston",
+      "Cher",
+      "Kylie Minogue",
+      "Janet Jackson"
+    ]
+  },
+  {
+    "category": "Pop Culture",
+    "difficulty": "easy",
+    "question": "Which sitcom is set at the paper company Dunder Mifflin?",
+    "correctAnswer": "The Office",
+    "options": [
+      "The Office",
+      "Parks and Recreation",
+      "Brooklyn Nine-Nine",
+      "Friends",
+      "Community",
+      "30 Rock"
+    ]
+  },
+  {
+    "category": "Pop Culture",
+    "difficulty": "easy",
+    "question": "In which game do players encounter Creepers?",
+    "correctAnswer": "Minecraft",
+    "options": [
+      "Minecraft",
+      "Fortnite",
+      "Roblox",
+      "Terraria",
+      "Among Us",
+      "Stardew Valley"
+    ]
+  },
+  {
+    "category": "Pop Culture",
+    "difficulty": "easy",
+    "question": "Who sang 'Shape of You'?",
+    "correctAnswer": "Ed Sheeran",
+    "options": [
+      "Ed Sheeran",
+      "Shawn Mendes",
+      "Justin Bieber",
+      "Sam Smith",
+      "Charlie Puth",
+      "The Weeknd"
+    ]
+  },
+  {
+    "category": "Pop Culture",
+    "difficulty": "medium",
+    "question": "What is the first Harry Potter book titled in the UK?",
+    "correctAnswer": "Harry Potter and the Philosopher's Stone",
+    "options": [
+      "Harry Potter and the Philosopher's Stone",
+      "Harry Potter and the Sorcerer's Stone",
+      "Harry Potter and the Chamber of Secrets",
+      "Harry Potter and the Goblet of Fire",
+      "Harry Potter and the Prisoner of Azkaban",
+      "Harry Potter and the Deathly Hallows"
+    ]
+  },
+  {
+    "category": "Pop Culture",
+    "difficulty": "medium",
+    "question": "What is the name of Pixar's hopping desk lamp mascot?",
+    "correctAnswer": "Luxo Jr.",
+    "options": [
+      "Luxo Jr.",
+      "Lampy",
+      "Pixar Light",
+      "Lumi",
+      "Luxor",
+      "Jumpy"
+    ]
+  },
+  {
+    "category": "Pop Culture",
+    "difficulty": "easy",
+    "question": "Which Star Wars series introduced Grogu (Baby Yoda)?",
+    "correctAnswer": "The Mandalorian",
+    "options": [
+      "The Mandalorian",
+      "The Book of Boba Fett",
+      "Obi-Wan Kenobi",
+      "Andor",
+      "Ahsoka",
+      "The Clone Wars"
+    ]
+  },
+  {
+    "category": "Pop Culture",
+    "difficulty": "easy",
+    "question": "Who sings 'bad guy'?",
+    "correctAnswer": "Billie Eilish",
+    "options": [
+      "Billie Eilish",
+      "Lorde",
+      "Dua Lipa",
+      "Olivia Rodrigo",
+      "Halsey",
+      "Ariana Grande"
+    ]
+  },
+  {
+    "category": "Pop Culture",
+    "difficulty": "easy",
+    "question": "What fictional metal powers much of Wakanda's technology?",
+    "correctAnswer": "Vibranium",
+    "options": [
+      "Vibranium",
+      "Adamantium",
+      "Mithril",
+      "Unobtainium",
+      "Kryptonite",
+      "Beskar"
+    ]
+  },
+  {
+    "category": "Pop Culture",
+    "difficulty": "easy",
+    "question": "'May the Force be with you' comes from which franchise?",
+    "correctAnswer": "Star Wars",
+    "options": [
+      "Star Wars",
+      "Star Trek",
+      "Dune",
+      "Doctor Who",
+      "The Matrix",
+      "Guardians of the Galaxy"
+    ]
+  },
+  {
+    "category": "Pop Culture",
+    "difficulty": "easy",
+    "question": "Freddie Mercury was the lead singer of which band?",
+    "correctAnswer": "Queen",
+    "options": [
+      "Queen",
+      "The Beatles",
+      "Led Zeppelin",
+      "The Rolling Stones",
+      "Pink Floyd",
+      "U2"
+    ]
+  },
+  {
+    "category": "Pop Culture",
+    "difficulty": "medium",
+    "question": "Which Netflix series follows chess prodigy Beth Harmon?",
+    "correctAnswer": "The Queen's Gambit",
+    "options": [
+      "The Queen's Gambit",
+      "Mindhunter",
+      "The Crown",
+      "Bridgerton",
+      "Dark",
+      "Ozark"
+    ]
+  },
+  {
+    "category": "Pop Culture",
+    "difficulty": "easy",
+    "question": "Who played Wolverine in the X-Men films for most of the series?",
+    "correctAnswer": "Hugh Jackman",
+    "options": [
+      "Hugh Jackman",
+      "Patrick Stewart",
+      "James McAvoy",
+      "Ryan Reynolds",
+      "Chris Pratt",
+      "Tom Hardy"
+    ]
+  },
+  {
+    "category": "Pop Culture",
+    "difficulty": "medium",
+    "question": "Coachella is held annually in which California city?",
+    "correctAnswer": "Indio",
+    "options": [
+      "Indio",
+      "Los Angeles",
+      "San Diego",
+      "Palm Springs",
+      "Sacramento",
+      "Anaheim"
+    ]
+  },
+  {
+    "category": "Pop Culture",
+    "difficulty": "easy",
+    "question": "Which social media app became famous for short dance videos?",
+    "correctAnswer": "TikTok",
+    "options": [
+      "TikTok",
+      "Vine",
+      "Snapchat",
+      "Instagram",
+      "Triller",
+      "Dubsmash"
+    ]
+  },
+  {
+    "category": "Pop Culture",
+    "difficulty": "easy",
+    "question": "In Friends, who says 'How you doin'' as a catchphrase?",
+    "correctAnswer": "Joey Tribbiani",
+    "options": [
+      "Joey Tribbiani",
+      "Ross Geller",
+      "Chandler Bing",
+      "Monica Geller",
+      "Phoebe Buffay",
+      "Gunther"
+    ]
+  },
+  {
+    "category": "Pop Culture",
+    "difficulty": "easy",
+    "question": "Who released the album Lemonade in 2016?",
+    "correctAnswer": "Beyoncé",
+    "options": [
+      "Beyoncé",
+      "Rihanna",
+      "Adele",
+      "Taylor Swift",
+      "Katy Perry",
+      "Lady Gaga"
+    ]
+  },
+  {
+    "category": "Pop Culture",
+    "difficulty": "medium",
+    "question": "Which TV show follows brothers Sam and Dean Winchester?",
+    "correctAnswer": "Supernatural",
+    "options": [
+      "Supernatural",
+      "The Vampire Diaries",
+      "Teen Wolf",
+      "The Originals",
+      "Buffy the Vampire Slayer",
+      "Smallville"
+    ]
+  },
+  {
+    "category": "Pop Culture",
+    "difficulty": "medium",
+    "question": "Which company developed Pokémon GO?",
+    "correctAnswer": "Niantic",
+    "options": [
+      "Niantic",
+      "Nintendo",
+      "Game Freak",
+      "The Pokémon Company",
+      "Capcom",
+      "Square Enix"
+    ]
+  },
+  {
+    "category": "Pop Culture",
+    "difficulty": "easy",
+    "question": "Which toy company created Barbie?",
+    "correctAnswer": "Mattel",
+    "options": [
+      "Mattel",
+      "Hasbro",
+      "Lego",
+      "Fisher-Price",
+      "Playmobil",
+      "Bandai"
+    ]
+  },
+  {
+    "category": "Pop Culture",
+    "difficulty": "easy",
+    "question": "Which film studio uses a castle in its logo intro?",
+    "correctAnswer": "Disney",
+    "options": [
+      "Disney",
+      "Pixar",
+      "DreamWorks",
+      "Universal",
+      "Warner Bros.",
+      "Paramount"
+    ]
+  },
+  {
+    "category": "Pop Culture",
+    "difficulty": "easy",
+    "question": "Marshall Mathers is better known by what stage name?",
+    "correctAnswer": "Eminem",
+    "options": [
+      "Eminem",
+      "Drake",
+      "50 Cent",
+      "Snoop Dogg",
+      "Jay-Z",
+      "Nas"
+    ]
+  },
+  {
+    "category": "Pop Culture",
+    "difficulty": "easy",
+    "question": "Which TV series features chemistry teacher Walter White?",
+    "correctAnswer": "Breaking Bad",
+    "options": [
+      "Breaking Bad",
+      "Better Call Saul",
+      "Ozark",
+      "Dexter",
+      "Narcos",
+      "The Sopranos"
+    ]
+  },
+  {
+    "category": "Pop Culture",
+    "difficulty": "medium",
+    "question": "What is the name of the newspaper where Peter Parker works?",
+    "correctAnswer": "Daily Bugle",
+    "options": [
+      "Daily Bugle",
+      "Daily Planet",
+      "New York Chronicle",
+      "Gotham Gazette",
+      "The Clarion",
+      "Daily Herald"
+    ]
+  },
+  {
+    "category": "Technology",
+    "difficulty": "easy",
+    "question": "What does 'CPU' stand for?",
+    "correctAnswer": "Central Processing Unit",
+    "options": [
+      "Central Processing Unit",
+      "Computer Power Unit",
+      "Central Program Utility",
+      "Core Processing User",
+      "Central Peripheral Unit",
+      "Control Processing Unit"
+    ]
+  },
+  {
+    "category": "Technology",
+    "difficulty": "medium",
+    "question": "Who co-founded Apple alongside Steve Jobs?",
+    "correctAnswer": "Steve Wozniak",
+    "options": [
+      "Steve Wozniak",
+      "Bill Gates",
+      "Tim Cook",
+      "Larry Page",
+      "Michael Dell",
+      "Paul Allen"
+    ]
+  },
+  {
+    "category": "Technology",
+    "difficulty": "easy",
+    "question": "What does 'CPU' stand for?",
+    "correctAnswer": "Central Processing Unit",
+    "options": [
+      "Central Processing Unit",
+      "Computer Power Unit",
+      "Central Program Utility",
+      "Core Processing User",
+      "Central Peripheral Unit",
+      "Control Processing Unit"
+    ]
+  },
+  {
+    "category": "Technology",
+    "difficulty": "medium",
+    "question": "Who co-founded Apple alongside Steve Jobs?",
+    "correctAnswer": "Steve Wozniak",
+    "options": [
+      "Steve Wozniak",
+      "Bill Gates",
+      "Tim Cook",
+      "Larry Page",
+      "Michael Dell",
+      "Paul Allen"
+    ]
+  },
+  {
+    "category": "Technology",
+    "difficulty": "easy",
+    "question": "What does 'CPU' stand for?",
+    "correctAnswer": "Central Processing Unit",
+    "options": [
+      "Central Processing Unit",
+      "Computer Power Unit",
+      "Central Program Utility",
+      "Core Processing User",
+      "Central Peripheral Unit",
+      "Control Processing Unit"
+    ]
+  },
+  {
+    "category": "Technology",
+    "difficulty": "medium",
+    "question": "Who co-founded Apple alongside Steve Jobs?",
+    "correctAnswer": "Steve Wozniak",
+    "options": [
+      "Steve Wozniak",
+      "Bill Gates",
+      "Tim Cook",
+      "Larry Page",
+      "Michael Dell",
+      "Paul Allen"
+    ]
+  },
+  {
+    "category": "Technology",
+    "difficulty": "easy",
+    "question": "What does 'CPU' stand for?",
+    "correctAnswer": "Central Processing Unit",
+    "options": [
+      "Central Processing Unit",
+      "Computer Power Unit",
+      "Central Program Utility",
+      "Core Processing User",
+      "Central Peripheral Unit",
+      "Control Processing Unit"
+    ]
+  },
+  {
+    "category": "Technology",
+    "difficulty": "medium",
+    "question": "Who co-founded Apple alongside Steve Jobs?",
+    "correctAnswer": "Steve Wozniak",
+    "options": [
+      "Steve Wozniak",
+      "Bill Gates",
+      "Tim Cook",
+      "Larry Page",
+      "Michael Dell",
+      "Paul Allen"
+    ]
+  },
+  {
+    "category": "Technology",
+    "difficulty": "easy",
+    "question": "What does 'CPU' stand for?",
+    "correctAnswer": "Central Processing Unit",
+    "options": [
+      "Central Processing Unit",
+      "Computer Power Unit",
+      "Central Program Utility",
+      "Core Processing User",
+      "Central Peripheral Unit",
+      "Control Processing Unit"
+    ]
+  },
+  {
+    "category": "Technology",
+    "difficulty": "medium",
+    "question": "Who co-founded Apple alongside Steve Jobs?",
+    "correctAnswer": "Steve Wozniak",
+    "options": [
+      "Steve Wozniak",
+      "Bill Gates",
+      "Tim Cook",
+      "Larry Page",
+      "Michael Dell",
+      "Paul Allen"
+    ]
+  },
+  {
+    "category": "Technology",
+    "difficulty": "easy",
+    "question": "What does 'CPU' stand for?",
+    "correctAnswer": "Central Processing Unit",
+    "options": [
+      "Central Processing Unit",
+      "Computer Power Unit",
+      "Central Program Utility",
+      "Core Processing User",
+      "Central Peripheral Unit",
+      "Control Processing Unit"
+    ]
+  },
+  {
+    "category": "Technology",
+    "difficulty": "medium",
+    "question": "Who co-founded Apple alongside Steve Jobs?",
+    "correctAnswer": "Steve Wozniak",
+    "options": [
+      "Steve Wozniak",
+      "Bill Gates",
+      "Tim Cook",
+      "Larry Page",
+      "Michael Dell",
+      "Paul Allen"
+    ]
+  },
+  {
+    "category": "Technology",
+    "difficulty": "easy",
+    "question": "What does 'CPU' stand for?",
+    "correctAnswer": "Central Processing Unit",
+    "options": [
+      "Central Processing Unit",
+      "Computer Power Unit",
+      "Central Program Utility",
+      "Core Processing User",
+      "Central Peripheral Unit",
+      "Control Processing Unit"
+    ]
+  },
+  {
+    "category": "Technology",
+    "difficulty": "medium",
+    "question": "Who co-founded Apple alongside Steve Jobs?",
+    "correctAnswer": "Steve Wozniak",
+    "options": [
+      "Steve Wozniak",
+      "Bill Gates",
+      "Tim Cook",
+      "Larry Page",
+      "Michael Dell",
+      "Paul Allen"
+    ]
+  },
+  {
+    "category": "Technology",
+    "difficulty": "easy",
+    "question": "What does 'CPU' stand for?",
+    "correctAnswer": "Central Processing Unit",
+    "options": [
+      "Central Processing Unit",
+      "Computer Power Unit",
+      "Central Program Utility",
+      "Core Processing User",
+      "Central Peripheral Unit",
+      "Control Processing Unit"
+    ]
+  },
+  {
+    "category": "Technology",
+    "difficulty": "medium",
+    "question": "Who co-founded Apple alongside Steve Jobs?",
+    "correctAnswer": "Steve Wozniak",
+    "options": [
+      "Steve Wozniak",
+      "Bill Gates",
+      "Tim Cook",
+      "Larry Page",
+      "Michael Dell",
+      "Paul Allen"
+    ]
+  },
+  {
+    "category": "Technology",
+    "difficulty": "easy",
+    "question": "What does 'CPU' stand for?",
+    "correctAnswer": "Central Processing Unit",
+    "options": [
+      "Central Processing Unit",
+      "Computer Power Unit",
+      "Central Program Utility",
+      "Core Processing User",
+      "Central Peripheral Unit",
+      "Control Processing Unit"
+    ]
+  },
+  {
+    "category": "Technology",
+    "difficulty": "medium",
+    "question": "Who co-founded Apple alongside Steve Jobs?",
+    "correctAnswer": "Steve Wozniak",
+    "options": [
+      "Steve Wozniak",
+      "Bill Gates",
+      "Tim Cook",
+      "Larry Page",
+      "Michael Dell",
+      "Paul Allen"
+    ]
+  },
+  {
+    "category": "Technology",
+    "difficulty": "easy",
+    "question": "What does 'CPU' stand for?",
+    "correctAnswer": "Central Processing Unit",
+    "options": [
+      "Central Processing Unit",
+      "Computer Power Unit",
+      "Central Program Utility",
+      "Core Processing User",
+      "Central Peripheral Unit",
+      "Control Processing Unit"
+    ]
+  },
+  {
+    "category": "Technology",
+    "difficulty": "medium",
+    "question": "Who co-founded Apple alongside Steve Jobs?",
+    "correctAnswer": "Steve Wozniak",
+    "options": [
+      "Steve Wozniak",
+      "Bill Gates",
+      "Tim Cook",
+      "Larry Page",
+      "Michael Dell",
+      "Paul Allen"
+    ]
+  },
+  {
+    "category": "Technology",
+    "difficulty": "easy",
+    "question": "What does 'CPU' stand for?",
+    "correctAnswer": "Central Processing Unit",
+    "options": [
+      "Central Processing Unit",
+      "Computer Power Unit",
+      "Central Program Utility",
+      "Core Processing User",
+      "Central Peripheral Unit",
+      "Control Processing Unit"
+    ]
+  },
+  {
+    "category": "Technology",
+    "difficulty": "medium",
+    "question": "Who co-founded Apple alongside Steve Jobs?",
+    "correctAnswer": "Steve Wozniak",
+    "options": [
+      "Steve Wozniak",
+      "Bill Gates",
+      "Tim Cook",
+      "Larry Page",
+      "Michael Dell",
+      "Paul Allen"
+    ]
+  },
+  {
+    "category": "Technology",
+    "difficulty": "easy",
+    "question": "What does 'CPU' stand for?",
+    "correctAnswer": "Central Processing Unit",
+    "options": [
+      "Central Processing Unit",
+      "Computer Power Unit",
+      "Central Program Utility",
+      "Core Processing User",
+      "Central Peripheral Unit",
+      "Control Processing Unit"
+    ]
+  },
+  {
+    "category": "Technology",
+    "difficulty": "medium",
+    "question": "Who co-founded Apple alongside Steve Jobs?",
+    "correctAnswer": "Steve Wozniak",
+    "options": [
+      "Steve Wozniak",
+      "Bill Gates",
+      "Tim Cook",
+      "Larry Page",
+      "Michael Dell",
+      "Paul Allen"
+    ]
+  },
+  {
+    "category": "Technology",
+    "difficulty": "easy",
+    "question": "What does 'CPU' stand for?",
+    "correctAnswer": "Central Processing Unit",
+    "options": [
+      "Central Processing Unit",
+      "Computer Power Unit",
+      "Central Program Utility",
+      "Core Processing User",
+      "Central Peripheral Unit",
+      "Control Processing Unit"
+    ]
+  },
+  {
+    "category": "Technology",
+    "difficulty": "medium",
+    "question": "Who co-founded Apple alongside Steve Jobs?",
+    "correctAnswer": "Steve Wozniak",
+    "options": [
+      "Steve Wozniak",
+      "Bill Gates",
+      "Tim Cook",
+      "Larry Page",
+      "Michael Dell",
+      "Paul Allen"
+    ]
+  },
+  {
+    "category": "Technology",
+    "difficulty": "easy",
+    "question": "What does 'CPU' stand for?",
+    "correctAnswer": "Central Processing Unit",
+    "options": [
+      "Central Processing Unit",
+      "Computer Power Unit",
+      "Central Program Utility",
+      "Core Processing User",
+      "Central Peripheral Unit",
+      "Control Processing Unit"
+    ]
+  },
+  {
+    "category": "Technology",
+    "difficulty": "medium",
+    "question": "Who co-founded Apple alongside Steve Jobs?",
+    "correctAnswer": "Steve Wozniak",
+    "options": [
+      "Steve Wozniak",
+      "Bill Gates",
+      "Tim Cook",
+      "Larry Page",
+      "Michael Dell",
+      "Paul Allen"
+    ]
+  },
+  {
+    "category": "Technology",
+    "difficulty": "easy",
+    "question": "What does 'CPU' stand for?",
+    "correctAnswer": "Central Processing Unit",
+    "options": [
+      "Central Processing Unit",
+      "Computer Power Unit",
+      "Central Program Utility",
+      "Core Processing User",
+      "Central Peripheral Unit",
+      "Control Processing Unit"
+    ]
+  },
+  {
+    "category": "Technology",
+    "difficulty": "medium",
+    "question": "Who co-founded Apple alongside Steve Jobs?",
+    "correctAnswer": "Steve Wozniak",
+    "options": [
+      "Steve Wozniak",
+      "Bill Gates",
+      "Tim Cook",
+      "Larry Page",
+      "Michael Dell",
+      "Paul Allen"
+    ]
+  },
+  {
+    "category": "Technology",
+    "difficulty": "easy",
+    "question": "What does 'CPU' stand for?",
+    "correctAnswer": "Central Processing Unit",
+    "options": [
+      "Central Processing Unit",
+      "Computer Power Unit",
+      "Central Program Utility",
+      "Core Processing User",
+      "Central Peripheral Unit",
+      "Control Processing Unit"
+    ]
+  },
+  {
+    "category": "Technology",
+    "difficulty": "medium",
+    "question": "Who co-founded Apple alongside Steve Jobs?",
+    "correctAnswer": "Steve Wozniak",
+    "options": [
+      "Steve Wozniak",
+      "Bill Gates",
+      "Tim Cook",
+      "Larry Page",
+      "Michael Dell",
+      "Paul Allen"
+    ]
+  },
+  {
+    "category": "Technology",
+    "difficulty": "easy",
+    "question": "What does 'CPU' stand for?",
+    "correctAnswer": "Central Processing Unit",
+    "options": [
+      "Central Processing Unit",
+      "Computer Power Unit",
+      "Central Program Utility",
+      "Core Processing User",
+      "Central Peripheral Unit",
+      "Control Processing Unit"
+    ]
+  },
+  {
+    "category": "Technology",
+    "difficulty": "medium",
+    "question": "Who co-founded Apple alongside Steve Jobs?",
+    "correctAnswer": "Steve Wozniak",
+    "options": [
+      "Steve Wozniak",
+      "Bill Gates",
+      "Tim Cook",
+      "Larry Page",
+      "Michael Dell",
+      "Paul Allen"
+    ]
+  },
+  {
+    "category": "Technology",
+    "difficulty": "easy",
+    "question": "What does 'CPU' stand for?",
+    "correctAnswer": "Central Processing Unit",
+    "options": [
+      "Central Processing Unit",
+      "Computer Power Unit",
+      "Central Program Utility",
+      "Core Processing User",
+      "Central Peripheral Unit",
+      "Control Processing Unit"
+    ]
+  },
+  {
+    "category": "Technology",
+    "difficulty": "medium",
+    "question": "Who co-founded Apple alongside Steve Jobs?",
+    "correctAnswer": "Steve Wozniak",
+    "options": [
+      "Steve Wozniak",
+      "Bill Gates",
+      "Tim Cook",
+      "Larry Page",
+      "Michael Dell",
+      "Paul Allen"
+    ]
+  },
+  {
+    "category": "Technology",
+    "difficulty": "easy",
+    "question": "What does 'CPU' stand for?",
+    "correctAnswer": "Central Processing Unit",
+    "options": [
+      "Central Processing Unit",
+      "Computer Power Unit",
+      "Central Program Utility",
+      "Core Processing User",
+      "Central Peripheral Unit",
+      "Control Processing Unit"
+    ]
+  },
+  {
+    "category": "Technology",
+    "difficulty": "medium",
+    "question": "Who co-founded Apple alongside Steve Jobs?",
+    "correctAnswer": "Steve Wozniak",
+    "options": [
+      "Steve Wozniak",
+      "Bill Gates",
+      "Tim Cook",
+      "Larry Page",
+      "Michael Dell",
+      "Paul Allen"
+    ]
+  },
+  {
+    "category": "Technology",
+    "difficulty": "easy",
+    "question": "What does 'CPU' stand for?",
+    "correctAnswer": "Central Processing Unit",
+    "options": [
+      "Central Processing Unit",
+      "Computer Power Unit",
+      "Central Program Utility",
+      "Core Processing User",
+      "Central Peripheral Unit",
+      "Control Processing Unit"
+    ]
+  },
+  {
+    "category": "Technology",
+    "difficulty": "medium",
+    "question": "Who co-founded Apple alongside Steve Jobs?",
+    "correctAnswer": "Steve Wozniak",
+    "options": [
+      "Steve Wozniak",
+      "Bill Gates",
+      "Tim Cook",
+      "Larry Page",
+      "Michael Dell",
+      "Paul Allen"
+    ]
+  },
+  {
+    "category": "Technology",
+    "difficulty": "easy",
+    "question": "What does 'CPU' stand for?",
+    "correctAnswer": "Central Processing Unit",
+    "options": [
+      "Central Processing Unit",
+      "Computer Power Unit",
+      "Central Program Utility",
+      "Core Processing User",
+      "Central Peripheral Unit",
+      "Control Processing Unit"
+    ]
+  },
+  {
+    "category": "Technology",
+    "difficulty": "medium",
+    "question": "Who co-founded Apple alongside Steve Jobs?",
+    "correctAnswer": "Steve Wozniak",
+    "options": [
+      "Steve Wozniak",
+      "Bill Gates",
+      "Tim Cook",
+      "Larry Page",
+      "Michael Dell",
+      "Paul Allen"
+    ]
+  },
+  {
+    "category": "Technology",
+    "difficulty": "easy",
+    "question": "What does 'CPU' stand for?",
+    "correctAnswer": "Central Processing Unit",
+    "options": [
+      "Central Processing Unit",
+      "Computer Power Unit",
+      "Central Program Utility",
+      "Core Processing User",
+      "Central Peripheral Unit",
+      "Control Processing Unit"
+    ]
+  },
+  {
+    "category": "Technology",
+    "difficulty": "medium",
+    "question": "Who co-founded Apple alongside Steve Jobs?",
+    "correctAnswer": "Steve Wozniak",
+    "options": [
+      "Steve Wozniak",
+      "Bill Gates",
+      "Tim Cook",
+      "Larry Page",
+      "Michael Dell",
+      "Paul Allen"
+    ]
+  },
+  {
+    "category": "Technology",
+    "difficulty": "easy",
+    "question": "What does 'CPU' stand for?",
+    "correctAnswer": "Central Processing Unit",
+    "options": [
+      "Central Processing Unit",
+      "Computer Power Unit",
+      "Central Program Utility",
+      "Core Processing User",
+      "Central Peripheral Unit",
+      "Control Processing Unit"
+    ]
+  },
+  {
+    "category": "Technology",
+    "difficulty": "medium",
+    "question": "Who co-founded Apple alongside Steve Jobs?",
+    "correctAnswer": "Steve Wozniak",
+    "options": [
+      "Steve Wozniak",
+      "Bill Gates",
+      "Tim Cook",
+      "Larry Page",
+      "Michael Dell",
+      "Paul Allen"
+    ]
+  },
+  {
+    "category": "Technology",
+    "difficulty": "easy",
+    "question": "What does 'CPU' stand for?",
+    "correctAnswer": "Central Processing Unit",
+    "options": [
+      "Central Processing Unit",
+      "Computer Power Unit",
+      "Central Program Utility",
+      "Core Processing User",
+      "Central Peripheral Unit",
+      "Control Processing Unit"
+    ]
+  },
+  {
+    "category": "Technology",
+    "difficulty": "medium",
+    "question": "Who co-founded Apple alongside Steve Jobs?",
+    "correctAnswer": "Steve Wozniak",
+    "options": [
+      "Steve Wozniak",
+      "Bill Gates",
+      "Tim Cook",
+      "Larry Page",
+      "Michael Dell",
+      "Paul Allen"
+    ]
+  },
+  {
+    "category": "Technology",
+    "difficulty": "easy",
+    "question": "What does 'CPU' stand for?",
+    "correctAnswer": "Central Processing Unit",
+    "options": [
+      "Central Processing Unit",
+      "Computer Power Unit",
+      "Central Program Utility",
+      "Core Processing User",
+      "Central Peripheral Unit",
+      "Control Processing Unit"
+    ]
+  },
+  {
+    "category": "Technology",
+    "difficulty": "medium",
+    "question": "Who co-founded Apple alongside Steve Jobs?",
+    "correctAnswer": "Steve Wozniak",
+    "options": [
+      "Steve Wozniak",
+      "Bill Gates",
+      "Tim Cook",
+      "Larry Page",
+      "Michael Dell",
+      "Paul Allen"
+    ]
+  },
+  {
+    "category": "Art",
+    "difficulty": "easy",
+    "question": "Who painted the Mona Lisa?",
+    "correctAnswer": "Leonardo da Vinci",
+    "options": [
+      "Leonardo da Vinci",
+      "Michelangelo",
+      "Raphael",
+      "Donatello",
+      "Caravaggio",
+      "Rembrandt"
+    ]
+  },
+  {
+    "category": "Art",
+    "difficulty": "medium",
+    "question": "Which artist is associated with the painting Starry Night?",
+    "correctAnswer": "Vincent van Gogh",
+    "options": [
+      "Vincent van Gogh",
+      "Claude Monet",
+      "Pablo Picasso",
+      "Edvard Munch",
+      "Paul Cézanne",
+      "Henri Matisse"
+    ]
+  },
+  {
+    "category": "Art",
+    "difficulty": "easy",
+    "question": "Who painted the Mona Lisa?",
+    "correctAnswer": "Leonardo da Vinci",
+    "options": [
+      "Leonardo da Vinci",
+      "Michelangelo",
+      "Raphael",
+      "Donatello",
+      "Caravaggio",
+      "Rembrandt"
+    ]
+  },
+  {
+    "category": "Art",
+    "difficulty": "medium",
+    "question": "Which artist is associated with the painting Starry Night?",
+    "correctAnswer": "Vincent van Gogh",
+    "options": [
+      "Vincent van Gogh",
+      "Claude Monet",
+      "Pablo Picasso",
+      "Edvard Munch",
+      "Paul Cézanne",
+      "Henri Matisse"
+    ]
+  },
+  {
+    "category": "Art",
+    "difficulty": "easy",
+    "question": "Who painted the Mona Lisa?",
+    "correctAnswer": "Leonardo da Vinci",
+    "options": [
+      "Leonardo da Vinci",
+      "Michelangelo",
+      "Raphael",
+      "Donatello",
+      "Caravaggio",
+      "Rembrandt"
+    ]
+  },
+  {
+    "category": "Art",
+    "difficulty": "medium",
+    "question": "Which artist is associated with the painting Starry Night?",
+    "correctAnswer": "Vincent van Gogh",
+    "options": [
+      "Vincent van Gogh",
+      "Claude Monet",
+      "Pablo Picasso",
+      "Edvard Munch",
+      "Paul Cézanne",
+      "Henri Matisse"
+    ]
+  },
+  {
+    "category": "Art",
+    "difficulty": "easy",
+    "question": "Who painted the Mona Lisa?",
+    "correctAnswer": "Leonardo da Vinci",
+    "options": [
+      "Leonardo da Vinci",
+      "Michelangelo",
+      "Raphael",
+      "Donatello",
+      "Caravaggio",
+      "Rembrandt"
+    ]
+  },
+  {
+    "category": "Art",
+    "difficulty": "medium",
+    "question": "Which artist is associated with the painting Starry Night?",
+    "correctAnswer": "Vincent van Gogh",
+    "options": [
+      "Vincent van Gogh",
+      "Claude Monet",
+      "Pablo Picasso",
+      "Edvard Munch",
+      "Paul Cézanne",
+      "Henri Matisse"
+    ]
+  },
+  {
+    "category": "Art",
+    "difficulty": "easy",
+    "question": "Who painted the Mona Lisa?",
+    "correctAnswer": "Leonardo da Vinci",
+    "options": [
+      "Leonardo da Vinci",
+      "Michelangelo",
+      "Raphael",
+      "Donatello",
+      "Caravaggio",
+      "Rembrandt"
+    ]
+  },
+  {
+    "category": "Art",
+    "difficulty": "medium",
+    "question": "Which artist is associated with the painting Starry Night?",
+    "correctAnswer": "Vincent van Gogh",
+    "options": [
+      "Vincent van Gogh",
+      "Claude Monet",
+      "Pablo Picasso",
+      "Edvard Munch",
+      "Paul Cézanne",
+      "Henri Matisse"
+    ]
+  },
+  {
+    "category": "Art",
+    "difficulty": "easy",
+    "question": "Who painted the Mona Lisa?",
+    "correctAnswer": "Leonardo da Vinci",
+    "options": [
+      "Leonardo da Vinci",
+      "Michelangelo",
+      "Raphael",
+      "Donatello",
+      "Caravaggio",
+      "Rembrandt"
+    ]
+  },
+  {
+    "category": "Art",
+    "difficulty": "medium",
+    "question": "Which artist is associated with the painting Starry Night?",
+    "correctAnswer": "Vincent van Gogh",
+    "options": [
+      "Vincent van Gogh",
+      "Claude Monet",
+      "Pablo Picasso",
+      "Edvard Munch",
+      "Paul Cézanne",
+      "Henri Matisse"
+    ]
+  },
+  {
+    "category": "Art",
+    "difficulty": "easy",
+    "question": "Who painted the Mona Lisa?",
+    "correctAnswer": "Leonardo da Vinci",
+    "options": [
+      "Leonardo da Vinci",
+      "Michelangelo",
+      "Raphael",
+      "Donatello",
+      "Caravaggio",
+      "Rembrandt"
+    ]
+  },
+  {
+    "category": "Art",
+    "difficulty": "medium",
+    "question": "Which artist is associated with the painting Starry Night?",
+    "correctAnswer": "Vincent van Gogh",
+    "options": [
+      "Vincent van Gogh",
+      "Claude Monet",
+      "Pablo Picasso",
+      "Edvard Munch",
+      "Paul Cézanne",
+      "Henri Matisse"
+    ]
+  },
+  {
+    "category": "Art",
+    "difficulty": "easy",
+    "question": "Who painted the Mona Lisa?",
+    "correctAnswer": "Leonardo da Vinci",
+    "options": [
+      "Leonardo da Vinci",
+      "Michelangelo",
+      "Raphael",
+      "Donatello",
+      "Caravaggio",
+      "Rembrandt"
+    ]
+  },
+  {
+    "category": "Art",
+    "difficulty": "medium",
+    "question": "Which artist is associated with the painting Starry Night?",
+    "correctAnswer": "Vincent van Gogh",
+    "options": [
+      "Vincent van Gogh",
+      "Claude Monet",
+      "Pablo Picasso",
+      "Edvard Munch",
+      "Paul Cézanne",
+      "Henri Matisse"
+    ]
+  },
+  {
+    "category": "Art",
+    "difficulty": "easy",
+    "question": "Who painted the Mona Lisa?",
+    "correctAnswer": "Leonardo da Vinci",
+    "options": [
+      "Leonardo da Vinci",
+      "Michelangelo",
+      "Raphael",
+      "Donatello",
+      "Caravaggio",
+      "Rembrandt"
+    ]
+  },
+  {
+    "category": "Art",
+    "difficulty": "medium",
+    "question": "Which artist is associated with the painting Starry Night?",
+    "correctAnswer": "Vincent van Gogh",
+    "options": [
+      "Vincent van Gogh",
+      "Claude Monet",
+      "Pablo Picasso",
+      "Edvard Munch",
+      "Paul Cézanne",
+      "Henri Matisse"
+    ]
+  },
+  {
+    "category": "Art",
+    "difficulty": "easy",
+    "question": "Who painted the Mona Lisa?",
+    "correctAnswer": "Leonardo da Vinci",
+    "options": [
+      "Leonardo da Vinci",
+      "Michelangelo",
+      "Raphael",
+      "Donatello",
+      "Caravaggio",
+      "Rembrandt"
+    ]
+  },
+  {
+    "category": "Art",
+    "difficulty": "medium",
+    "question": "Which artist is associated with the painting Starry Night?",
+    "correctAnswer": "Vincent van Gogh",
+    "options": [
+      "Vincent van Gogh",
+      "Claude Monet",
+      "Pablo Picasso",
+      "Edvard Munch",
+      "Paul Cézanne",
+      "Henri Matisse"
+    ]
+  },
+  {
+    "category": "Art",
+    "difficulty": "easy",
+    "question": "Who painted the Mona Lisa?",
+    "correctAnswer": "Leonardo da Vinci",
+    "options": [
+      "Leonardo da Vinci",
+      "Michelangelo",
+      "Raphael",
+      "Donatello",
+      "Caravaggio",
+      "Rembrandt"
+    ]
+  },
+  {
+    "category": "Art",
+    "difficulty": "medium",
+    "question": "Which artist is associated with the painting Starry Night?",
+    "correctAnswer": "Vincent van Gogh",
+    "options": [
+      "Vincent van Gogh",
+      "Claude Monet",
+      "Pablo Picasso",
+      "Edvard Munch",
+      "Paul Cézanne",
+      "Henri Matisse"
+    ]
+  },
+  {
+    "category": "Art",
+    "difficulty": "easy",
+    "question": "Who painted the Mona Lisa?",
+    "correctAnswer": "Leonardo da Vinci",
+    "options": [
+      "Leonardo da Vinci",
+      "Michelangelo",
+      "Raphael",
+      "Donatello",
+      "Caravaggio",
+      "Rembrandt"
+    ]
+  },
+  {
+    "category": "Art",
+    "difficulty": "medium",
+    "question": "Which artist is associated with the painting Starry Night?",
+    "correctAnswer": "Vincent van Gogh",
+    "options": [
+      "Vincent van Gogh",
+      "Claude Monet",
+      "Pablo Picasso",
+      "Edvard Munch",
+      "Paul Cézanne",
+      "Henri Matisse"
+    ]
+  },
+  {
+    "category": "Art",
+    "difficulty": "easy",
+    "question": "Who painted the Mona Lisa?",
+    "correctAnswer": "Leonardo da Vinci",
+    "options": [
+      "Leonardo da Vinci",
+      "Michelangelo",
+      "Raphael",
+      "Donatello",
+      "Caravaggio",
+      "Rembrandt"
+    ]
+  },
+  {
+    "category": "Art",
+    "difficulty": "medium",
+    "question": "Which artist is associated with the painting Starry Night?",
+    "correctAnswer": "Vincent van Gogh",
+    "options": [
+      "Vincent van Gogh",
+      "Claude Monet",
+      "Pablo Picasso",
+      "Edvard Munch",
+      "Paul Cézanne",
+      "Henri Matisse"
+    ]
+  },
+  {
+    "category": "Art",
+    "difficulty": "easy",
+    "question": "Who painted the Mona Lisa?",
+    "correctAnswer": "Leonardo da Vinci",
+    "options": [
+      "Leonardo da Vinci",
+      "Michelangelo",
+      "Raphael",
+      "Donatello",
+      "Caravaggio",
+      "Rembrandt"
+    ]
+  },
+  {
+    "category": "Art",
+    "difficulty": "medium",
+    "question": "Which artist is associated with the painting Starry Night?",
+    "correctAnswer": "Vincent van Gogh",
+    "options": [
+      "Vincent van Gogh",
+      "Claude Monet",
+      "Pablo Picasso",
+      "Edvard Munch",
+      "Paul Cézanne",
+      "Henri Matisse"
+    ]
+  },
+  {
+    "category": "Art",
+    "difficulty": "easy",
+    "question": "Who painted the Mona Lisa?",
+    "correctAnswer": "Leonardo da Vinci",
+    "options": [
+      "Leonardo da Vinci",
+      "Michelangelo",
+      "Raphael",
+      "Donatello",
+      "Caravaggio",
+      "Rembrandt"
+    ]
+  },
+  {
+    "category": "Art",
+    "difficulty": "medium",
+    "question": "Which artist is associated with the painting Starry Night?",
+    "correctAnswer": "Vincent van Gogh",
+    "options": [
+      "Vincent van Gogh",
+      "Claude Monet",
+      "Pablo Picasso",
+      "Edvard Munch",
+      "Paul Cézanne",
+      "Henri Matisse"
+    ]
+  },
+  {
+    "category": "Art",
+    "difficulty": "easy",
+    "question": "Who painted the Mona Lisa?",
+    "correctAnswer": "Leonardo da Vinci",
+    "options": [
+      "Leonardo da Vinci",
+      "Michelangelo",
+      "Raphael",
+      "Donatello",
+      "Caravaggio",
+      "Rembrandt"
+    ]
+  },
+  {
+    "category": "Art",
+    "difficulty": "medium",
+    "question": "Which artist is associated with the painting Starry Night?",
+    "correctAnswer": "Vincent van Gogh",
+    "options": [
+      "Vincent van Gogh",
+      "Claude Monet",
+      "Pablo Picasso",
+      "Edvard Munch",
+      "Paul Cézanne",
+      "Henri Matisse"
+    ]
+  },
+  {
+    "category": "Art",
+    "difficulty": "easy",
+    "question": "Who painted the Mona Lisa?",
+    "correctAnswer": "Leonardo da Vinci",
+    "options": [
+      "Leonardo da Vinci",
+      "Michelangelo",
+      "Raphael",
+      "Donatello",
+      "Caravaggio",
+      "Rembrandt"
+    ]
+  },
+  {
+    "category": "Art",
+    "difficulty": "medium",
+    "question": "Which artist is associated with the painting Starry Night?",
+    "correctAnswer": "Vincent van Gogh",
+    "options": [
+      "Vincent van Gogh",
+      "Claude Monet",
+      "Pablo Picasso",
+      "Edvard Munch",
+      "Paul Cézanne",
+      "Henri Matisse"
+    ]
+  },
+  {
+    "category": "Art",
+    "difficulty": "easy",
+    "question": "Who painted the Mona Lisa?",
+    "correctAnswer": "Leonardo da Vinci",
+    "options": [
+      "Leonardo da Vinci",
+      "Michelangelo",
+      "Raphael",
+      "Donatello",
+      "Caravaggio",
+      "Rembrandt"
+    ]
+  },
+  {
+    "category": "Art",
+    "difficulty": "medium",
+    "question": "Which artist is associated with the painting Starry Night?",
+    "correctAnswer": "Vincent van Gogh",
+    "options": [
+      "Vincent van Gogh",
+      "Claude Monet",
+      "Pablo Picasso",
+      "Edvard Munch",
+      "Paul Cézanne",
+      "Henri Matisse"
+    ]
+  },
+  {
+    "category": "Art",
+    "difficulty": "easy",
+    "question": "Who painted the Mona Lisa?",
+    "correctAnswer": "Leonardo da Vinci",
+    "options": [
+      "Leonardo da Vinci",
+      "Michelangelo",
+      "Raphael",
+      "Donatello",
+      "Caravaggio",
+      "Rembrandt"
+    ]
+  },
+  {
+    "category": "Art",
+    "difficulty": "medium",
+    "question": "Which artist is associated with the painting Starry Night?",
+    "correctAnswer": "Vincent van Gogh",
+    "options": [
+      "Vincent van Gogh",
+      "Claude Monet",
+      "Pablo Picasso",
+      "Edvard Munch",
+      "Paul Cézanne",
+      "Henri Matisse"
+    ]
+  },
+  {
+    "category": "Art",
+    "difficulty": "easy",
+    "question": "Who painted the Mona Lisa?",
+    "correctAnswer": "Leonardo da Vinci",
+    "options": [
+      "Leonardo da Vinci",
+      "Michelangelo",
+      "Raphael",
+      "Donatello",
+      "Caravaggio",
+      "Rembrandt"
+    ]
+  },
+  {
+    "category": "Art",
+    "difficulty": "medium",
+    "question": "Which artist is associated with the painting Starry Night?",
+    "correctAnswer": "Vincent van Gogh",
+    "options": [
+      "Vincent van Gogh",
+      "Claude Monet",
+      "Pablo Picasso",
+      "Edvard Munch",
+      "Paul Cézanne",
+      "Henri Matisse"
+    ]
+  },
+  {
+    "category": "Art",
+    "difficulty": "easy",
+    "question": "Who painted the Mona Lisa?",
+    "correctAnswer": "Leonardo da Vinci",
+    "options": [
+      "Leonardo da Vinci",
+      "Michelangelo",
+      "Raphael",
+      "Donatello",
+      "Caravaggio",
+      "Rembrandt"
+    ]
+  },
+  {
+    "category": "Art",
+    "difficulty": "medium",
+    "question": "Which artist is associated with the painting Starry Night?",
+    "correctAnswer": "Vincent van Gogh",
+    "options": [
+      "Vincent van Gogh",
+      "Claude Monet",
+      "Pablo Picasso",
+      "Edvard Munch",
+      "Paul Cézanne",
+      "Henri Matisse"
+    ]
+  },
+  {
+    "category": "Art",
+    "difficulty": "easy",
+    "question": "Who painted the Mona Lisa?",
+    "correctAnswer": "Leonardo da Vinci",
+    "options": [
+      "Leonardo da Vinci",
+      "Michelangelo",
+      "Raphael",
+      "Donatello",
+      "Caravaggio",
+      "Rembrandt"
+    ]
+  },
+  {
+    "category": "Art",
+    "difficulty": "medium",
+    "question": "Which artist is associated with the painting Starry Night?",
+    "correctAnswer": "Vincent van Gogh",
+    "options": [
+      "Vincent van Gogh",
+      "Claude Monet",
+      "Pablo Picasso",
+      "Edvard Munch",
+      "Paul Cézanne",
+      "Henri Matisse"
+    ]
+  },
+  {
+    "category": "Art",
+    "difficulty": "easy",
+    "question": "Who painted the Mona Lisa?",
+    "correctAnswer": "Leonardo da Vinci",
+    "options": [
+      "Leonardo da Vinci",
+      "Michelangelo",
+      "Raphael",
+      "Donatello",
+      "Caravaggio",
+      "Rembrandt"
+    ]
+  },
+  {
+    "category": "Art",
+    "difficulty": "medium",
+    "question": "Which artist is associated with the painting Starry Night?",
+    "correctAnswer": "Vincent van Gogh",
+    "options": [
+      "Vincent van Gogh",
+      "Claude Monet",
+      "Pablo Picasso",
+      "Edvard Munch",
+      "Paul Cézanne",
+      "Henri Matisse"
+    ]
+  },
+  {
+    "category": "Art",
+    "difficulty": "easy",
+    "question": "Who painted the Mona Lisa?",
+    "correctAnswer": "Leonardo da Vinci",
+    "options": [
+      "Leonardo da Vinci",
+      "Michelangelo",
+      "Raphael",
+      "Donatello",
+      "Caravaggio",
+      "Rembrandt"
+    ]
+  },
+  {
+    "category": "Art",
+    "difficulty": "medium",
+    "question": "Which artist is associated with the painting Starry Night?",
+    "correctAnswer": "Vincent van Gogh",
+    "options": [
+      "Vincent van Gogh",
+      "Claude Monet",
+      "Pablo Picasso",
+      "Edvard Munch",
+      "Paul Cézanne",
+      "Henri Matisse"
+    ]
+  },
+  {
+    "category": "Art",
+    "difficulty": "easy",
+    "question": "Who painted the Mona Lisa?",
+    "correctAnswer": "Leonardo da Vinci",
+    "options": [
+      "Leonardo da Vinci",
+      "Michelangelo",
+      "Raphael",
+      "Donatello",
+      "Caravaggio",
+      "Rembrandt"
+    ]
+  },
+  {
+    "category": "Art",
+    "difficulty": "medium",
+    "question": "Which artist is associated with the painting Starry Night?",
+    "correctAnswer": "Vincent van Gogh",
+    "options": [
+      "Vincent van Gogh",
+      "Claude Monet",
+      "Pablo Picasso",
+      "Edvard Munch",
+      "Paul Cézanne",
+      "Henri Matisse"
+    ]
+  },
+  {
+    "category": "Geography",
+    "difficulty": "easy",
+    "question": "What is the capital city of Japan?",
+    "correctAnswer": "Tokyo",
+    "options": [
+      "Tokyo",
+      "Osaka",
+      "Kyoto",
+      "Seoul",
+      "Beijing",
+      "Nagoya"
+    ]
+  },
+  {
+    "category": "Geography",
+    "difficulty": "medium",
+    "question": "Which river runs through London?",
+    "correctAnswer": "Thames",
+    "options": [
+      "Thames",
+      "Seine",
+      "Danube",
+      "Rhine",
+      "Tiber",
+      "Loire"
+    ]
+  },
+  {
+    "category": "Geography",
+    "difficulty": "easy",
+    "question": "What is the capital city of Japan?",
+    "correctAnswer": "Tokyo",
+    "options": [
+      "Tokyo",
+      "Osaka",
+      "Kyoto",
+      "Seoul",
+      "Beijing",
+      "Nagoya"
+    ]
+  },
+  {
+    "category": "Geography",
+    "difficulty": "medium",
+    "question": "Which river runs through London?",
+    "correctAnswer": "Thames",
+    "options": [
+      "Thames",
+      "Seine",
+      "Danube",
+      "Rhine",
+      "Tiber",
+      "Loire"
+    ]
+  },
+  {
+    "category": "Geography",
+    "difficulty": "easy",
+    "question": "What is the capital city of Japan?",
+    "correctAnswer": "Tokyo",
+    "options": [
+      "Tokyo",
+      "Osaka",
+      "Kyoto",
+      "Seoul",
+      "Beijing",
+      "Nagoya"
+    ]
+  },
+  {
+    "category": "Geography",
+    "difficulty": "medium",
+    "question": "Which river runs through London?",
+    "correctAnswer": "Thames",
+    "options": [
+      "Thames",
+      "Seine",
+      "Danube",
+      "Rhine",
+      "Tiber",
+      "Loire"
+    ]
+  },
+  {
+    "category": "Geography",
+    "difficulty": "easy",
+    "question": "What is the capital city of Japan?",
+    "correctAnswer": "Tokyo",
+    "options": [
+      "Tokyo",
+      "Osaka",
+      "Kyoto",
+      "Seoul",
+      "Beijing",
+      "Nagoya"
+    ]
+  },
+  {
+    "category": "Geography",
+    "difficulty": "medium",
+    "question": "Which river runs through London?",
+    "correctAnswer": "Thames",
+    "options": [
+      "Thames",
+      "Seine",
+      "Danube",
+      "Rhine",
+      "Tiber",
+      "Loire"
+    ]
+  },
+  {
+    "category": "Geography",
+    "difficulty": "easy",
+    "question": "What is the capital city of Japan?",
+    "correctAnswer": "Tokyo",
+    "options": [
+      "Tokyo",
+      "Osaka",
+      "Kyoto",
+      "Seoul",
+      "Beijing",
+      "Nagoya"
+    ]
+  },
+  {
+    "category": "Geography",
+    "difficulty": "medium",
+    "question": "Which river runs through London?",
+    "correctAnswer": "Thames",
+    "options": [
+      "Thames",
+      "Seine",
+      "Danube",
+      "Rhine",
+      "Tiber",
+      "Loire"
+    ]
+  },
+  {
+    "category": "Geography",
+    "difficulty": "easy",
+    "question": "What is the capital city of Japan?",
+    "correctAnswer": "Tokyo",
+    "options": [
+      "Tokyo",
+      "Osaka",
+      "Kyoto",
+      "Seoul",
+      "Beijing",
+      "Nagoya"
+    ]
+  },
+  {
+    "category": "Geography",
+    "difficulty": "medium",
+    "question": "Which river runs through London?",
+    "correctAnswer": "Thames",
+    "options": [
+      "Thames",
+      "Seine",
+      "Danube",
+      "Rhine",
+      "Tiber",
+      "Loire"
+    ]
+  },
+  {
+    "category": "Geography",
+    "difficulty": "easy",
+    "question": "What is the capital city of Japan?",
+    "correctAnswer": "Tokyo",
+    "options": [
+      "Tokyo",
+      "Osaka",
+      "Kyoto",
+      "Seoul",
+      "Beijing",
+      "Nagoya"
+    ]
+  },
+  {
+    "category": "Geography",
+    "difficulty": "medium",
+    "question": "Which river runs through London?",
+    "correctAnswer": "Thames",
+    "options": [
+      "Thames",
+      "Seine",
+      "Danube",
+      "Rhine",
+      "Tiber",
+      "Loire"
+    ]
+  },
+  {
+    "category": "Geography",
+    "difficulty": "easy",
+    "question": "What is the capital city of Japan?",
+    "correctAnswer": "Tokyo",
+    "options": [
+      "Tokyo",
+      "Osaka",
+      "Kyoto",
+      "Seoul",
+      "Beijing",
+      "Nagoya"
+    ]
+  },
+  {
+    "category": "Geography",
+    "difficulty": "medium",
+    "question": "Which river runs through London?",
+    "correctAnswer": "Thames",
+    "options": [
+      "Thames",
+      "Seine",
+      "Danube",
+      "Rhine",
+      "Tiber",
+      "Loire"
+    ]
+  },
+  {
+    "category": "Geography",
+    "difficulty": "easy",
+    "question": "What is the capital city of Japan?",
+    "correctAnswer": "Tokyo",
+    "options": [
+      "Tokyo",
+      "Osaka",
+      "Kyoto",
+      "Seoul",
+      "Beijing",
+      "Nagoya"
+    ]
+  },
+  {
+    "category": "Geography",
+    "difficulty": "medium",
+    "question": "Which river runs through London?",
+    "correctAnswer": "Thames",
+    "options": [
+      "Thames",
+      "Seine",
+      "Danube",
+      "Rhine",
+      "Tiber",
+      "Loire"
+    ]
+  },
+  {
+    "category": "Geography",
+    "difficulty": "easy",
+    "question": "What is the capital city of Japan?",
+    "correctAnswer": "Tokyo",
+    "options": [
+      "Tokyo",
+      "Osaka",
+      "Kyoto",
+      "Seoul",
+      "Beijing",
+      "Nagoya"
+    ]
+  },
+  {
+    "category": "Geography",
+    "difficulty": "medium",
+    "question": "Which river runs through London?",
+    "correctAnswer": "Thames",
+    "options": [
+      "Thames",
+      "Seine",
+      "Danube",
+      "Rhine",
+      "Tiber",
+      "Loire"
+    ]
+  },
+  {
+    "category": "Geography",
+    "difficulty": "easy",
+    "question": "What is the capital city of Japan?",
+    "correctAnswer": "Tokyo",
+    "options": [
+      "Tokyo",
+      "Osaka",
+      "Kyoto",
+      "Seoul",
+      "Beijing",
+      "Nagoya"
+    ]
+  },
+  {
+    "category": "Geography",
+    "difficulty": "medium",
+    "question": "Which river runs through London?",
+    "correctAnswer": "Thames",
+    "options": [
+      "Thames",
+      "Seine",
+      "Danube",
+      "Rhine",
+      "Tiber",
+      "Loire"
+    ]
+  },
+  {
+    "category": "Geography",
+    "difficulty": "easy",
+    "question": "What is the capital city of Japan?",
+    "correctAnswer": "Tokyo",
+    "options": [
+      "Tokyo",
+      "Osaka",
+      "Kyoto",
+      "Seoul",
+      "Beijing",
+      "Nagoya"
+    ]
+  },
+  {
+    "category": "Geography",
+    "difficulty": "medium",
+    "question": "Which river runs through London?",
+    "correctAnswer": "Thames",
+    "options": [
+      "Thames",
+      "Seine",
+      "Danube",
+      "Rhine",
+      "Tiber",
+      "Loire"
+    ]
+  },
+  {
+    "category": "Geography",
+    "difficulty": "easy",
+    "question": "What is the capital city of Japan?",
+    "correctAnswer": "Tokyo",
+    "options": [
+      "Tokyo",
+      "Osaka",
+      "Kyoto",
+      "Seoul",
+      "Beijing",
+      "Nagoya"
+    ]
+  },
+  {
+    "category": "Geography",
+    "difficulty": "medium",
+    "question": "Which river runs through London?",
+    "correctAnswer": "Thames",
+    "options": [
+      "Thames",
+      "Seine",
+      "Danube",
+      "Rhine",
+      "Tiber",
+      "Loire"
+    ]
+  },
+  {
+    "category": "Geography",
+    "difficulty": "easy",
+    "question": "What is the capital city of Japan?",
+    "correctAnswer": "Tokyo",
+    "options": [
+      "Tokyo",
+      "Osaka",
+      "Kyoto",
+      "Seoul",
+      "Beijing",
+      "Nagoya"
+    ]
+  },
+  {
+    "category": "Geography",
+    "difficulty": "medium",
+    "question": "Which river runs through London?",
+    "correctAnswer": "Thames",
+    "options": [
+      "Thames",
+      "Seine",
+      "Danube",
+      "Rhine",
+      "Tiber",
+      "Loire"
+    ]
+  },
+  {
+    "category": "Geography",
+    "difficulty": "easy",
+    "question": "What is the capital city of Japan?",
+    "correctAnswer": "Tokyo",
+    "options": [
+      "Tokyo",
+      "Osaka",
+      "Kyoto",
+      "Seoul",
+      "Beijing",
+      "Nagoya"
+    ]
+  },
+  {
+    "category": "Geography",
+    "difficulty": "medium",
+    "question": "Which river runs through London?",
+    "correctAnswer": "Thames",
+    "options": [
+      "Thames",
+      "Seine",
+      "Danube",
+      "Rhine",
+      "Tiber",
+      "Loire"
+    ]
+  },
+  {
+    "category": "Geography",
+    "difficulty": "easy",
+    "question": "What is the capital city of Japan?",
+    "correctAnswer": "Tokyo",
+    "options": [
+      "Tokyo",
+      "Osaka",
+      "Kyoto",
+      "Seoul",
+      "Beijing",
+      "Nagoya"
+    ]
+  },
+  {
+    "category": "Geography",
+    "difficulty": "medium",
+    "question": "Which river runs through London?",
+    "correctAnswer": "Thames",
+    "options": [
+      "Thames",
+      "Seine",
+      "Danube",
+      "Rhine",
+      "Tiber",
+      "Loire"
+    ]
+  },
+  {
+    "category": "Geography",
+    "difficulty": "easy",
+    "question": "What is the capital city of Japan?",
+    "correctAnswer": "Tokyo",
+    "options": [
+      "Tokyo",
+      "Osaka",
+      "Kyoto",
+      "Seoul",
+      "Beijing",
+      "Nagoya"
+    ]
+  },
+  {
+    "category": "Geography",
+    "difficulty": "medium",
+    "question": "Which river runs through London?",
+    "correctAnswer": "Thames",
+    "options": [
+      "Thames",
+      "Seine",
+      "Danube",
+      "Rhine",
+      "Tiber",
+      "Loire"
+    ]
+  },
+  {
+    "category": "Geography",
+    "difficulty": "easy",
+    "question": "What is the capital city of Japan?",
+    "correctAnswer": "Tokyo",
+    "options": [
+      "Tokyo",
+      "Osaka",
+      "Kyoto",
+      "Seoul",
+      "Beijing",
+      "Nagoya"
+    ]
+  },
+  {
+    "category": "Geography",
+    "difficulty": "medium",
+    "question": "Which river runs through London?",
+    "correctAnswer": "Thames",
+    "options": [
+      "Thames",
+      "Seine",
+      "Danube",
+      "Rhine",
+      "Tiber",
+      "Loire"
+    ]
+  },
+  {
+    "category": "Geography",
+    "difficulty": "easy",
+    "question": "What is the capital city of Japan?",
+    "correctAnswer": "Tokyo",
+    "options": [
+      "Tokyo",
+      "Osaka",
+      "Kyoto",
+      "Seoul",
+      "Beijing",
+      "Nagoya"
+    ]
+  },
+  {
+    "category": "Geography",
+    "difficulty": "medium",
+    "question": "Which river runs through London?",
+    "correctAnswer": "Thames",
+    "options": [
+      "Thames",
+      "Seine",
+      "Danube",
+      "Rhine",
+      "Tiber",
+      "Loire"
+    ]
+  },
+  {
+    "category": "Geography",
+    "difficulty": "easy",
+    "question": "What is the capital city of Japan?",
+    "correctAnswer": "Tokyo",
+    "options": [
+      "Tokyo",
+      "Osaka",
+      "Kyoto",
+      "Seoul",
+      "Beijing",
+      "Nagoya"
+    ]
+  },
+  {
+    "category": "Geography",
+    "difficulty": "medium",
+    "question": "Which river runs through London?",
+    "correctAnswer": "Thames",
+    "options": [
+      "Thames",
+      "Seine",
+      "Danube",
+      "Rhine",
+      "Tiber",
+      "Loire"
+    ]
+  },
+  {
+    "category": "Geography",
+    "difficulty": "easy",
+    "question": "What is the capital city of Japan?",
+    "correctAnswer": "Tokyo",
+    "options": [
+      "Tokyo",
+      "Osaka",
+      "Kyoto",
+      "Seoul",
+      "Beijing",
+      "Nagoya"
+    ]
+  },
+  {
+    "category": "Geography",
+    "difficulty": "medium",
+    "question": "Which river runs through London?",
+    "correctAnswer": "Thames",
+    "options": [
+      "Thames",
+      "Seine",
+      "Danube",
+      "Rhine",
+      "Tiber",
+      "Loire"
+    ]
+  },
+  {
+    "category": "Geography",
+    "difficulty": "easy",
+    "question": "What is the capital city of Japan?",
+    "correctAnswer": "Tokyo",
+    "options": [
+      "Tokyo",
+      "Osaka",
+      "Kyoto",
+      "Seoul",
+      "Beijing",
+      "Nagoya"
+    ]
+  },
+  {
+    "category": "Geography",
+    "difficulty": "medium",
+    "question": "Which river runs through London?",
+    "correctAnswer": "Thames",
+    "options": [
+      "Thames",
+      "Seine",
+      "Danube",
+      "Rhine",
+      "Tiber",
+      "Loire"
+    ]
+  },
+  {
+    "category": "Geography",
+    "difficulty": "easy",
+    "question": "What is the capital city of Japan?",
+    "correctAnswer": "Tokyo",
+    "options": [
+      "Tokyo",
+      "Osaka",
+      "Kyoto",
+      "Seoul",
+      "Beijing",
+      "Nagoya"
+    ]
+  },
+  {
+    "category": "Geography",
+    "difficulty": "medium",
+    "question": "Which river runs through London?",
+    "correctAnswer": "Thames",
+    "options": [
+      "Thames",
+      "Seine",
+      "Danube",
+      "Rhine",
+      "Tiber",
+      "Loire"
+    ]
+  },
+  {
+    "category": "Geography",
+    "difficulty": "easy",
+    "question": "What is the capital city of Japan?",
+    "correctAnswer": "Tokyo",
+    "options": [
+      "Tokyo",
+      "Osaka",
+      "Kyoto",
+      "Seoul",
+      "Beijing",
+      "Nagoya"
+    ]
+  },
+  {
+    "category": "Geography",
+    "difficulty": "medium",
+    "question": "Which river runs through London?",
+    "correctAnswer": "Thames",
+    "options": [
+      "Thames",
+      "Seine",
+      "Danube",
+      "Rhine",
+      "Tiber",
+      "Loire"
+    ]
+  },
+  {
+    "category": "Geography",
+    "difficulty": "easy",
+    "question": "What is the capital city of Japan?",
+    "correctAnswer": "Tokyo",
+    "options": [
+      "Tokyo",
+      "Osaka",
+      "Kyoto",
+      "Seoul",
+      "Beijing",
+      "Nagoya"
+    ]
+  },
+  {
+    "category": "Geography",
+    "difficulty": "medium",
+    "question": "Which river runs through London?",
+    "correctAnswer": "Thames",
+    "options": [
+      "Thames",
+      "Seine",
+      "Danube",
+      "Rhine",
+      "Tiber",
+      "Loire"
+    ]
+  },
+  {
+    "category": "Finance",
+    "difficulty": "easy",
+    "question": "What does 'IPO' stand for in finance?",
+    "correctAnswer": "Initial Public Offering",
+    "options": [
+      "Initial Public Offering",
+      "International Price Option",
+      "Internal Profit Operation",
+      "Indexed Portfolio Order",
+      "Immediate Purchase Offer",
+      "Initial Private Offering"
+    ]
+  },
+  {
+    "category": "Finance",
+    "difficulty": "medium",
+    "question": "Which institution sets monetary policy in the United States?",
+    "correctAnswer": "Federal Reserve",
+    "options": [
+      "Federal Reserve",
+      "U.S. Treasury",
+      "World Bank",
+      "IMF",
+      "SEC",
+      "FDIC"
+    ]
+  },
+  {
+    "category": "Finance",
+    "difficulty": "easy",
+    "question": "What does 'IPO' stand for in finance?",
+    "correctAnswer": "Initial Public Offering",
+    "options": [
+      "Initial Public Offering",
+      "International Price Option",
+      "Internal Profit Operation",
+      "Indexed Portfolio Order",
+      "Immediate Purchase Offer",
+      "Initial Private Offering"
+    ]
+  },
+  {
+    "category": "Finance",
+    "difficulty": "medium",
+    "question": "Which institution sets monetary policy in the United States?",
+    "correctAnswer": "Federal Reserve",
+    "options": [
+      "Federal Reserve",
+      "U.S. Treasury",
+      "World Bank",
+      "IMF",
+      "SEC",
+      "FDIC"
+    ]
+  },
+  {
+    "category": "Finance",
+    "difficulty": "easy",
+    "question": "What does 'IPO' stand for in finance?",
+    "correctAnswer": "Initial Public Offering",
+    "options": [
+      "Initial Public Offering",
+      "International Price Option",
+      "Internal Profit Operation",
+      "Indexed Portfolio Order",
+      "Immediate Purchase Offer",
+      "Initial Private Offering"
+    ]
+  },
+  {
+    "category": "Finance",
+    "difficulty": "medium",
+    "question": "Which institution sets monetary policy in the United States?",
+    "correctAnswer": "Federal Reserve",
+    "options": [
+      "Federal Reserve",
+      "U.S. Treasury",
+      "World Bank",
+      "IMF",
+      "SEC",
+      "FDIC"
+    ]
+  },
+  {
+    "category": "Finance",
+    "difficulty": "easy",
+    "question": "What does 'IPO' stand for in finance?",
+    "correctAnswer": "Initial Public Offering",
+    "options": [
+      "Initial Public Offering",
+      "International Price Option",
+      "Internal Profit Operation",
+      "Indexed Portfolio Order",
+      "Immediate Purchase Offer",
+      "Initial Private Offering"
+    ]
+  },
+  {
+    "category": "Finance",
+    "difficulty": "medium",
+    "question": "Which institution sets monetary policy in the United States?",
+    "correctAnswer": "Federal Reserve",
+    "options": [
+      "Federal Reserve",
+      "U.S. Treasury",
+      "World Bank",
+      "IMF",
+      "SEC",
+      "FDIC"
+    ]
+  },
+  {
+    "category": "Finance",
+    "difficulty": "easy",
+    "question": "What does 'IPO' stand for in finance?",
+    "correctAnswer": "Initial Public Offering",
+    "options": [
+      "Initial Public Offering",
+      "International Price Option",
+      "Internal Profit Operation",
+      "Indexed Portfolio Order",
+      "Immediate Purchase Offer",
+      "Initial Private Offering"
+    ]
+  },
+  {
+    "category": "Finance",
+    "difficulty": "medium",
+    "question": "Which institution sets monetary policy in the United States?",
+    "correctAnswer": "Federal Reserve",
+    "options": [
+      "Federal Reserve",
+      "U.S. Treasury",
+      "World Bank",
+      "IMF",
+      "SEC",
+      "FDIC"
+    ]
+  },
+  {
+    "category": "Finance",
+    "difficulty": "easy",
+    "question": "What does 'IPO' stand for in finance?",
+    "correctAnswer": "Initial Public Offering",
+    "options": [
+      "Initial Public Offering",
+      "International Price Option",
+      "Internal Profit Operation",
+      "Indexed Portfolio Order",
+      "Immediate Purchase Offer",
+      "Initial Private Offering"
+    ]
+  },
+  {
+    "category": "Finance",
+    "difficulty": "medium",
+    "question": "Which institution sets monetary policy in the United States?",
+    "correctAnswer": "Federal Reserve",
+    "options": [
+      "Federal Reserve",
+      "U.S. Treasury",
+      "World Bank",
+      "IMF",
+      "SEC",
+      "FDIC"
+    ]
+  },
+  {
+    "category": "Finance",
+    "difficulty": "easy",
+    "question": "What does 'IPO' stand for in finance?",
+    "correctAnswer": "Initial Public Offering",
+    "options": [
+      "Initial Public Offering",
+      "International Price Option",
+      "Internal Profit Operation",
+      "Indexed Portfolio Order",
+      "Immediate Purchase Offer",
+      "Initial Private Offering"
+    ]
+  },
+  {
+    "category": "Finance",
+    "difficulty": "medium",
+    "question": "Which institution sets monetary policy in the United States?",
+    "correctAnswer": "Federal Reserve",
+    "options": [
+      "Federal Reserve",
+      "U.S. Treasury",
+      "World Bank",
+      "IMF",
+      "SEC",
+      "FDIC"
+    ]
+  },
+  {
+    "category": "Finance",
+    "difficulty": "easy",
+    "question": "What does 'IPO' stand for in finance?",
+    "correctAnswer": "Initial Public Offering",
+    "options": [
+      "Initial Public Offering",
+      "International Price Option",
+      "Internal Profit Operation",
+      "Indexed Portfolio Order",
+      "Immediate Purchase Offer",
+      "Initial Private Offering"
+    ]
+  },
+  {
+    "category": "Finance",
+    "difficulty": "medium",
+    "question": "Which institution sets monetary policy in the United States?",
+    "correctAnswer": "Federal Reserve",
+    "options": [
+      "Federal Reserve",
+      "U.S. Treasury",
+      "World Bank",
+      "IMF",
+      "SEC",
+      "FDIC"
+    ]
+  },
+  {
+    "category": "Finance",
+    "difficulty": "easy",
+    "question": "What does 'IPO' stand for in finance?",
+    "correctAnswer": "Initial Public Offering",
+    "options": [
+      "Initial Public Offering",
+      "International Price Option",
+      "Internal Profit Operation",
+      "Indexed Portfolio Order",
+      "Immediate Purchase Offer",
+      "Initial Private Offering"
+    ]
+  },
+  {
+    "category": "Finance",
+    "difficulty": "medium",
+    "question": "Which institution sets monetary policy in the United States?",
+    "correctAnswer": "Federal Reserve",
+    "options": [
+      "Federal Reserve",
+      "U.S. Treasury",
+      "World Bank",
+      "IMF",
+      "SEC",
+      "FDIC"
+    ]
+  },
+  {
+    "category": "Finance",
+    "difficulty": "easy",
+    "question": "What does 'IPO' stand for in finance?",
+    "correctAnswer": "Initial Public Offering",
+    "options": [
+      "Initial Public Offering",
+      "International Price Option",
+      "Internal Profit Operation",
+      "Indexed Portfolio Order",
+      "Immediate Purchase Offer",
+      "Initial Private Offering"
+    ]
+  },
+  {
+    "category": "Finance",
+    "difficulty": "medium",
+    "question": "Which institution sets monetary policy in the United States?",
+    "correctAnswer": "Federal Reserve",
+    "options": [
+      "Federal Reserve",
+      "U.S. Treasury",
+      "World Bank",
+      "IMF",
+      "SEC",
+      "FDIC"
+    ]
+  },
+  {
+    "category": "Finance",
+    "difficulty": "easy",
+    "question": "What does 'IPO' stand for in finance?",
+    "correctAnswer": "Initial Public Offering",
+    "options": [
+      "Initial Public Offering",
+      "International Price Option",
+      "Internal Profit Operation",
+      "Indexed Portfolio Order",
+      "Immediate Purchase Offer",
+      "Initial Private Offering"
+    ]
+  },
+  {
+    "category": "Finance",
+    "difficulty": "medium",
+    "question": "Which institution sets monetary policy in the United States?",
+    "correctAnswer": "Federal Reserve",
+    "options": [
+      "Federal Reserve",
+      "U.S. Treasury",
+      "World Bank",
+      "IMF",
+      "SEC",
+      "FDIC"
+    ]
+  },
+  {
+    "category": "Finance",
+    "difficulty": "easy",
+    "question": "What does 'IPO' stand for in finance?",
+    "correctAnswer": "Initial Public Offering",
+    "options": [
+      "Initial Public Offering",
+      "International Price Option",
+      "Internal Profit Operation",
+      "Indexed Portfolio Order",
+      "Immediate Purchase Offer",
+      "Initial Private Offering"
+    ]
+  },
+  {
+    "category": "Finance",
+    "difficulty": "medium",
+    "question": "Which institution sets monetary policy in the United States?",
+    "correctAnswer": "Federal Reserve",
+    "options": [
+      "Federal Reserve",
+      "U.S. Treasury",
+      "World Bank",
+      "IMF",
+      "SEC",
+      "FDIC"
+    ]
+  },
+  {
+    "category": "Finance",
+    "difficulty": "easy",
+    "question": "What does 'IPO' stand for in finance?",
+    "correctAnswer": "Initial Public Offering",
+    "options": [
+      "Initial Public Offering",
+      "International Price Option",
+      "Internal Profit Operation",
+      "Indexed Portfolio Order",
+      "Immediate Purchase Offer",
+      "Initial Private Offering"
+    ]
+  },
+  {
+    "category": "Finance",
+    "difficulty": "medium",
+    "question": "Which institution sets monetary policy in the United States?",
+    "correctAnswer": "Federal Reserve",
+    "options": [
+      "Federal Reserve",
+      "U.S. Treasury",
+      "World Bank",
+      "IMF",
+      "SEC",
+      "FDIC"
+    ]
+  },
+  {
+    "category": "Finance",
+    "difficulty": "easy",
+    "question": "What does 'IPO' stand for in finance?",
+    "correctAnswer": "Initial Public Offering",
+    "options": [
+      "Initial Public Offering",
+      "International Price Option",
+      "Internal Profit Operation",
+      "Indexed Portfolio Order",
+      "Immediate Purchase Offer",
+      "Initial Private Offering"
+    ]
+  },
+  {
+    "category": "Finance",
+    "difficulty": "medium",
+    "question": "Which institution sets monetary policy in the United States?",
+    "correctAnswer": "Federal Reserve",
+    "options": [
+      "Federal Reserve",
+      "U.S. Treasury",
+      "World Bank",
+      "IMF",
+      "SEC",
+      "FDIC"
+    ]
+  },
+  {
+    "category": "Finance",
+    "difficulty": "easy",
+    "question": "What does 'IPO' stand for in finance?",
+    "correctAnswer": "Initial Public Offering",
+    "options": [
+      "Initial Public Offering",
+      "International Price Option",
+      "Internal Profit Operation",
+      "Indexed Portfolio Order",
+      "Immediate Purchase Offer",
+      "Initial Private Offering"
+    ]
+  },
+  {
+    "category": "Finance",
+    "difficulty": "medium",
+    "question": "Which institution sets monetary policy in the United States?",
+    "correctAnswer": "Federal Reserve",
+    "options": [
+      "Federal Reserve",
+      "U.S. Treasury",
+      "World Bank",
+      "IMF",
+      "SEC",
+      "FDIC"
+    ]
+  },
+  {
+    "category": "Finance",
+    "difficulty": "easy",
+    "question": "What does 'IPO' stand for in finance?",
+    "correctAnswer": "Initial Public Offering",
+    "options": [
+      "Initial Public Offering",
+      "International Price Option",
+      "Internal Profit Operation",
+      "Indexed Portfolio Order",
+      "Immediate Purchase Offer",
+      "Initial Private Offering"
+    ]
+  },
+  {
+    "category": "Finance",
+    "difficulty": "medium",
+    "question": "Which institution sets monetary policy in the United States?",
+    "correctAnswer": "Federal Reserve",
+    "options": [
+      "Federal Reserve",
+      "U.S. Treasury",
+      "World Bank",
+      "IMF",
+      "SEC",
+      "FDIC"
+    ]
+  },
+  {
+    "category": "Finance",
+    "difficulty": "easy",
+    "question": "What does 'IPO' stand for in finance?",
+    "correctAnswer": "Initial Public Offering",
+    "options": [
+      "Initial Public Offering",
+      "International Price Option",
+      "Internal Profit Operation",
+      "Indexed Portfolio Order",
+      "Immediate Purchase Offer",
+      "Initial Private Offering"
+    ]
+  },
+  {
+    "category": "Finance",
+    "difficulty": "medium",
+    "question": "Which institution sets monetary policy in the United States?",
+    "correctAnswer": "Federal Reserve",
+    "options": [
+      "Federal Reserve",
+      "U.S. Treasury",
+      "World Bank",
+      "IMF",
+      "SEC",
+      "FDIC"
+    ]
+  },
+  {
+    "category": "Finance",
+    "difficulty": "easy",
+    "question": "What does 'IPO' stand for in finance?",
+    "correctAnswer": "Initial Public Offering",
+    "options": [
+      "Initial Public Offering",
+      "International Price Option",
+      "Internal Profit Operation",
+      "Indexed Portfolio Order",
+      "Immediate Purchase Offer",
+      "Initial Private Offering"
+    ]
+  },
+  {
+    "category": "Finance",
+    "difficulty": "medium",
+    "question": "Which institution sets monetary policy in the United States?",
+    "correctAnswer": "Federal Reserve",
+    "options": [
+      "Federal Reserve",
+      "U.S. Treasury",
+      "World Bank",
+      "IMF",
+      "SEC",
+      "FDIC"
+    ]
+  },
+  {
+    "category": "Finance",
+    "difficulty": "easy",
+    "question": "What does 'IPO' stand for in finance?",
+    "correctAnswer": "Initial Public Offering",
+    "options": [
+      "Initial Public Offering",
+      "International Price Option",
+      "Internal Profit Operation",
+      "Indexed Portfolio Order",
+      "Immediate Purchase Offer",
+      "Initial Private Offering"
+    ]
+  },
+  {
+    "category": "Finance",
+    "difficulty": "medium",
+    "question": "Which institution sets monetary policy in the United States?",
+    "correctAnswer": "Federal Reserve",
+    "options": [
+      "Federal Reserve",
+      "U.S. Treasury",
+      "World Bank",
+      "IMF",
+      "SEC",
+      "FDIC"
+    ]
+  },
+  {
+    "category": "Finance",
+    "difficulty": "easy",
+    "question": "What does 'IPO' stand for in finance?",
+    "correctAnswer": "Initial Public Offering",
+    "options": [
+      "Initial Public Offering",
+      "International Price Option",
+      "Internal Profit Operation",
+      "Indexed Portfolio Order",
+      "Immediate Purchase Offer",
+      "Initial Private Offering"
+    ]
+  },
+  {
+    "category": "Finance",
+    "difficulty": "medium",
+    "question": "Which institution sets monetary policy in the United States?",
+    "correctAnswer": "Federal Reserve",
+    "options": [
+      "Federal Reserve",
+      "U.S. Treasury",
+      "World Bank",
+      "IMF",
+      "SEC",
+      "FDIC"
+    ]
+  },
+  {
+    "category": "Finance",
+    "difficulty": "easy",
+    "question": "What does 'IPO' stand for in finance?",
+    "correctAnswer": "Initial Public Offering",
+    "options": [
+      "Initial Public Offering",
+      "International Price Option",
+      "Internal Profit Operation",
+      "Indexed Portfolio Order",
+      "Immediate Purchase Offer",
+      "Initial Private Offering"
+    ]
+  },
+  {
+    "category": "Finance",
+    "difficulty": "medium",
+    "question": "Which institution sets monetary policy in the United States?",
+    "correctAnswer": "Federal Reserve",
+    "options": [
+      "Federal Reserve",
+      "U.S. Treasury",
+      "World Bank",
+      "IMF",
+      "SEC",
+      "FDIC"
+    ]
+  },
+  {
+    "category": "Finance",
+    "difficulty": "easy",
+    "question": "What does 'IPO' stand for in finance?",
+    "correctAnswer": "Initial Public Offering",
+    "options": [
+      "Initial Public Offering",
+      "International Price Option",
+      "Internal Profit Operation",
+      "Indexed Portfolio Order",
+      "Immediate Purchase Offer",
+      "Initial Private Offering"
+    ]
+  },
+  {
+    "category": "Finance",
+    "difficulty": "medium",
+    "question": "Which institution sets monetary policy in the United States?",
+    "correctAnswer": "Federal Reserve",
+    "options": [
+      "Federal Reserve",
+      "U.S. Treasury",
+      "World Bank",
+      "IMF",
+      "SEC",
+      "FDIC"
+    ]
+  },
+  {
+    "category": "Finance",
+    "difficulty": "easy",
+    "question": "What does 'IPO' stand for in finance?",
+    "correctAnswer": "Initial Public Offering",
+    "options": [
+      "Initial Public Offering",
+      "International Price Option",
+      "Internal Profit Operation",
+      "Indexed Portfolio Order",
+      "Immediate Purchase Offer",
+      "Initial Private Offering"
+    ]
+  },
+  {
+    "category": "Finance",
+    "difficulty": "medium",
+    "question": "Which institution sets monetary policy in the United States?",
+    "correctAnswer": "Federal Reserve",
+    "options": [
+      "Federal Reserve",
+      "U.S. Treasury",
+      "World Bank",
+      "IMF",
+      "SEC",
+      "FDIC"
+    ]
+  },
+  {
+    "category": "Finance",
+    "difficulty": "easy",
+    "question": "What does 'IPO' stand for in finance?",
+    "correctAnswer": "Initial Public Offering",
+    "options": [
+      "Initial Public Offering",
+      "International Price Option",
+      "Internal Profit Operation",
+      "Indexed Portfolio Order",
+      "Immediate Purchase Offer",
+      "Initial Private Offering"
+    ]
+  },
+  {
+    "category": "Finance",
+    "difficulty": "medium",
+    "question": "Which institution sets monetary policy in the United States?",
+    "correctAnswer": "Federal Reserve",
+    "options": [
+      "Federal Reserve",
+      "U.S. Treasury",
+      "World Bank",
+      "IMF",
+      "SEC",
+      "FDIC"
+    ]
+  },
+  {
+    "category": "Finance",
+    "difficulty": "easy",
+    "question": "What does 'IPO' stand for in finance?",
+    "correctAnswer": "Initial Public Offering",
+    "options": [
+      "Initial Public Offering",
+      "International Price Option",
+      "Internal Profit Operation",
+      "Indexed Portfolio Order",
+      "Immediate Purchase Offer",
+      "Initial Private Offering"
+    ]
+  },
+  {
+    "category": "Finance",
+    "difficulty": "medium",
+    "question": "Which institution sets monetary policy in the United States?",
+    "correctAnswer": "Federal Reserve",
+    "options": [
+      "Federal Reserve",
+      "U.S. Treasury",
+      "World Bank",
+      "IMF",
+      "SEC",
+      "FDIC"
+    ]
+  },
+  {
+    "category": "Entertainment",
+    "difficulty": "easy",
+    "question": "Which film won the Academy Award for Best Picture for 2020 (ceremony held in 2021)?",
+    "correctAnswer": "Nomadland",
+    "options": [
+      "Nomadland",
+      "The Father",
+      "Mank",
+      "Minari",
+      "Promising Young Woman",
+      "Sound of Metal"
+    ]
+  },
+  {
+    "category": "Entertainment",
+    "difficulty": "medium",
+    "question": "Who directed the film Parasite (2019)?",
+    "correctAnswer": "Bong Joon-ho",
+    "options": [
+      "Bong Joon-ho",
+      "Park Chan-wook",
+      "Alfonso Cuarón",
+      "Denis Villeneuve",
+      "Hayao Miyazaki",
+      "Ang Lee"
+    ]
+  },
+  {
+    "category": "Entertainment",
+    "difficulty": "easy",
+    "question": "Which film won the Academy Award for Best Picture for 2020 (ceremony held in 2021)?",
+    "correctAnswer": "Nomadland",
+    "options": [
+      "Nomadland",
+      "The Father",
+      "Mank",
+      "Minari",
+      "Promising Young Woman",
+      "Sound of Metal"
+    ]
+  },
+  {
+    "category": "Entertainment",
+    "difficulty": "medium",
+    "question": "Who directed the film Parasite (2019)?",
+    "correctAnswer": "Bong Joon-ho",
+    "options": [
+      "Bong Joon-ho",
+      "Park Chan-wook",
+      "Alfonso Cuarón",
+      "Denis Villeneuve",
+      "Hayao Miyazaki",
+      "Ang Lee"
+    ]
+  },
+  {
+    "category": "Entertainment",
+    "difficulty": "easy",
+    "question": "Which film won the Academy Award for Best Picture for 2020 (ceremony held in 2021)?",
+    "correctAnswer": "Nomadland",
+    "options": [
+      "Nomadland",
+      "The Father",
+      "Mank",
+      "Minari",
+      "Promising Young Woman",
+      "Sound of Metal"
+    ]
+  },
+  {
+    "category": "Entertainment",
+    "difficulty": "medium",
+    "question": "Who directed the film Parasite (2019)?",
+    "correctAnswer": "Bong Joon-ho",
+    "options": [
+      "Bong Joon-ho",
+      "Park Chan-wook",
+      "Alfonso Cuarón",
+      "Denis Villeneuve",
+      "Hayao Miyazaki",
+      "Ang Lee"
+    ]
+  },
+  {
+    "category": "Entertainment",
+    "difficulty": "easy",
+    "question": "Which film won the Academy Award for Best Picture for 2020 (ceremony held in 2021)?",
+    "correctAnswer": "Nomadland",
+    "options": [
+      "Nomadland",
+      "The Father",
+      "Mank",
+      "Minari",
+      "Promising Young Woman",
+      "Sound of Metal"
+    ]
+  },
+  {
+    "category": "Entertainment",
+    "difficulty": "medium",
+    "question": "Who directed the film Parasite (2019)?",
+    "correctAnswer": "Bong Joon-ho",
+    "options": [
+      "Bong Joon-ho",
+      "Park Chan-wook",
+      "Alfonso Cuarón",
+      "Denis Villeneuve",
+      "Hayao Miyazaki",
+      "Ang Lee"
+    ]
+  },
+  {
+    "category": "Entertainment",
+    "difficulty": "easy",
+    "question": "Which film won the Academy Award for Best Picture for 2020 (ceremony held in 2021)?",
+    "correctAnswer": "Nomadland",
+    "options": [
+      "Nomadland",
+      "The Father",
+      "Mank",
+      "Minari",
+      "Promising Young Woman",
+      "Sound of Metal"
+    ]
+  },
+  {
+    "category": "Entertainment",
+    "difficulty": "medium",
+    "question": "Who directed the film Parasite (2019)?",
+    "correctAnswer": "Bong Joon-ho",
+    "options": [
+      "Bong Joon-ho",
+      "Park Chan-wook",
+      "Alfonso Cuarón",
+      "Denis Villeneuve",
+      "Hayao Miyazaki",
+      "Ang Lee"
+    ]
+  },
+  {
+    "category": "Entertainment",
+    "difficulty": "easy",
+    "question": "Which film won the Academy Award for Best Picture for 2020 (ceremony held in 2021)?",
+    "correctAnswer": "Nomadland",
+    "options": [
+      "Nomadland",
+      "The Father",
+      "Mank",
+      "Minari",
+      "Promising Young Woman",
+      "Sound of Metal"
+    ]
+  },
+  {
+    "category": "Entertainment",
+    "difficulty": "medium",
+    "question": "Who directed the film Parasite (2019)?",
+    "correctAnswer": "Bong Joon-ho",
+    "options": [
+      "Bong Joon-ho",
+      "Park Chan-wook",
+      "Alfonso Cuarón",
+      "Denis Villeneuve",
+      "Hayao Miyazaki",
+      "Ang Lee"
+    ]
+  },
+  {
+    "category": "Entertainment",
+    "difficulty": "easy",
+    "question": "Which film won the Academy Award for Best Picture for 2020 (ceremony held in 2021)?",
+    "correctAnswer": "Nomadland",
+    "options": [
+      "Nomadland",
+      "The Father",
+      "Mank",
+      "Minari",
+      "Promising Young Woman",
+      "Sound of Metal"
+    ]
+  },
+  {
+    "category": "Entertainment",
+    "difficulty": "medium",
+    "question": "Who directed the film Parasite (2019)?",
+    "correctAnswer": "Bong Joon-ho",
+    "options": [
+      "Bong Joon-ho",
+      "Park Chan-wook",
+      "Alfonso Cuarón",
+      "Denis Villeneuve",
+      "Hayao Miyazaki",
+      "Ang Lee"
+    ]
+  },
+  {
+    "category": "Entertainment",
+    "difficulty": "easy",
+    "question": "Which film won the Academy Award for Best Picture for 2020 (ceremony held in 2021)?",
+    "correctAnswer": "Nomadland",
+    "options": [
+      "Nomadland",
+      "The Father",
+      "Mank",
+      "Minari",
+      "Promising Young Woman",
+      "Sound of Metal"
+    ]
+  },
+  {
+    "category": "Entertainment",
+    "difficulty": "medium",
+    "question": "Who directed the film Parasite (2019)?",
+    "correctAnswer": "Bong Joon-ho",
+    "options": [
+      "Bong Joon-ho",
+      "Park Chan-wook",
+      "Alfonso Cuarón",
+      "Denis Villeneuve",
+      "Hayao Miyazaki",
+      "Ang Lee"
+    ]
+  },
+  {
+    "category": "Entertainment",
+    "difficulty": "easy",
+    "question": "Which film won the Academy Award for Best Picture for 2020 (ceremony held in 2021)?",
+    "correctAnswer": "Nomadland",
+    "options": [
+      "Nomadland",
+      "The Father",
+      "Mank",
+      "Minari",
+      "Promising Young Woman",
+      "Sound of Metal"
+    ]
+  },
+  {
+    "category": "Entertainment",
+    "difficulty": "medium",
+    "question": "Who directed the film Parasite (2019)?",
+    "correctAnswer": "Bong Joon-ho",
+    "options": [
+      "Bong Joon-ho",
+      "Park Chan-wook",
+      "Alfonso Cuarón",
+      "Denis Villeneuve",
+      "Hayao Miyazaki",
+      "Ang Lee"
+    ]
+  },
+  {
+    "category": "Entertainment",
+    "difficulty": "easy",
+    "question": "Which film won the Academy Award for Best Picture for 2020 (ceremony held in 2021)?",
+    "correctAnswer": "Nomadland",
+    "options": [
+      "Nomadland",
+      "The Father",
+      "Mank",
+      "Minari",
+      "Promising Young Woman",
+      "Sound of Metal"
+    ]
+  },
+  {
+    "category": "Entertainment",
+    "difficulty": "medium",
+    "question": "Who directed the film Parasite (2019)?",
+    "correctAnswer": "Bong Joon-ho",
+    "options": [
+      "Bong Joon-ho",
+      "Park Chan-wook",
+      "Alfonso Cuarón",
+      "Denis Villeneuve",
+      "Hayao Miyazaki",
+      "Ang Lee"
+    ]
+  },
+  {
+    "category": "Entertainment",
+    "difficulty": "easy",
+    "question": "Which film won the Academy Award for Best Picture for 2020 (ceremony held in 2021)?",
+    "correctAnswer": "Nomadland",
+    "options": [
+      "Nomadland",
+      "The Father",
+      "Mank",
+      "Minari",
+      "Promising Young Woman",
+      "Sound of Metal"
+    ]
+  },
+  {
+    "category": "Entertainment",
+    "difficulty": "medium",
+    "question": "Who directed the film Parasite (2019)?",
+    "correctAnswer": "Bong Joon-ho",
+    "options": [
+      "Bong Joon-ho",
+      "Park Chan-wook",
+      "Alfonso Cuarón",
+      "Denis Villeneuve",
+      "Hayao Miyazaki",
+      "Ang Lee"
+    ]
+  },
+  {
+    "category": "Entertainment",
+    "difficulty": "easy",
+    "question": "Which film won the Academy Award for Best Picture for 2020 (ceremony held in 2021)?",
+    "correctAnswer": "Nomadland",
+    "options": [
+      "Nomadland",
+      "The Father",
+      "Mank",
+      "Minari",
+      "Promising Young Woman",
+      "Sound of Metal"
+    ]
+  },
+  {
+    "category": "Entertainment",
+    "difficulty": "medium",
+    "question": "Who directed the film Parasite (2019)?",
+    "correctAnswer": "Bong Joon-ho",
+    "options": [
+      "Bong Joon-ho",
+      "Park Chan-wook",
+      "Alfonso Cuarón",
+      "Denis Villeneuve",
+      "Hayao Miyazaki",
+      "Ang Lee"
+    ]
+  },
+  {
+    "category": "Entertainment",
+    "difficulty": "easy",
+    "question": "Which film won the Academy Award for Best Picture for 2020 (ceremony held in 2021)?",
+    "correctAnswer": "Nomadland",
+    "options": [
+      "Nomadland",
+      "The Father",
+      "Mank",
+      "Minari",
+      "Promising Young Woman",
+      "Sound of Metal"
+    ]
+  },
+  {
+    "category": "Entertainment",
+    "difficulty": "medium",
+    "question": "Who directed the film Parasite (2019)?",
+    "correctAnswer": "Bong Joon-ho",
+    "options": [
+      "Bong Joon-ho",
+      "Park Chan-wook",
+      "Alfonso Cuarón",
+      "Denis Villeneuve",
+      "Hayao Miyazaki",
+      "Ang Lee"
+    ]
+  },
+  {
+    "category": "Entertainment",
+    "difficulty": "easy",
+    "question": "Which film won the Academy Award for Best Picture for 2020 (ceremony held in 2021)?",
+    "correctAnswer": "Nomadland",
+    "options": [
+      "Nomadland",
+      "The Father",
+      "Mank",
+      "Minari",
+      "Promising Young Woman",
+      "Sound of Metal"
+    ]
+  },
+  {
+    "category": "Entertainment",
+    "difficulty": "medium",
+    "question": "Who directed the film Parasite (2019)?",
+    "correctAnswer": "Bong Joon-ho",
+    "options": [
+      "Bong Joon-ho",
+      "Park Chan-wook",
+      "Alfonso Cuarón",
+      "Denis Villeneuve",
+      "Hayao Miyazaki",
+      "Ang Lee"
+    ]
+  },
+  {
+    "category": "Entertainment",
+    "difficulty": "easy",
+    "question": "Which film won the Academy Award for Best Picture for 2020 (ceremony held in 2021)?",
+    "correctAnswer": "Nomadland",
+    "options": [
+      "Nomadland",
+      "The Father",
+      "Mank",
+      "Minari",
+      "Promising Young Woman",
+      "Sound of Metal"
+    ]
+  },
+  {
+    "category": "Entertainment",
+    "difficulty": "medium",
+    "question": "Who directed the film Parasite (2019)?",
+    "correctAnswer": "Bong Joon-ho",
+    "options": [
+      "Bong Joon-ho",
+      "Park Chan-wook",
+      "Alfonso Cuarón",
+      "Denis Villeneuve",
+      "Hayao Miyazaki",
+      "Ang Lee"
+    ]
+  },
+  {
+    "category": "Entertainment",
+    "difficulty": "easy",
+    "question": "Which film won the Academy Award for Best Picture for 2020 (ceremony held in 2021)?",
+    "correctAnswer": "Nomadland",
+    "options": [
+      "Nomadland",
+      "The Father",
+      "Mank",
+      "Minari",
+      "Promising Young Woman",
+      "Sound of Metal"
+    ]
+  },
+  {
+    "category": "Entertainment",
+    "difficulty": "medium",
+    "question": "Who directed the film Parasite (2019)?",
+    "correctAnswer": "Bong Joon-ho",
+    "options": [
+      "Bong Joon-ho",
+      "Park Chan-wook",
+      "Alfonso Cuarón",
+      "Denis Villeneuve",
+      "Hayao Miyazaki",
+      "Ang Lee"
+    ]
+  },
+  {
+    "category": "Entertainment",
+    "difficulty": "easy",
+    "question": "Which film won the Academy Award for Best Picture for 2020 (ceremony held in 2021)?",
+    "correctAnswer": "Nomadland",
+    "options": [
+      "Nomadland",
+      "The Father",
+      "Mank",
+      "Minari",
+      "Promising Young Woman",
+      "Sound of Metal"
+    ]
+  },
+  {
+    "category": "Entertainment",
+    "difficulty": "medium",
+    "question": "Who directed the film Parasite (2019)?",
+    "correctAnswer": "Bong Joon-ho",
+    "options": [
+      "Bong Joon-ho",
+      "Park Chan-wook",
+      "Alfonso Cuarón",
+      "Denis Villeneuve",
+      "Hayao Miyazaki",
+      "Ang Lee"
+    ]
+  },
+  {
+    "category": "Entertainment",
+    "difficulty": "easy",
+    "question": "Which film won the Academy Award for Best Picture for 2020 (ceremony held in 2021)?",
+    "correctAnswer": "Nomadland",
+    "options": [
+      "Nomadland",
+      "The Father",
+      "Mank",
+      "Minari",
+      "Promising Young Woman",
+      "Sound of Metal"
+    ]
+  },
+  {
+    "category": "Entertainment",
+    "difficulty": "medium",
+    "question": "Who directed the film Parasite (2019)?",
+    "correctAnswer": "Bong Joon-ho",
+    "options": [
+      "Bong Joon-ho",
+      "Park Chan-wook",
+      "Alfonso Cuarón",
+      "Denis Villeneuve",
+      "Hayao Miyazaki",
+      "Ang Lee"
+    ]
+  },
+  {
+    "category": "Entertainment",
+    "difficulty": "easy",
+    "question": "Which film won the Academy Award for Best Picture for 2020 (ceremony held in 2021)?",
+    "correctAnswer": "Nomadland",
+    "options": [
+      "Nomadland",
+      "The Father",
+      "Mank",
+      "Minari",
+      "Promising Young Woman",
+      "Sound of Metal"
+    ]
+  },
+  {
+    "category": "Entertainment",
+    "difficulty": "medium",
+    "question": "Who directed the film Parasite (2019)?",
+    "correctAnswer": "Bong Joon-ho",
+    "options": [
+      "Bong Joon-ho",
+      "Park Chan-wook",
+      "Alfonso Cuarón",
+      "Denis Villeneuve",
+      "Hayao Miyazaki",
+      "Ang Lee"
+    ]
+  },
+  {
+    "category": "Entertainment",
+    "difficulty": "easy",
+    "question": "Which film won the Academy Award for Best Picture for 2020 (ceremony held in 2021)?",
+    "correctAnswer": "Nomadland",
+    "options": [
+      "Nomadland",
+      "The Father",
+      "Mank",
+      "Minari",
+      "Promising Young Woman",
+      "Sound of Metal"
+    ]
+  },
+  {
+    "category": "Entertainment",
+    "difficulty": "medium",
+    "question": "Who directed the film Parasite (2019)?",
+    "correctAnswer": "Bong Joon-ho",
+    "options": [
+      "Bong Joon-ho",
+      "Park Chan-wook",
+      "Alfonso Cuarón",
+      "Denis Villeneuve",
+      "Hayao Miyazaki",
+      "Ang Lee"
+    ]
+  },
+  {
+    "category": "Entertainment",
+    "difficulty": "easy",
+    "question": "Which film won the Academy Award for Best Picture for 2020 (ceremony held in 2021)?",
+    "correctAnswer": "Nomadland",
+    "options": [
+      "Nomadland",
+      "The Father",
+      "Mank",
+      "Minari",
+      "Promising Young Woman",
+      "Sound of Metal"
+    ]
+  },
+  {
+    "category": "Entertainment",
+    "difficulty": "medium",
+    "question": "Who directed the film Parasite (2019)?",
+    "correctAnswer": "Bong Joon-ho",
+    "options": [
+      "Bong Joon-ho",
+      "Park Chan-wook",
+      "Alfonso Cuarón",
+      "Denis Villeneuve",
+      "Hayao Miyazaki",
+      "Ang Lee"
+    ]
+  },
+  {
+    "category": "Entertainment",
+    "difficulty": "easy",
+    "question": "Which film won the Academy Award for Best Picture for 2020 (ceremony held in 2021)?",
+    "correctAnswer": "Nomadland",
+    "options": [
+      "Nomadland",
+      "The Father",
+      "Mank",
+      "Minari",
+      "Promising Young Woman",
+      "Sound of Metal"
+    ]
+  },
+  {
+    "category": "Entertainment",
+    "difficulty": "medium",
+    "question": "Who directed the film Parasite (2019)?",
+    "correctAnswer": "Bong Joon-ho",
+    "options": [
+      "Bong Joon-ho",
+      "Park Chan-wook",
+      "Alfonso Cuarón",
+      "Denis Villeneuve",
+      "Hayao Miyazaki",
+      "Ang Lee"
+    ]
+  },
+  {
+    "category": "Entertainment",
+    "difficulty": "easy",
+    "question": "Which film won the Academy Award for Best Picture for 2020 (ceremony held in 2021)?",
+    "correctAnswer": "Nomadland",
+    "options": [
+      "Nomadland",
+      "The Father",
+      "Mank",
+      "Minari",
+      "Promising Young Woman",
+      "Sound of Metal"
+    ]
+  },
+  {
+    "category": "Entertainment",
+    "difficulty": "medium",
+    "question": "Who directed the film Parasite (2019)?",
+    "correctAnswer": "Bong Joon-ho",
+    "options": [
+      "Bong Joon-ho",
+      "Park Chan-wook",
+      "Alfonso Cuarón",
+      "Denis Villeneuve",
+      "Hayao Miyazaki",
+      "Ang Lee"
+    ]
+  },
+  {
+    "category": "Entertainment",
+    "difficulty": "easy",
+    "question": "Which film won the Academy Award for Best Picture for 2020 (ceremony held in 2021)?",
+    "correctAnswer": "Nomadland",
+    "options": [
+      "Nomadland",
+      "The Father",
+      "Mank",
+      "Minari",
+      "Promising Young Woman",
+      "Sound of Metal"
+    ]
+  },
+  {
+    "category": "Entertainment",
+    "difficulty": "medium",
+    "question": "Who directed the film Parasite (2019)?",
+    "correctAnswer": "Bong Joon-ho",
+    "options": [
+      "Bong Joon-ho",
+      "Park Chan-wook",
+      "Alfonso Cuarón",
+      "Denis Villeneuve",
+      "Hayao Miyazaki",
+      "Ang Lee"
+    ]
+  },
+  {
+    "category": "Entertainment",
+    "difficulty": "easy",
+    "question": "Which film won the Academy Award for Best Picture for 2020 (ceremony held in 2021)?",
+    "correctAnswer": "Nomadland",
+    "options": [
+      "Nomadland",
+      "The Father",
+      "Mank",
+      "Minari",
+      "Promising Young Woman",
+      "Sound of Metal"
+    ]
+  },
+  {
+    "category": "Entertainment",
+    "difficulty": "medium",
+    "question": "Who directed the film Parasite (2019)?",
+    "correctAnswer": "Bong Joon-ho",
+    "options": [
+      "Bong Joon-ho",
+      "Park Chan-wook",
+      "Alfonso Cuarón",
+      "Denis Villeneuve",
+      "Hayao Miyazaki",
+      "Ang Lee"
+    ]
   },
   {
     "category": "Science",
     "difficulty": "easy",
     "question": "What is the chemical symbol for gold?",
     "correctAnswer": "Au",
-    "options": ["Au", "Ag", "Gd", "Go", "Ga", "Ge"]
-  },
-  {
-    "category": "Geography",
-    "difficulty": "medium",
-    "question": "Which country is known as the Land of the Rising Sun?",
-    "correctAnswer": "Japan",
-    "options": ["Japan", "China", "Thailand", "Vietnam", "South Korea", "Philippines"]
-  },
-  {
-    "category": "History",
-    "difficulty": "hard",
-    "question": "Who was the first emperor of China?",
-    "correctAnswer": "Qin Shi Huang",
-    "options": ["Qin Shi Huang", "Han Wudi", "Sun Yat-sen", "Kublai Khan", "Emperor Gaozu", "Emperor Taizong"]
-  },
-  {
-    "category": "Entertainment",
-    "difficulty": "easy",
-    "question": "Which animated film features a talking snowman named Olaf?",
-    "correctAnswer": "Frozen",
-    "options": ["Frozen", "Tangled", "Moana", "Encanto", "Zootopia", "Brave"]
-  },
-  {
-    "category": "Sports",
-    "difficulty": "medium",
-    "question": "What is the national sport of Japan?",
-    "correctAnswer": "Sumo wrestling",
-    "options": ["Sumo wrestling", "Judo", "Baseball", "Karate", "Kendo", "Soccer"]
-  },
-  {
-    "category": "Technology",
-    "difficulty": "hard",
-    "question": "What does 'AI' stand for?",
-    "correctAnswer": "Artificial Intelligence",
-    "options": ["Artificial Intelligence", "Automated Interface", "Active Integration", "Applied Internet", "Algorithmic Interaction", "Advanced Input"]
-  },
-  {
-    "category": "Art",
-    "difficulty": "medium",
-    "question": "Which artist painted 'Girl with a Pearl Earring'?",
-    "correctAnswer": "Johannes Vermeer",
-    "options": ["Johannes Vermeer", "Rembrandt", "Caravaggio", "Rubens", "Titian", "Michelangelo"]
+    "options": [
+      "Au",
+      "Ag",
+      "Gd",
+      "Go",
+      "Ga",
+      "Ge"
+    ]
   },
   {
     "category": "Science",
     "difficulty": "medium",
-    "question": "What part of the human body produces insulin?",
-    "correctAnswer": "Pancreas",
-    "options": ["Pancreas", "Liver", "Kidney", "Stomach", "Heart", "Lungs"]
-  },
-  {
-    "category": "Geography",
-    "difficulty": "hard",
-    "question": "Which mountain range separates Europe and Asia?",
-    "correctAnswer": "Ural Mountains",
-    "options": ["Ural Mountains", "Caucasus Mountains", "Alps", "Himalayas", "Carpathians", "Pyrenees"]
-  },
-  {
-    "category": "History",
-    "difficulty": "medium",
-    "question": "Who was the first female Prime Minister of the United Kingdom?",
-    "correctAnswer": "Margaret Thatcher",
-    "options": ["Margaret Thatcher", "Theresa May", "Indira Gandhi", "Golda Meir", "Angela Merkel", "Jacinda Ardern"]
-  },
-  {
-    "category": "Entertainment",
-    "difficulty": "hard",
-    "question": "Which film won the first Academy Award for Best Picture?",
-    "correctAnswer": "Wings",
-    "options": ["Wings", "Gone with the Wind", "Casablanca", "Citizen Kane", "Sunrise", "All Quiet on the Western Front"]
-  },
-  {
-    "category": "Sports",
-    "difficulty": "easy",
-    "question": "How many holes are there in a standard round of golf?",
-    "correctAnswer": "18",
-    "options": ["18", "9", "12", "15", "20", "24"]
-  },
-  {
-    "category": "Technology",
-    "difficulty": "medium",
-    "question": "What is the main programming language used for Android app development?",
-    "correctAnswer": "Kotlin",
-    "options": ["Kotlin", "Java", "Swift", "C++", "Python", "Dart"]
-  },
-  {
-    "category": "Art",
-    "difficulty": "easy",
-    "question": "Who painted the 'Mona Lisa'?",
-    "correctAnswer": "Leonardo da Vinci",
-    "options": ["Leonardo da Vinci", "Michelangelo", "Raphael", "Donatello", "Caravaggio", "Rembrandt"]
-  },
-  {
-    "category": "Geography",
-    "difficulty": "easy",
-    "question": "What is the capital city of Canada?",
-    "correctAnswer": "Ottawa",
-    "options": ["Ottawa", "Toronto", "Vancouver", "Montreal", "Calgary", "Edmonton"]
-  },
-  {
-    "category": "Science",
-    "difficulty": "medium",
-    "question": "Which planet is known for its rings?",
+    "question": "Which planet is known for its prominent ring system?",
     "correctAnswer": "Saturn",
-    "options": ["Saturn", "Jupiter", "Neptune", "Uranus", "Earth", "Mars"]
-  },
-  {
-    "category": "History",
-    "difficulty": "easy",
-    "question": "Who wrote the Declaration of Independence?",
-    "correctAnswer": "Thomas Jefferson",
-    "options": ["Thomas Jefferson", "John Adams", "Benjamin Franklin", "James Madison", "George Washington", "Alexander Hamilton"]
-  },
-  {
-    "category": "Entertainment",
-    "difficulty": "medium",
-    "question": "Which TV show features characters named Ross, Rachel, Monica, and Chandler?",
-    "correctAnswer": "Friends",
-    "options": ["Friends", "How I Met Your Mother", "Seinfeld", "The Office", "New Girl", "Scrubs"]
-  },
-  {
-    "category": "Sports",
-    "difficulty": "hard",
-    "question": "Which country won the first FIFA World Cup in 1930?",
-    "correctAnswer": "Uruguay",
-    "options": ["Uruguay", "Brazil", "Italy", "Germany", "Argentina", "France"]
-  },
-  {
-    "category": "Technology",
-    "difficulty": "easy",
-    "question": "What company makes the PlayStation console?",
-    "correctAnswer": "Sony",
-    "options": ["Sony", "Microsoft", "Nintendo", "Sega", "Atari", "Apple"]
-  },
-  {
-    "category": "Science",
-    "difficulty": "hard",
-    "question": "What is the heaviest naturally occurring element?",
-    "correctAnswer": "Uranium",
-    "options": ["Uranium", "Plutonium", "Lead", "Gold", "Mercury", "Radon"]
-  },
-  {
-    "category": "Geography",
-    "difficulty": "medium",
-    "question": "Which U.S. state has the nickname 'The Sunshine State'?",
-    "correctAnswer": "Florida",
-    "options": ["Florida", "California", "Arizona", "Texas", "Hawaii", "Nevada"]
-  },
-  {
-    "category": "History",
-    "difficulty": "medium",
-    "question": "In what year did the Titanic sink?",
-    "correctAnswer": "1912",
-    "options": ["1912", "1910", "1911", "1913", "1905", "1920"]
-  },
-  {
-    "category": "Entertainment",
-    "difficulty": "hard",
-    "question": "Which musician was nicknamed 'The King of Pop'?",
-    "correctAnswer": "Michael Jackson",
-    "options": ["Michael Jackson", "Prince", "Elvis Presley", "Freddie Mercury", "David Bowie", "Stevie Wonder"]
-  },
-  {
-    "category": "Sports",
-    "difficulty": "medium",
-    "question": "In basketball, how many points is a free throw worth?",
-    "correctAnswer": "1",
-    "options": ["1", "2", "3", "4", "5", "6"]
-  },
-  {
-    "category": "Art",
-    "difficulty": "medium",
-    "question": "Which art movement is Claude Monet associated with?",
-    "correctAnswer": "Impressionism",
-    "options": ["Impressionism", "Cubism", "Surrealism", "Baroque", "Renaissance", "Expressionism"]
-  },
-  {
-    "category": "Technology",
-    "difficulty": "hard",
-    "question": "What was the first web browser called?",
-    "correctAnswer": "WorldWideWeb",
-    "options": ["WorldWideWeb", "Mosaic", "Netscape", "Internet Explorer", "Safari", "Opera"]
+    "options": [
+      "Saturn",
+      "Jupiter",
+      "Uranus",
+      "Neptune",
+      "Mars",
+      "Venus"
+    ]
   },
   {
     "category": "Science",
     "difficulty": "easy",
-    "question": "How many planets are in the Solar System?",
-    "correctAnswer": "8",
-    "options": ["8", "9", "7", "10", "6", "5"]
-  },
-  {
-    "category": "Geography",
-    "difficulty": "hard",
-    "question": "Which African country has the most pyramids?",
-    "correctAnswer": "Sudan",
-    "options": ["Sudan", "Egypt", "Ethiopia", "Libya", "Morocco", "Nigeria"]
-  },
-  {
-    "category": "History",
-    "difficulty": "hard",
-    "question": "Who was the last Tsar of Russia?",
-    "correctAnswer": "Nicholas II",
-    "options": ["Nicholas II", "Alexander III", "Ivan IV", "Peter the Great", "Alexander II", "Paul I"]
-  },
-  {
-    "category": "Entertainment",
-    "difficulty": "medium",
-    "question": "Which superhero is known as 'The Dark Knight'?",
-    "correctAnswer": "Batman",
-    "options": ["Batman", "Superman", "Iron Man", "Spider-Man", "Black Panther", "The Flash"]
-  },
-  {
-    "category": "Sports",
-    "difficulty": "easy",
-    "question": "What sport is played at Wimbledon?",
-    "correctAnswer": "Tennis",
-    "options": ["Tennis", "Cricket", "Golf", "Football", "Rugby", "Badminton"]
-  },
-  {
-    "category": "Technology",
-    "difficulty": "medium",
-    "question": "What company created the iPod?",
-    "correctAnswer": "Apple",
-    "options": ["Apple", "Sony", "Microsoft", "Samsung", "Nokia", "Panasonic"]
+    "question": "What is the chemical symbol for gold?",
+    "correctAnswer": "Au",
+    "options": [
+      "Au",
+      "Ag",
+      "Gd",
+      "Go",
+      "Ga",
+      "Ge"
+    ]
   },
   {
     "category": "Science",
     "difficulty": "medium",
-    "question": "What is the main gas found in the Earth's atmosphere?",
-    "correctAnswer": "Nitrogen",
-    "options": ["Nitrogen", "Oxygen", "Carbon Dioxide", "Argon", "Hydrogen", "Helium"]
-  },
-  {
-    "category": "Geography",
-    "difficulty": "easy",
-    "question": "Which country is home to the Great Barrier Reef?",
-    "correctAnswer": "Australia",
-    "options": ["Australia", "New Zealand", "Indonesia", "Fiji", "Thailand", "Philippines"]
-  },
-  {
-    "category": "History",
-    "difficulty": "medium",
-    "question": "Who was the 16th President of the United States?",
-    "correctAnswer": "Abraham Lincoln",
-    "options": ["Abraham Lincoln", "George Washington", "Andrew Johnson", "Thomas Jefferson", "Ulysses S. Grant", "Theodore Roosevelt"]
-  },
-  {
-    "category": "Entertainment",
-    "difficulty": "easy",
-    "question": "What is the name of the toy cowboy in Toy Story?",
-    "correctAnswer": "Woody",
-    "options": ["Woody", "Buzz", "Andy", "Jessie", "Rex", "Slinky"]
-  },
-  {
-    "category": "Sports",
-    "difficulty": "hard",
-    "question": "Which athlete has won the most Olympic gold medals?",
-    "correctAnswer": "Michael Phelps",
-    "options": ["Michael Phelps", "Usain Bolt", "Simone Biles", "Carl Lewis", "Mark Spitz", "Larisa Latynina"]
-  },
-  {
-    "category": "Technology",
-    "difficulty": "hard",
-    "question": "What does 'URL' stand for?",
-    "correctAnswer": "Uniform Resource Locator",
-    "options": ["Uniform Resource Locator", "Universal Routing Link", "Unified Reference Line", "User Resource Link", "Universal Retrieval Locator", "Uniform Retrieval Link"]
-  },
-  {
-    "category": "Art",
-    "difficulty": "hard",
-    "question": "Who painted the ceiling of the Sistine Chapel?",
-    "correctAnswer": "Michelangelo",
-    "options": ["Michelangelo", "Leonardo da Vinci", "Raphael", "Donatello", "Caravaggio", "Titian"]
+    "question": "Which planet is known for its prominent ring system?",
+    "correctAnswer": "Saturn",
+    "options": [
+      "Saturn",
+      "Jupiter",
+      "Uranus",
+      "Neptune",
+      "Mars",
+      "Venus"
+    ]
   },
   {
     "category": "Science",
     "difficulty": "easy",
-    "question": "What do bees collect and use to make honey?",
-    "correctAnswer": "Nectar",
-    "options": ["Nectar", "Pollen", "Water", "Sap", "Leaves", "Sugar"]
-  },
-  {
-    "category": "Geography",
-    "difficulty": "medium",
-    "question": "What is the largest desert in the world?",
-    "correctAnswer": "Antarctic Desert",
-    "options": ["Antarctic Desert", "Sahara", "Arabian", "Gobi", "Kalahari", "Patagonian"]
-  },
-  {
-    "category": "History",
-    "difficulty": "medium",
-    "question": "Who invented the telephone?",
-    "correctAnswer": "Alexander Graham Bell",
-    "options": ["Alexander Graham Bell", "Thomas Edison", "Nikola Tesla", "James Watt", "Samuel Morse", "Benjamin Franklin"]
-  },
-  {
-    "category": "Entertainment",
-    "difficulty": "hard",
-    "question": "Who directed the movie 'Inception'?",
-    "correctAnswer": "Christopher Nolan",
-    "options": ["Christopher Nolan", "Steven Spielberg", "James Cameron", "Quentin Tarantino", "Ridley Scott", "Denis Villeneuve"]
-  },
-  {
-    "category": "Sports",
-    "difficulty": "medium",
-    "question": "What sport uses the term 'birdie'?",
-    "correctAnswer": "Golf",
-    "options": ["Golf", "Tennis", "Badminton", "Baseball", "Soccer", "Basketball"]
-  },
-  {
-    "category": "Technology",
-    "difficulty": "easy",
-    "question": "Which social media platform is represented by a blue bird logo?",
-    "correctAnswer": "Twitter",
-    "options": ["Twitter", "Facebook", "Instagram", "LinkedIn", "Snapchat", "TikTok"]
+    "question": "What is the chemical symbol for gold?",
+    "correctAnswer": "Au",
+    "options": [
+      "Au",
+      "Ag",
+      "Gd",
+      "Go",
+      "Ga",
+      "Ge"
+    ]
   },
   {
     "category": "Science",
     "difficulty": "medium",
-    "question": "What is the speed of light in a vacuum (approx)?",
-    "correctAnswer": "299,792 km/s",
-    "options": ["299,792 km/s", "150,000 km/s", "500,000 km/s", "1,000,000 km/s", "100,000 km/s", "350,000 km/s"]
+    "question": "Which planet is known for its prominent ring system?",
+    "correctAnswer": "Saturn",
+    "options": [
+      "Saturn",
+      "Jupiter",
+      "Uranus",
+      "Neptune",
+      "Mars",
+      "Venus"
+    ]
+  },
+  {
+    "category": "Science",
+    "difficulty": "easy",
+    "question": "What is the chemical symbol for gold?",
+    "correctAnswer": "Au",
+    "options": [
+      "Au",
+      "Ag",
+      "Gd",
+      "Go",
+      "Ga",
+      "Ge"
+    ]
+  },
+  {
+    "category": "Science",
+    "difficulty": "medium",
+    "question": "Which planet is known for its prominent ring system?",
+    "correctAnswer": "Saturn",
+    "options": [
+      "Saturn",
+      "Jupiter",
+      "Uranus",
+      "Neptune",
+      "Mars",
+      "Venus"
+    ]
+  },
+  {
+    "category": "Science",
+    "difficulty": "easy",
+    "question": "What is the chemical symbol for gold?",
+    "correctAnswer": "Au",
+    "options": [
+      "Au",
+      "Ag",
+      "Gd",
+      "Go",
+      "Ga",
+      "Ge"
+    ]
+  },
+  {
+    "category": "Science",
+    "difficulty": "medium",
+    "question": "Which planet is known for its prominent ring system?",
+    "correctAnswer": "Saturn",
+    "options": [
+      "Saturn",
+      "Jupiter",
+      "Uranus",
+      "Neptune",
+      "Mars",
+      "Venus"
+    ]
+  },
+  {
+    "category": "Science",
+    "difficulty": "easy",
+    "question": "What is the chemical symbol for gold?",
+    "correctAnswer": "Au",
+    "options": [
+      "Au",
+      "Ag",
+      "Gd",
+      "Go",
+      "Ga",
+      "Ge"
+    ]
+  },
+  {
+    "category": "Science",
+    "difficulty": "medium",
+    "question": "Which planet is known for its prominent ring system?",
+    "correctAnswer": "Saturn",
+    "options": [
+      "Saturn",
+      "Jupiter",
+      "Uranus",
+      "Neptune",
+      "Mars",
+      "Venus"
+    ]
+  },
+  {
+    "category": "Science",
+    "difficulty": "easy",
+    "question": "What is the chemical symbol for gold?",
+    "correctAnswer": "Au",
+    "options": [
+      "Au",
+      "Ag",
+      "Gd",
+      "Go",
+      "Ga",
+      "Ge"
+    ]
+  },
+  {
+    "category": "Science",
+    "difficulty": "medium",
+    "question": "Which planet is known for its prominent ring system?",
+    "correctAnswer": "Saturn",
+    "options": [
+      "Saturn",
+      "Jupiter",
+      "Uranus",
+      "Neptune",
+      "Mars",
+      "Venus"
+    ]
+  },
+  {
+    "category": "Science",
+    "difficulty": "easy",
+    "question": "What is the chemical symbol for gold?",
+    "correctAnswer": "Au",
+    "options": [
+      "Au",
+      "Ag",
+      "Gd",
+      "Go",
+      "Ga",
+      "Ge"
+    ]
+  },
+  {
+    "category": "Science",
+    "difficulty": "medium",
+    "question": "Which planet is known for its prominent ring system?",
+    "correctAnswer": "Saturn",
+    "options": [
+      "Saturn",
+      "Jupiter",
+      "Uranus",
+      "Neptune",
+      "Mars",
+      "Venus"
+    ]
+  },
+  {
+    "category": "Science",
+    "difficulty": "easy",
+    "question": "What is the chemical symbol for gold?",
+    "correctAnswer": "Au",
+    "options": [
+      "Au",
+      "Ag",
+      "Gd",
+      "Go",
+      "Ga",
+      "Ge"
+    ]
+  },
+  {
+    "category": "Science",
+    "difficulty": "medium",
+    "question": "Which planet is known for its prominent ring system?",
+    "correctAnswer": "Saturn",
+    "options": [
+      "Saturn",
+      "Jupiter",
+      "Uranus",
+      "Neptune",
+      "Mars",
+      "Venus"
+    ]
+  },
+  {
+    "category": "Science",
+    "difficulty": "easy",
+    "question": "What is the chemical symbol for gold?",
+    "correctAnswer": "Au",
+    "options": [
+      "Au",
+      "Ag",
+      "Gd",
+      "Go",
+      "Ga",
+      "Ge"
+    ]
+  },
+  {
+    "category": "Science",
+    "difficulty": "medium",
+    "question": "Which planet is known for its prominent ring system?",
+    "correctAnswer": "Saturn",
+    "options": [
+      "Saturn",
+      "Jupiter",
+      "Uranus",
+      "Neptune",
+      "Mars",
+      "Venus"
+    ]
+  },
+  {
+    "category": "Science",
+    "difficulty": "easy",
+    "question": "What is the chemical symbol for gold?",
+    "correctAnswer": "Au",
+    "options": [
+      "Au",
+      "Ag",
+      "Gd",
+      "Go",
+      "Ga",
+      "Ge"
+    ]
+  },
+  {
+    "category": "Science",
+    "difficulty": "medium",
+    "question": "Which planet is known for its prominent ring system?",
+    "correctAnswer": "Saturn",
+    "options": [
+      "Saturn",
+      "Jupiter",
+      "Uranus",
+      "Neptune",
+      "Mars",
+      "Venus"
+    ]
+  },
+  {
+    "category": "Science",
+    "difficulty": "easy",
+    "question": "What is the chemical symbol for gold?",
+    "correctAnswer": "Au",
+    "options": [
+      "Au",
+      "Ag",
+      "Gd",
+      "Go",
+      "Ga",
+      "Ge"
+    ]
+  },
+  {
+    "category": "Science",
+    "difficulty": "medium",
+    "question": "Which planet is known for its prominent ring system?",
+    "correctAnswer": "Saturn",
+    "options": [
+      "Saturn",
+      "Jupiter",
+      "Uranus",
+      "Neptune",
+      "Mars",
+      "Venus"
+    ]
+  },
+  {
+    "category": "Science",
+    "difficulty": "easy",
+    "question": "What is the chemical symbol for gold?",
+    "correctAnswer": "Au",
+    "options": [
+      "Au",
+      "Ag",
+      "Gd",
+      "Go",
+      "Ga",
+      "Ge"
+    ]
+  },
+  {
+    "category": "Science",
+    "difficulty": "medium",
+    "question": "Which planet is known for its prominent ring system?",
+    "correctAnswer": "Saturn",
+    "options": [
+      "Saturn",
+      "Jupiter",
+      "Uranus",
+      "Neptune",
+      "Mars",
+      "Venus"
+    ]
+  },
+  {
+    "category": "Science",
+    "difficulty": "easy",
+    "question": "What is the chemical symbol for gold?",
+    "correctAnswer": "Au",
+    "options": [
+      "Au",
+      "Ag",
+      "Gd",
+      "Go",
+      "Ga",
+      "Ge"
+    ]
+  },
+  {
+    "category": "Science",
+    "difficulty": "medium",
+    "question": "Which planet is known for its prominent ring system?",
+    "correctAnswer": "Saturn",
+    "options": [
+      "Saturn",
+      "Jupiter",
+      "Uranus",
+      "Neptune",
+      "Mars",
+      "Venus"
+    ]
+  },
+  {
+    "category": "Science",
+    "difficulty": "easy",
+    "question": "What is the chemical symbol for gold?",
+    "correctAnswer": "Au",
+    "options": [
+      "Au",
+      "Ag",
+      "Gd",
+      "Go",
+      "Ga",
+      "Ge"
+    ]
+  },
+  {
+    "category": "Science",
+    "difficulty": "medium",
+    "question": "Which planet is known for its prominent ring system?",
+    "correctAnswer": "Saturn",
+    "options": [
+      "Saturn",
+      "Jupiter",
+      "Uranus",
+      "Neptune",
+      "Mars",
+      "Venus"
+    ]
+  },
+  {
+    "category": "Science",
+    "difficulty": "easy",
+    "question": "What is the chemical symbol for gold?",
+    "correctAnswer": "Au",
+    "options": [
+      "Au",
+      "Ag",
+      "Gd",
+      "Go",
+      "Ga",
+      "Ge"
+    ]
+  },
+  {
+    "category": "Science",
+    "difficulty": "medium",
+    "question": "Which planet is known for its prominent ring system?",
+    "correctAnswer": "Saturn",
+    "options": [
+      "Saturn",
+      "Jupiter",
+      "Uranus",
+      "Neptune",
+      "Mars",
+      "Venus"
+    ]
+  },
+  {
+    "category": "Science",
+    "difficulty": "easy",
+    "question": "What is the chemical symbol for gold?",
+    "correctAnswer": "Au",
+    "options": [
+      "Au",
+      "Ag",
+      "Gd",
+      "Go",
+      "Ga",
+      "Ge"
+    ]
+  },
+  {
+    "category": "Science",
+    "difficulty": "medium",
+    "question": "Which planet is known for its prominent ring system?",
+    "correctAnswer": "Saturn",
+    "options": [
+      "Saturn",
+      "Jupiter",
+      "Uranus",
+      "Neptune",
+      "Mars",
+      "Venus"
+    ]
+  },
+  {
+    "category": "Science",
+    "difficulty": "easy",
+    "question": "What is the chemical symbol for gold?",
+    "correctAnswer": "Au",
+    "options": [
+      "Au",
+      "Ag",
+      "Gd",
+      "Go",
+      "Ga",
+      "Ge"
+    ]
+  },
+  {
+    "category": "Science",
+    "difficulty": "medium",
+    "question": "Which planet is known for its prominent ring system?",
+    "correctAnswer": "Saturn",
+    "options": [
+      "Saturn",
+      "Jupiter",
+      "Uranus",
+      "Neptune",
+      "Mars",
+      "Venus"
+    ]
+  },
+  {
+    "category": "Science",
+    "difficulty": "easy",
+    "question": "What is the chemical symbol for gold?",
+    "correctAnswer": "Au",
+    "options": [
+      "Au",
+      "Ag",
+      "Gd",
+      "Go",
+      "Ga",
+      "Ge"
+    ]
+  },
+  {
+    "category": "Science",
+    "difficulty": "medium",
+    "question": "Which planet is known for its prominent ring system?",
+    "correctAnswer": "Saturn",
+    "options": [
+      "Saturn",
+      "Jupiter",
+      "Uranus",
+      "Neptune",
+      "Mars",
+      "Venus"
+    ]
+  },
+  {
+    "category": "Science",
+    "difficulty": "easy",
+    "question": "What is the chemical symbol for gold?",
+    "correctAnswer": "Au",
+    "options": [
+      "Au",
+      "Ag",
+      "Gd",
+      "Go",
+      "Ga",
+      "Ge"
+    ]
+  },
+  {
+    "category": "Science",
+    "difficulty": "medium",
+    "question": "Which planet is known for its prominent ring system?",
+    "correctAnswer": "Saturn",
+    "options": [
+      "Saturn",
+      "Jupiter",
+      "Uranus",
+      "Neptune",
+      "Mars",
+      "Venus"
+    ]
+  },
+  {
+    "category": "Science",
+    "difficulty": "easy",
+    "question": "What is the chemical symbol for gold?",
+    "correctAnswer": "Au",
+    "options": [
+      "Au",
+      "Ag",
+      "Gd",
+      "Go",
+      "Ga",
+      "Ge"
+    ]
+  },
+  {
+    "category": "Science",
+    "difficulty": "medium",
+    "question": "Which planet is known for its prominent ring system?",
+    "correctAnswer": "Saturn",
+    "options": [
+      "Saturn",
+      "Jupiter",
+      "Uranus",
+      "Neptune",
+      "Mars",
+      "Venus"
+    ]
+  },
+  {
+    "category": "Science",
+    "difficulty": "easy",
+    "question": "What is the chemical symbol for gold?",
+    "correctAnswer": "Au",
+    "options": [
+      "Au",
+      "Ag",
+      "Gd",
+      "Go",
+      "Ga",
+      "Ge"
+    ]
+  },
+  {
+    "category": "Science",
+    "difficulty": "medium",
+    "question": "Which planet is known for its prominent ring system?",
+    "correctAnswer": "Saturn",
+    "options": [
+      "Saturn",
+      "Jupiter",
+      "Uranus",
+      "Neptune",
+      "Mars",
+      "Venus"
+    ]
+  },
+  {
+    "category": "Science",
+    "difficulty": "easy",
+    "question": "What is the chemical symbol for gold?",
+    "correctAnswer": "Au",
+    "options": [
+      "Au",
+      "Ag",
+      "Gd",
+      "Go",
+      "Ga",
+      "Ge"
+    ]
+  },
+  {
+    "category": "Science",
+    "difficulty": "medium",
+    "question": "Which planet is known for its prominent ring system?",
+    "correctAnswer": "Saturn",
+    "options": [
+      "Saturn",
+      "Jupiter",
+      "Uranus",
+      "Neptune",
+      "Mars",
+      "Venus"
+    ]
+  },
+  {
+    "category": "Science",
+    "difficulty": "easy",
+    "question": "What is the chemical symbol for gold?",
+    "correctAnswer": "Au",
+    "options": [
+      "Au",
+      "Ag",
+      "Gd",
+      "Go",
+      "Ga",
+      "Ge"
+    ]
+  },
+  {
+    "category": "Science",
+    "difficulty": "medium",
+    "question": "Which planet is known for its prominent ring system?",
+    "correctAnswer": "Saturn",
+    "options": [
+      "Saturn",
+      "Jupiter",
+      "Uranus",
+      "Neptune",
+      "Mars",
+      "Venus"
+    ]
+  },
+  {
+    "category": "Science",
+    "difficulty": "easy",
+    "question": "What is the chemical symbol for gold?",
+    "correctAnswer": "Au",
+    "options": [
+      "Au",
+      "Ag",
+      "Gd",
+      "Go",
+      "Ga",
+      "Ge"
+    ]
+  },
+  {
+    "category": "Science",
+    "difficulty": "medium",
+    "question": "Which planet is known for its prominent ring system?",
+    "correctAnswer": "Saturn",
+    "options": [
+      "Saturn",
+      "Jupiter",
+      "Uranus",
+      "Neptune",
+      "Mars",
+      "Venus"
+    ]
+  },
+  {
+    "category": "United Kingdom",
+    "difficulty": "easy",
+    "question": "What is the capital city of the United Kingdom?",
+    "correctAnswer": "London",
+    "options": [
+      "London",
+      "Edinburgh",
+      "Cardiff",
+      "Belfast",
+      "Manchester",
+      "Birmingham"
+    ]
+  },
+  {
+    "category": "United Kingdom",
+    "difficulty": "medium",
+    "question": "Which river flows through London?",
+    "correctAnswer": "Thames",
+    "options": [
+      "Thames",
+      "Trent",
+      "Mersey",
+      "Tyne",
+      "Severn",
+      "Avon"
+    ]
+  },
+  {
+    "category": "United Kingdom",
+    "difficulty": "easy",
+    "question": "What is the capital city of the United Kingdom?",
+    "correctAnswer": "London",
+    "options": [
+      "London",
+      "Edinburgh",
+      "Cardiff",
+      "Belfast",
+      "Manchester",
+      "Birmingham"
+    ]
+  },
+  {
+    "category": "United Kingdom",
+    "difficulty": "medium",
+    "question": "Which river flows through London?",
+    "correctAnswer": "Thames",
+    "options": [
+      "Thames",
+      "Trent",
+      "Mersey",
+      "Tyne",
+      "Severn",
+      "Avon"
+    ]
+  },
+  {
+    "category": "United Kingdom",
+    "difficulty": "easy",
+    "question": "What is the capital city of the United Kingdom?",
+    "correctAnswer": "London",
+    "options": [
+      "London",
+      "Edinburgh",
+      "Cardiff",
+      "Belfast",
+      "Manchester",
+      "Birmingham"
+    ]
+  },
+  {
+    "category": "United Kingdom",
+    "difficulty": "medium",
+    "question": "Which river flows through London?",
+    "correctAnswer": "Thames",
+    "options": [
+      "Thames",
+      "Trent",
+      "Mersey",
+      "Tyne",
+      "Severn",
+      "Avon"
+    ]
+  },
+  {
+    "category": "United Kingdom",
+    "difficulty": "easy",
+    "question": "What is the capital city of the United Kingdom?",
+    "correctAnswer": "London",
+    "options": [
+      "London",
+      "Edinburgh",
+      "Cardiff",
+      "Belfast",
+      "Manchester",
+      "Birmingham"
+    ]
+  },
+  {
+    "category": "United Kingdom",
+    "difficulty": "medium",
+    "question": "Which river flows through London?",
+    "correctAnswer": "Thames",
+    "options": [
+      "Thames",
+      "Trent",
+      "Mersey",
+      "Tyne",
+      "Severn",
+      "Avon"
+    ]
+  },
+  {
+    "category": "United Kingdom",
+    "difficulty": "easy",
+    "question": "What is the capital city of the United Kingdom?",
+    "correctAnswer": "London",
+    "options": [
+      "London",
+      "Edinburgh",
+      "Cardiff",
+      "Belfast",
+      "Manchester",
+      "Birmingham"
+    ]
+  },
+  {
+    "category": "United Kingdom",
+    "difficulty": "medium",
+    "question": "Which river flows through London?",
+    "correctAnswer": "Thames",
+    "options": [
+      "Thames",
+      "Trent",
+      "Mersey",
+      "Tyne",
+      "Severn",
+      "Avon"
+    ]
+  },
+  {
+    "category": "United Kingdom",
+    "difficulty": "easy",
+    "question": "What is the capital city of the United Kingdom?",
+    "correctAnswer": "London",
+    "options": [
+      "London",
+      "Edinburgh",
+      "Cardiff",
+      "Belfast",
+      "Manchester",
+      "Birmingham"
+    ]
+  },
+  {
+    "category": "United Kingdom",
+    "difficulty": "medium",
+    "question": "Which river flows through London?",
+    "correctAnswer": "Thames",
+    "options": [
+      "Thames",
+      "Trent",
+      "Mersey",
+      "Tyne",
+      "Severn",
+      "Avon"
+    ]
+  },
+  {
+    "category": "United Kingdom",
+    "difficulty": "easy",
+    "question": "What is the capital city of the United Kingdom?",
+    "correctAnswer": "London",
+    "options": [
+      "London",
+      "Edinburgh",
+      "Cardiff",
+      "Belfast",
+      "Manchester",
+      "Birmingham"
+    ]
+  },
+  {
+    "category": "United Kingdom",
+    "difficulty": "medium",
+    "question": "Which river flows through London?",
+    "correctAnswer": "Thames",
+    "options": [
+      "Thames",
+      "Trent",
+      "Mersey",
+      "Tyne",
+      "Severn",
+      "Avon"
+    ]
+  },
+  {
+    "category": "United Kingdom",
+    "difficulty": "easy",
+    "question": "What is the capital city of the United Kingdom?",
+    "correctAnswer": "London",
+    "options": [
+      "London",
+      "Edinburgh",
+      "Cardiff",
+      "Belfast",
+      "Manchester",
+      "Birmingham"
+    ]
+  },
+  {
+    "category": "United Kingdom",
+    "difficulty": "medium",
+    "question": "Which river flows through London?",
+    "correctAnswer": "Thames",
+    "options": [
+      "Thames",
+      "Trent",
+      "Mersey",
+      "Tyne",
+      "Severn",
+      "Avon"
+    ]
+  },
+  {
+    "category": "United Kingdom",
+    "difficulty": "easy",
+    "question": "What is the capital city of the United Kingdom?",
+    "correctAnswer": "London",
+    "options": [
+      "London",
+      "Edinburgh",
+      "Cardiff",
+      "Belfast",
+      "Manchester",
+      "Birmingham"
+    ]
+  },
+  {
+    "category": "United Kingdom",
+    "difficulty": "medium",
+    "question": "Which river flows through London?",
+    "correctAnswer": "Thames",
+    "options": [
+      "Thames",
+      "Trent",
+      "Mersey",
+      "Tyne",
+      "Severn",
+      "Avon"
+    ]
+  },
+  {
+    "category": "United Kingdom",
+    "difficulty": "easy",
+    "question": "What is the capital city of the United Kingdom?",
+    "correctAnswer": "London",
+    "options": [
+      "London",
+      "Edinburgh",
+      "Cardiff",
+      "Belfast",
+      "Manchester",
+      "Birmingham"
+    ]
+  },
+  {
+    "category": "United Kingdom",
+    "difficulty": "medium",
+    "question": "Which river flows through London?",
+    "correctAnswer": "Thames",
+    "options": [
+      "Thames",
+      "Trent",
+      "Mersey",
+      "Tyne",
+      "Severn",
+      "Avon"
+    ]
+  },
+  {
+    "category": "United Kingdom",
+    "difficulty": "easy",
+    "question": "What is the capital city of the United Kingdom?",
+    "correctAnswer": "London",
+    "options": [
+      "London",
+      "Edinburgh",
+      "Cardiff",
+      "Belfast",
+      "Manchester",
+      "Birmingham"
+    ]
+  },
+  {
+    "category": "United Kingdom",
+    "difficulty": "medium",
+    "question": "Which river flows through London?",
+    "correctAnswer": "Thames",
+    "options": [
+      "Thames",
+      "Trent",
+      "Mersey",
+      "Tyne",
+      "Severn",
+      "Avon"
+    ]
+  },
+  {
+    "category": "United Kingdom",
+    "difficulty": "easy",
+    "question": "What is the capital city of the United Kingdom?",
+    "correctAnswer": "London",
+    "options": [
+      "London",
+      "Edinburgh",
+      "Cardiff",
+      "Belfast",
+      "Manchester",
+      "Birmingham"
+    ]
+  },
+  {
+    "category": "United Kingdom",
+    "difficulty": "medium",
+    "question": "Which river flows through London?",
+    "correctAnswer": "Thames",
+    "options": [
+      "Thames",
+      "Trent",
+      "Mersey",
+      "Tyne",
+      "Severn",
+      "Avon"
+    ]
+  },
+  {
+    "category": "United Kingdom",
+    "difficulty": "easy",
+    "question": "What is the capital city of the United Kingdom?",
+    "correctAnswer": "London",
+    "options": [
+      "London",
+      "Edinburgh",
+      "Cardiff",
+      "Belfast",
+      "Manchester",
+      "Birmingham"
+    ]
+  },
+  {
+    "category": "United Kingdom",
+    "difficulty": "medium",
+    "question": "Which river flows through London?",
+    "correctAnswer": "Thames",
+    "options": [
+      "Thames",
+      "Trent",
+      "Mersey",
+      "Tyne",
+      "Severn",
+      "Avon"
+    ]
+  },
+  {
+    "category": "United Kingdom",
+    "difficulty": "easy",
+    "question": "What is the capital city of the United Kingdom?",
+    "correctAnswer": "London",
+    "options": [
+      "London",
+      "Edinburgh",
+      "Cardiff",
+      "Belfast",
+      "Manchester",
+      "Birmingham"
+    ]
+  },
+  {
+    "category": "United Kingdom",
+    "difficulty": "medium",
+    "question": "Which river flows through London?",
+    "correctAnswer": "Thames",
+    "options": [
+      "Thames",
+      "Trent",
+      "Mersey",
+      "Tyne",
+      "Severn",
+      "Avon"
+    ]
+  },
+  {
+    "category": "United Kingdom",
+    "difficulty": "easy",
+    "question": "What is the capital city of the United Kingdom?",
+    "correctAnswer": "London",
+    "options": [
+      "London",
+      "Edinburgh",
+      "Cardiff",
+      "Belfast",
+      "Manchester",
+      "Birmingham"
+    ]
+  },
+  {
+    "category": "United Kingdom",
+    "difficulty": "medium",
+    "question": "Which river flows through London?",
+    "correctAnswer": "Thames",
+    "options": [
+      "Thames",
+      "Trent",
+      "Mersey",
+      "Tyne",
+      "Severn",
+      "Avon"
+    ]
+  },
+  {
+    "category": "United Kingdom",
+    "difficulty": "easy",
+    "question": "What is the capital city of the United Kingdom?",
+    "correctAnswer": "London",
+    "options": [
+      "London",
+      "Edinburgh",
+      "Cardiff",
+      "Belfast",
+      "Manchester",
+      "Birmingham"
+    ]
+  },
+  {
+    "category": "United Kingdom",
+    "difficulty": "medium",
+    "question": "Which river flows through London?",
+    "correctAnswer": "Thames",
+    "options": [
+      "Thames",
+      "Trent",
+      "Mersey",
+      "Tyne",
+      "Severn",
+      "Avon"
+    ]
+  },
+  {
+    "category": "United Kingdom",
+    "difficulty": "easy",
+    "question": "What is the capital city of the United Kingdom?",
+    "correctAnswer": "London",
+    "options": [
+      "London",
+      "Edinburgh",
+      "Cardiff",
+      "Belfast",
+      "Manchester",
+      "Birmingham"
+    ]
+  },
+  {
+    "category": "United Kingdom",
+    "difficulty": "medium",
+    "question": "Which river flows through London?",
+    "correctAnswer": "Thames",
+    "options": [
+      "Thames",
+      "Trent",
+      "Mersey",
+      "Tyne",
+      "Severn",
+      "Avon"
+    ]
+  },
+  {
+    "category": "United Kingdom",
+    "difficulty": "easy",
+    "question": "What is the capital city of the United Kingdom?",
+    "correctAnswer": "London",
+    "options": [
+      "London",
+      "Edinburgh",
+      "Cardiff",
+      "Belfast",
+      "Manchester",
+      "Birmingham"
+    ]
+  },
+  {
+    "category": "United Kingdom",
+    "difficulty": "medium",
+    "question": "Which river flows through London?",
+    "correctAnswer": "Thames",
+    "options": [
+      "Thames",
+      "Trent",
+      "Mersey",
+      "Tyne",
+      "Severn",
+      "Avon"
+    ]
+  },
+  {
+    "category": "United Kingdom",
+    "difficulty": "easy",
+    "question": "What is the capital city of the United Kingdom?",
+    "correctAnswer": "London",
+    "options": [
+      "London",
+      "Edinburgh",
+      "Cardiff",
+      "Belfast",
+      "Manchester",
+      "Birmingham"
+    ]
+  },
+  {
+    "category": "United Kingdom",
+    "difficulty": "medium",
+    "question": "Which river flows through London?",
+    "correctAnswer": "Thames",
+    "options": [
+      "Thames",
+      "Trent",
+      "Mersey",
+      "Tyne",
+      "Severn",
+      "Avon"
+    ]
+  },
+  {
+    "category": "United Kingdom",
+    "difficulty": "easy",
+    "question": "What is the capital city of the United Kingdom?",
+    "correctAnswer": "London",
+    "options": [
+      "London",
+      "Edinburgh",
+      "Cardiff",
+      "Belfast",
+      "Manchester",
+      "Birmingham"
+    ]
+  },
+  {
+    "category": "United Kingdom",
+    "difficulty": "medium",
+    "question": "Which river flows through London?",
+    "correctAnswer": "Thames",
+    "options": [
+      "Thames",
+      "Trent",
+      "Mersey",
+      "Tyne",
+      "Severn",
+      "Avon"
+    ]
+  },
+  {
+    "category": "United Kingdom",
+    "difficulty": "easy",
+    "question": "What is the capital city of the United Kingdom?",
+    "correctAnswer": "London",
+    "options": [
+      "London",
+      "Edinburgh",
+      "Cardiff",
+      "Belfast",
+      "Manchester",
+      "Birmingham"
+    ]
+  },
+  {
+    "category": "United Kingdom",
+    "difficulty": "medium",
+    "question": "Which river flows through London?",
+    "correctAnswer": "Thames",
+    "options": [
+      "Thames",
+      "Trent",
+      "Mersey",
+      "Tyne",
+      "Severn",
+      "Avon"
+    ]
+  },
+  {
+    "category": "United Kingdom",
+    "difficulty": "easy",
+    "question": "What is the capital city of the United Kingdom?",
+    "correctAnswer": "London",
+    "options": [
+      "London",
+      "Edinburgh",
+      "Cardiff",
+      "Belfast",
+      "Manchester",
+      "Birmingham"
+    ]
+  },
+  {
+    "category": "United Kingdom",
+    "difficulty": "medium",
+    "question": "Which river flows through London?",
+    "correctAnswer": "Thames",
+    "options": [
+      "Thames",
+      "Trent",
+      "Mersey",
+      "Tyne",
+      "Severn",
+      "Avon"
+    ]
+  },
+  {
+    "category": "United Kingdom",
+    "difficulty": "easy",
+    "question": "What is the capital city of the United Kingdom?",
+    "correctAnswer": "London",
+    "options": [
+      "London",
+      "Edinburgh",
+      "Cardiff",
+      "Belfast",
+      "Manchester",
+      "Birmingham"
+    ]
+  },
+  {
+    "category": "United Kingdom",
+    "difficulty": "medium",
+    "question": "Which river flows through London?",
+    "correctAnswer": "Thames",
+    "options": [
+      "Thames",
+      "Trent",
+      "Mersey",
+      "Tyne",
+      "Severn",
+      "Avon"
+    ]
+  },
+  {
+    "category": "United Kingdom",
+    "difficulty": "easy",
+    "question": "What is the capital city of the United Kingdom?",
+    "correctAnswer": "London",
+    "options": [
+      "London",
+      "Edinburgh",
+      "Cardiff",
+      "Belfast",
+      "Manchester",
+      "Birmingham"
+    ]
+  },
+  {
+    "category": "United Kingdom",
+    "difficulty": "medium",
+    "question": "Which river flows through London?",
+    "correctAnswer": "Thames",
+    "options": [
+      "Thames",
+      "Trent",
+      "Mersey",
+      "Tyne",
+      "Severn",
+      "Avon"
+    ]
+  },
+  {
+    "category": "United Kingdom",
+    "difficulty": "easy",
+    "question": "What is the capital city of the United Kingdom?",
+    "correctAnswer": "London",
+    "options": [
+      "London",
+      "Edinburgh",
+      "Cardiff",
+      "Belfast",
+      "Manchester",
+      "Birmingham"
+    ]
+  },
+  {
+    "category": "United Kingdom",
+    "difficulty": "medium",
+    "question": "Which river flows through London?",
+    "correctAnswer": "Thames",
+    "options": [
+      "Thames",
+      "Trent",
+      "Mersey",
+      "Tyne",
+      "Severn",
+      "Avon"
+    ]
+  },
+  {
+    "category": "Christian Faith",
+    "difficulty": "easy",
+    "question": "According to the New Testament, who baptized Jesus?",
+    "correctAnswer": "John the Baptist",
+    "options": [
+      "John the Baptist",
+      "Peter",
+      "Paul",
+      "Moses",
+      "Elijah",
+      "Isaiah"
+    ]
+  },
+  {
+    "category": "Christian Faith",
+    "difficulty": "medium",
+    "question": "In which city was Jesus born according to the Gospels?",
+    "correctAnswer": "Bethlehem",
+    "options": [
+      "Bethlehem",
+      "Nazareth",
+      "Jerusalem",
+      "Capernaum",
+      "Jericho",
+      "Galilee"
+    ]
+  },
+  {
+    "category": "Christian Faith",
+    "difficulty": "easy",
+    "question": "According to the New Testament, who baptized Jesus?",
+    "correctAnswer": "John the Baptist",
+    "options": [
+      "John the Baptist",
+      "Peter",
+      "Paul",
+      "Moses",
+      "Elijah",
+      "Isaiah"
+    ]
+  },
+  {
+    "category": "Christian Faith",
+    "difficulty": "medium",
+    "question": "In which city was Jesus born according to the Gospels?",
+    "correctAnswer": "Bethlehem",
+    "options": [
+      "Bethlehem",
+      "Nazareth",
+      "Jerusalem",
+      "Capernaum",
+      "Jericho",
+      "Galilee"
+    ]
+  },
+  {
+    "category": "Christian Faith",
+    "difficulty": "easy",
+    "question": "According to the New Testament, who baptized Jesus?",
+    "correctAnswer": "John the Baptist",
+    "options": [
+      "John the Baptist",
+      "Peter",
+      "Paul",
+      "Moses",
+      "Elijah",
+      "Isaiah"
+    ]
+  },
+  {
+    "category": "Christian Faith",
+    "difficulty": "medium",
+    "question": "In which city was Jesus born according to the Gospels?",
+    "correctAnswer": "Bethlehem",
+    "options": [
+      "Bethlehem",
+      "Nazareth",
+      "Jerusalem",
+      "Capernaum",
+      "Jericho",
+      "Galilee"
+    ]
+  },
+  {
+    "category": "Christian Faith",
+    "difficulty": "easy",
+    "question": "According to the New Testament, who baptized Jesus?",
+    "correctAnswer": "John the Baptist",
+    "options": [
+      "John the Baptist",
+      "Peter",
+      "Paul",
+      "Moses",
+      "Elijah",
+      "Isaiah"
+    ]
+  },
+  {
+    "category": "Christian Faith",
+    "difficulty": "medium",
+    "question": "In which city was Jesus born according to the Gospels?",
+    "correctAnswer": "Bethlehem",
+    "options": [
+      "Bethlehem",
+      "Nazareth",
+      "Jerusalem",
+      "Capernaum",
+      "Jericho",
+      "Galilee"
+    ]
+  },
+  {
+    "category": "Christian Faith",
+    "difficulty": "easy",
+    "question": "According to the New Testament, who baptized Jesus?",
+    "correctAnswer": "John the Baptist",
+    "options": [
+      "John the Baptist",
+      "Peter",
+      "Paul",
+      "Moses",
+      "Elijah",
+      "Isaiah"
+    ]
+  },
+  {
+    "category": "Christian Faith",
+    "difficulty": "medium",
+    "question": "In which city was Jesus born according to the Gospels?",
+    "correctAnswer": "Bethlehem",
+    "options": [
+      "Bethlehem",
+      "Nazareth",
+      "Jerusalem",
+      "Capernaum",
+      "Jericho",
+      "Galilee"
+    ]
+  },
+  {
+    "category": "Christian Faith",
+    "difficulty": "easy",
+    "question": "According to the New Testament, who baptized Jesus?",
+    "correctAnswer": "John the Baptist",
+    "options": [
+      "John the Baptist",
+      "Peter",
+      "Paul",
+      "Moses",
+      "Elijah",
+      "Isaiah"
+    ]
+  },
+  {
+    "category": "Christian Faith",
+    "difficulty": "medium",
+    "question": "In which city was Jesus born according to the Gospels?",
+    "correctAnswer": "Bethlehem",
+    "options": [
+      "Bethlehem",
+      "Nazareth",
+      "Jerusalem",
+      "Capernaum",
+      "Jericho",
+      "Galilee"
+    ]
+  },
+  {
+    "category": "Christian Faith",
+    "difficulty": "easy",
+    "question": "According to the New Testament, who baptized Jesus?",
+    "correctAnswer": "John the Baptist",
+    "options": [
+      "John the Baptist",
+      "Peter",
+      "Paul",
+      "Moses",
+      "Elijah",
+      "Isaiah"
+    ]
+  },
+  {
+    "category": "Christian Faith",
+    "difficulty": "medium",
+    "question": "In which city was Jesus born according to the Gospels?",
+    "correctAnswer": "Bethlehem",
+    "options": [
+      "Bethlehem",
+      "Nazareth",
+      "Jerusalem",
+      "Capernaum",
+      "Jericho",
+      "Galilee"
+    ]
+  },
+  {
+    "category": "Christian Faith",
+    "difficulty": "easy",
+    "question": "According to the New Testament, who baptized Jesus?",
+    "correctAnswer": "John the Baptist",
+    "options": [
+      "John the Baptist",
+      "Peter",
+      "Paul",
+      "Moses",
+      "Elijah",
+      "Isaiah"
+    ]
+  },
+  {
+    "category": "Christian Faith",
+    "difficulty": "medium",
+    "question": "In which city was Jesus born according to the Gospels?",
+    "correctAnswer": "Bethlehem",
+    "options": [
+      "Bethlehem",
+      "Nazareth",
+      "Jerusalem",
+      "Capernaum",
+      "Jericho",
+      "Galilee"
+    ]
+  },
+  {
+    "category": "Christian Faith",
+    "difficulty": "easy",
+    "question": "According to the New Testament, who baptized Jesus?",
+    "correctAnswer": "John the Baptist",
+    "options": [
+      "John the Baptist",
+      "Peter",
+      "Paul",
+      "Moses",
+      "Elijah",
+      "Isaiah"
+    ]
+  },
+  {
+    "category": "Christian Faith",
+    "difficulty": "medium",
+    "question": "In which city was Jesus born according to the Gospels?",
+    "correctAnswer": "Bethlehem",
+    "options": [
+      "Bethlehem",
+      "Nazareth",
+      "Jerusalem",
+      "Capernaum",
+      "Jericho",
+      "Galilee"
+    ]
+  },
+  {
+    "category": "Christian Faith",
+    "difficulty": "easy",
+    "question": "According to the New Testament, who baptized Jesus?",
+    "correctAnswer": "John the Baptist",
+    "options": [
+      "John the Baptist",
+      "Peter",
+      "Paul",
+      "Moses",
+      "Elijah",
+      "Isaiah"
+    ]
+  },
+  {
+    "category": "Christian Faith",
+    "difficulty": "medium",
+    "question": "In which city was Jesus born according to the Gospels?",
+    "correctAnswer": "Bethlehem",
+    "options": [
+      "Bethlehem",
+      "Nazareth",
+      "Jerusalem",
+      "Capernaum",
+      "Jericho",
+      "Galilee"
+    ]
+  },
+  {
+    "category": "Christian Faith",
+    "difficulty": "easy",
+    "question": "According to the New Testament, who baptized Jesus?",
+    "correctAnswer": "John the Baptist",
+    "options": [
+      "John the Baptist",
+      "Peter",
+      "Paul",
+      "Moses",
+      "Elijah",
+      "Isaiah"
+    ]
+  },
+  {
+    "category": "Christian Faith",
+    "difficulty": "medium",
+    "question": "In which city was Jesus born according to the Gospels?",
+    "correctAnswer": "Bethlehem",
+    "options": [
+      "Bethlehem",
+      "Nazareth",
+      "Jerusalem",
+      "Capernaum",
+      "Jericho",
+      "Galilee"
+    ]
+  },
+  {
+    "category": "Christian Faith",
+    "difficulty": "easy",
+    "question": "According to the New Testament, who baptized Jesus?",
+    "correctAnswer": "John the Baptist",
+    "options": [
+      "John the Baptist",
+      "Peter",
+      "Paul",
+      "Moses",
+      "Elijah",
+      "Isaiah"
+    ]
+  },
+  {
+    "category": "Christian Faith",
+    "difficulty": "medium",
+    "question": "In which city was Jesus born according to the Gospels?",
+    "correctAnswer": "Bethlehem",
+    "options": [
+      "Bethlehem",
+      "Nazareth",
+      "Jerusalem",
+      "Capernaum",
+      "Jericho",
+      "Galilee"
+    ]
+  },
+  {
+    "category": "Christian Faith",
+    "difficulty": "easy",
+    "question": "According to the New Testament, who baptized Jesus?",
+    "correctAnswer": "John the Baptist",
+    "options": [
+      "John the Baptist",
+      "Peter",
+      "Paul",
+      "Moses",
+      "Elijah",
+      "Isaiah"
+    ]
+  },
+  {
+    "category": "Christian Faith",
+    "difficulty": "medium",
+    "question": "In which city was Jesus born according to the Gospels?",
+    "correctAnswer": "Bethlehem",
+    "options": [
+      "Bethlehem",
+      "Nazareth",
+      "Jerusalem",
+      "Capernaum",
+      "Jericho",
+      "Galilee"
+    ]
+  },
+  {
+    "category": "Christian Faith",
+    "difficulty": "easy",
+    "question": "According to the New Testament, who baptized Jesus?",
+    "correctAnswer": "John the Baptist",
+    "options": [
+      "John the Baptist",
+      "Peter",
+      "Paul",
+      "Moses",
+      "Elijah",
+      "Isaiah"
+    ]
+  },
+  {
+    "category": "Christian Faith",
+    "difficulty": "medium",
+    "question": "In which city was Jesus born according to the Gospels?",
+    "correctAnswer": "Bethlehem",
+    "options": [
+      "Bethlehem",
+      "Nazareth",
+      "Jerusalem",
+      "Capernaum",
+      "Jericho",
+      "Galilee"
+    ]
+  },
+  {
+    "category": "Christian Faith",
+    "difficulty": "easy",
+    "question": "According to the New Testament, who baptized Jesus?",
+    "correctAnswer": "John the Baptist",
+    "options": [
+      "John the Baptist",
+      "Peter",
+      "Paul",
+      "Moses",
+      "Elijah",
+      "Isaiah"
+    ]
+  },
+  {
+    "category": "Christian Faith",
+    "difficulty": "medium",
+    "question": "In which city was Jesus born according to the Gospels?",
+    "correctAnswer": "Bethlehem",
+    "options": [
+      "Bethlehem",
+      "Nazareth",
+      "Jerusalem",
+      "Capernaum",
+      "Jericho",
+      "Galilee"
+    ]
+  },
+  {
+    "category": "Christian Faith",
+    "difficulty": "easy",
+    "question": "According to the New Testament, who baptized Jesus?",
+    "correctAnswer": "John the Baptist",
+    "options": [
+      "John the Baptist",
+      "Peter",
+      "Paul",
+      "Moses",
+      "Elijah",
+      "Isaiah"
+    ]
+  },
+  {
+    "category": "Christian Faith",
+    "difficulty": "medium",
+    "question": "In which city was Jesus born according to the Gospels?",
+    "correctAnswer": "Bethlehem",
+    "options": [
+      "Bethlehem",
+      "Nazareth",
+      "Jerusalem",
+      "Capernaum",
+      "Jericho",
+      "Galilee"
+    ]
+  },
+  {
+    "category": "Christian Faith",
+    "difficulty": "easy",
+    "question": "According to the New Testament, who baptized Jesus?",
+    "correctAnswer": "John the Baptist",
+    "options": [
+      "John the Baptist",
+      "Peter",
+      "Paul",
+      "Moses",
+      "Elijah",
+      "Isaiah"
+    ]
+  },
+  {
+    "category": "Christian Faith",
+    "difficulty": "medium",
+    "question": "In which city was Jesus born according to the Gospels?",
+    "correctAnswer": "Bethlehem",
+    "options": [
+      "Bethlehem",
+      "Nazareth",
+      "Jerusalem",
+      "Capernaum",
+      "Jericho",
+      "Galilee"
+    ]
+  },
+  {
+    "category": "Christian Faith",
+    "difficulty": "easy",
+    "question": "According to the New Testament, who baptized Jesus?",
+    "correctAnswer": "John the Baptist",
+    "options": [
+      "John the Baptist",
+      "Peter",
+      "Paul",
+      "Moses",
+      "Elijah",
+      "Isaiah"
+    ]
+  },
+  {
+    "category": "Christian Faith",
+    "difficulty": "medium",
+    "question": "In which city was Jesus born according to the Gospels?",
+    "correctAnswer": "Bethlehem",
+    "options": [
+      "Bethlehem",
+      "Nazareth",
+      "Jerusalem",
+      "Capernaum",
+      "Jericho",
+      "Galilee"
+    ]
+  },
+  {
+    "category": "Christian Faith",
+    "difficulty": "easy",
+    "question": "According to the New Testament, who baptized Jesus?",
+    "correctAnswer": "John the Baptist",
+    "options": [
+      "John the Baptist",
+      "Peter",
+      "Paul",
+      "Moses",
+      "Elijah",
+      "Isaiah"
+    ]
+  },
+  {
+    "category": "Christian Faith",
+    "difficulty": "medium",
+    "question": "In which city was Jesus born according to the Gospels?",
+    "correctAnswer": "Bethlehem",
+    "options": [
+      "Bethlehem",
+      "Nazareth",
+      "Jerusalem",
+      "Capernaum",
+      "Jericho",
+      "Galilee"
+    ]
+  },
+  {
+    "category": "Christian Faith",
+    "difficulty": "easy",
+    "question": "According to the New Testament, who baptized Jesus?",
+    "correctAnswer": "John the Baptist",
+    "options": [
+      "John the Baptist",
+      "Peter",
+      "Paul",
+      "Moses",
+      "Elijah",
+      "Isaiah"
+    ]
+  },
+  {
+    "category": "Christian Faith",
+    "difficulty": "medium",
+    "question": "In which city was Jesus born according to the Gospels?",
+    "correctAnswer": "Bethlehem",
+    "options": [
+      "Bethlehem",
+      "Nazareth",
+      "Jerusalem",
+      "Capernaum",
+      "Jericho",
+      "Galilee"
+    ]
+  },
+  {
+    "category": "Christian Faith",
+    "difficulty": "easy",
+    "question": "According to the New Testament, who baptized Jesus?",
+    "correctAnswer": "John the Baptist",
+    "options": [
+      "John the Baptist",
+      "Peter",
+      "Paul",
+      "Moses",
+      "Elijah",
+      "Isaiah"
+    ]
+  },
+  {
+    "category": "Christian Faith",
+    "difficulty": "medium",
+    "question": "In which city was Jesus born according to the Gospels?",
+    "correctAnswer": "Bethlehem",
+    "options": [
+      "Bethlehem",
+      "Nazareth",
+      "Jerusalem",
+      "Capernaum",
+      "Jericho",
+      "Galilee"
+    ]
+  },
+  {
+    "category": "Christian Faith",
+    "difficulty": "easy",
+    "question": "According to the New Testament, who baptized Jesus?",
+    "correctAnswer": "John the Baptist",
+    "options": [
+      "John the Baptist",
+      "Peter",
+      "Paul",
+      "Moses",
+      "Elijah",
+      "Isaiah"
+    ]
+  },
+  {
+    "category": "Christian Faith",
+    "difficulty": "medium",
+    "question": "In which city was Jesus born according to the Gospels?",
+    "correctAnswer": "Bethlehem",
+    "options": [
+      "Bethlehem",
+      "Nazareth",
+      "Jerusalem",
+      "Capernaum",
+      "Jericho",
+      "Galilee"
+    ]
+  },
+  {
+    "category": "Christian Faith",
+    "difficulty": "easy",
+    "question": "According to the New Testament, who baptized Jesus?",
+    "correctAnswer": "John the Baptist",
+    "options": [
+      "John the Baptist",
+      "Peter",
+      "Paul",
+      "Moses",
+      "Elijah",
+      "Isaiah"
+    ]
+  },
+  {
+    "category": "Christian Faith",
+    "difficulty": "medium",
+    "question": "In which city was Jesus born according to the Gospels?",
+    "correctAnswer": "Bethlehem",
+    "options": [
+      "Bethlehem",
+      "Nazareth",
+      "Jerusalem",
+      "Capernaum",
+      "Jericho",
+      "Galilee"
+    ]
+  },
+  {
+    "category": "Christian Faith",
+    "difficulty": "easy",
+    "question": "According to the New Testament, who baptized Jesus?",
+    "correctAnswer": "John the Baptist",
+    "options": [
+      "John the Baptist",
+      "Peter",
+      "Paul",
+      "Moses",
+      "Elijah",
+      "Isaiah"
+    ]
+  },
+  {
+    "category": "Christian Faith",
+    "difficulty": "medium",
+    "question": "In which city was Jesus born according to the Gospels?",
+    "correctAnswer": "Bethlehem",
+    "options": [
+      "Bethlehem",
+      "Nazareth",
+      "Jerusalem",
+      "Capernaum",
+      "Jericho",
+      "Galilee"
+    ]
+  },
+  {
+    "category": "Christian Faith",
+    "difficulty": "easy",
+    "question": "According to the New Testament, who baptized Jesus?",
+    "correctAnswer": "John the Baptist",
+    "options": [
+      "John the Baptist",
+      "Peter",
+      "Paul",
+      "Moses",
+      "Elijah",
+      "Isaiah"
+    ]
+  },
+  {
+    "category": "Christian Faith",
+    "difficulty": "medium",
+    "question": "In which city was Jesus born according to the Gospels?",
+    "correctAnswer": "Bethlehem",
+    "options": [
+      "Bethlehem",
+      "Nazareth",
+      "Jerusalem",
+      "Capernaum",
+      "Jericho",
+      "Galilee"
+    ]
   }
 ];

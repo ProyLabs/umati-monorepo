@@ -17,7 +17,7 @@ import { AnimatePresence, motion } from "motion/react";
 import { useTheme } from "next-themes";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import useClickOutside from "../../hooks/use-click-outside";
 import { useClipboard } from "../../hooks/use-clipboard";
 import { cn, getRandomAvatarUrl } from "../../lib/utils";
@@ -36,7 +36,7 @@ import { Separator } from "../ui/separator";
 import { QRCode } from "../ui/shadcn-io/qr-code";
 import { Slider } from "../ui/slider";
 import Link from "next/link";
-import { Game, Games, RoomState } from "@umati/ws";
+import { Game, Games, Player, RoomState } from "@umati/ws";
 
 export const CopyLinkButton = () => {
   const { joinUrl } = useLobbyHost();
@@ -170,10 +170,14 @@ export const Latency = ({ ms }: { ms: number }) => {
 
 export const BeforeWeBegin = ({dark}: {dark?: boolean}) => {
   const { startGame, cancelGame, game } = useLobbyHost();
+
+  const instructions = useMemo(() => Games.find(g => g.id === game?.type)?.instructions, [game]);
+  console.log("🚀 ~ BeforeWeBegin ~ instructions:", instructions)
+
   return (
     <div className={"max-w-screen-2xl mx-auto w-full py-4 flex flex-col gap-8 px-4 items-center justify-center h-full"}>
-      <h3 className="text-5xl font-bold text-center">Before We Begin</h3>
-      <ul className="text-3xl font-semibold list-decimal list-inside max-w-2xl mx-auto py-24 space-y-4">
+      <h3 className="text-5xl font-bold text-center">How to Play</h3>
+      {/* <ul className="text-3xl font-semibold list-decimal list-inside max-w-2xl mx-auto py-24 space-y-4">
         <p>Some instructions...</p>
         <li className="">
           Ensure this screen is being shared on Zoom (or others) or a TV
@@ -181,7 +185,8 @@ export const BeforeWeBegin = ({dark}: {dark?: boolean}) => {
         <li className="">Questions will appear on this screen!</li>
         <li className="">Answer using the device you've joined with!</li>
         <li className="">The faster you answer, the more points you'll get!</li>
-      </ul>
+      </ul> */}
+      <div className="rules" dangerouslySetInnerHTML={{__html: instructions!}}></div>
       <Fbutton
         className="max-w-xs mx-auto w-full"
         variant={dark ? "dark" : "secondary"}
@@ -597,6 +602,106 @@ export const PlayerReactionLayer = () => {
             }}
           >
             {r.emoji}
+          </motion.div>
+        ))}
+      </AnimatePresence>
+    </div>
+  );
+};
+
+
+export const PlayerJoinAnimationLayer = () => {
+    const { players, uiState } = useLobbyHost();
+  const [activeReactions, setActiveReactions] = useState<
+    {
+      id: string;
+      player: Player;
+      xOffset: number;
+      drift: number;
+    }[]
+  >([]);
+
+  const prevPlayersRef = useRef<Player[]>([]);
+
+  useEffect(() => {
+    const prevPlayers = prevPlayersRef.current;
+    const newJoins: Player[] = [];
+
+    players.forEach((p) => {
+      const prev = prevPlayers.find((pp) => pp.id === p.id);
+
+      if ((!prev && p.connected) || (prev && !prev.connected && p.connected)) {
+        newJoins.push(p);
+      }
+    });
+
+    prevPlayersRef.current = players;
+
+    if (newJoins.length === 0) return;
+
+    const reactions = newJoins.map((player) => ({
+      id: `join-${player.id}-${Date.now()}`,
+      player,
+      xOffset: Math.random() * window.innerWidth - window.innerWidth / 2,
+      drift: Math.random() * 80 - 40,
+    }));
+
+    setActiveReactions((prev) => [...prev, ...reactions]);
+  }, [players]);
+
+  return (
+    <div className="pointer-events-none fixed inset-0 overflow-hidden z-50">
+      <AnimatePresence>
+        {activeReactions.map((r) => (
+          <motion.div
+            key={r.id}
+            initial={{
+              opacity: 0,
+              y: window.innerHeight,
+              x: r.xOffset,
+              scale: 0.8,
+            }}
+            animate={{
+              opacity: [0, 1, 1, 0],
+              y: -500,
+              x: [r.xOffset, r.xOffset + r.drift, r.xOffset - r.drift / 2],
+              scale: [0.8, 1.1, 1],
+            }}
+            exit={{ opacity: 0 }}
+            transition={{
+              duration: 3.5,
+              ease: "easeOut",
+            }}
+            className="absolute select-none flex flex-col items-center justify-center"
+            style={{
+              left: "50%",
+              bottom: "0px",
+            }}
+            onAnimationComplete={() => {
+              setActiveReactions((prev) =>
+                prev.filter((x) => x.id !== r.id)
+              );
+            }}
+          >
+            {/* Replace emoji with avatar */}
+            <Avatar
+              className={cn(
+                "ring-2 ring-background shadow-md transition-transform",
+                {
+                  "size-16": uiState === RoomState.INIT,
+                  "size-12": uiState === RoomState.LOBBY,
+                }
+              )}
+            >
+              <AvatarImage
+                src={r.player.avatar}
+                alt={r.player.displayName}
+              />
+              <AvatarFallback>
+                {r.player.displayName?.[0]}
+              </AvatarFallback>
+            </Avatar>
+            <p className="text-sm font-semibold text-center">{r.player.displayName} Joined!</p>
           </motion.div>
         ))}
       </AnimatePresence>
