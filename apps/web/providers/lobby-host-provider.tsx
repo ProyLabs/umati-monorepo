@@ -197,7 +197,7 @@ export function LobbyHostProvider({ children }: { children: ReactNode }) {
   /* ------------------------------------------------------------------------ */
   const joinUrl = useMemo(() => {
     if (!lobby || typeof window === "undefined") return "";
-    // return `http://192.168.1.135:3000/lobby/${lobby.id}`;
+    // return `http://192.168.1.141:3000/lobby/${lobby.id}`;
     return `${window.location.origin}/lobby/${lobby.id}`;
   }, [lobby]);
 

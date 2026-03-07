@@ -17,12 +17,14 @@ import { useState } from "react";
 import { toast } from "sonner";
 import ButtonOptions from "../ui/button-options";
 import { Fbutton } from "../ui/fancy-button";
+import { cn } from "@/lib/utils";
 
 export default function CreateLobby() {
   const [lobbyName, setLobbyName] = useState("");
-  const [maxPlayers, setMaxPlayers] = useState(8);
+  const [maxPlayers, setMaxPlayers] = useState(20);
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [pageLoader, setPageLoader] = useState(false);
   const { user } = useAuth();
 
   async function handleCreate(isPrivate = false, pin?: string) {
@@ -58,15 +60,77 @@ export default function CreateLobby() {
         throw new Error(error.message || "Failed to create lobby");
       }
 
+      setPageLoader(true);
       const { lobby } = await res.json();
       if (lobby) {
         router.push(`/lobby/${lobby.lobbyIdentifier}/host`);
+      } else {
+        setPageLoader(false);
+        throw new Error("Lobby creation failed");
       }
     } catch (err: any) {
       toast.error(err.message || "Something went wrong!", {});
     } finally {
       setLoading(false);
     }
+  }
+
+  if (pageLoader) {
+    return (
+      <svg
+        height={128}
+        width={128}
+        xmlns="http://www.w3.org/2000/svg"
+        viewBox="0 0 200 200"
+        className={cn("animate-pulse")}
+      >
+        <rect
+          fill="currentColor"
+          stroke="currentColor"
+          strokeWidth="15"
+          strokeLinejoin="round"
+          width="30"
+          height="30"
+          x="85"
+          y="85"
+          rx="0"
+          ry="0"
+        >
+          <animate
+            attributeName="rx"
+            calcMode="spline"
+            dur="2"
+            values="15;15;5;15;15"
+            keySplines=".5 0 .5 1;.8 0 1 .2;0 .8 .2 1;.5 0 .5 1"
+            repeatCount="indefinite"
+          ></animate>
+          <animate
+            attributeName="ry"
+            calcMode="spline"
+            dur="2"
+            values="15;15;10;15;15"
+            keySplines=".5 0 .5 1;.8 0 1 .2;0 .8 .2 1;.5 0 .5 1"
+            repeatCount="indefinite"
+          ></animate>
+          <animate
+            attributeName="height"
+            calcMode="spline"
+            dur="2"
+            values="30;30;1;30;30"
+            keySplines=".5 0 .5 1;.8 0 1 .2;0 .8 .2 1;.5 0 .5 1"
+            repeatCount="indefinite"
+          ></animate>
+          <animate
+            attributeName="y"
+            calcMode="spline"
+            dur="2"
+            values="40;170;40;"
+            keySplines=".6 0 1 .4;0 .8 .2 1"
+            repeatCount="indefinite"
+          ></animate>
+        </rect>
+      </svg>
+    );
   }
 
   return (
@@ -99,7 +163,7 @@ export default function CreateLobby() {
               variant="outline"
               value={maxPlayers}
               onChange={(value) => setMaxPlayers(Number(value))}
-              options={[10, 20, 60]}
+              options={[10, 20, 40, 60]}
             />
           </div>
 

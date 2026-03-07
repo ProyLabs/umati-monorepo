@@ -170,6 +170,7 @@ export type HerdMentalityDataItem = {
 
 export type HerdMentalityPlayerAnswer = {
   answer: HerdMentalityOptions;
+  timeTaken: number;
 };
 
 export const HerdMentalityOptions = {

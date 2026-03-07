@@ -18,7 +18,8 @@ import { GameManager } from "../game-manager";
 
 export class HerdMentality extends BaseGame {
   static maxNumberOfRounds = 20;
-  static basePoints = 100;
+  static basePoints = 50;
+  static timeBonusFactor = 0.5;
   public noOfRounds: number;
 
   public data: HerdMentalityDataItem[] = [];
@@ -28,12 +29,12 @@ export class HerdMentality extends BaseGame {
 
   constructor(
     roomId: string,
-    options: { noOfRounds: number; duration?: number }
+    options: { noOfRounds: number; duration?: number },
   ) {
     super(roomId, GameType.HM);
     this.noOfRounds = Math.min(
       options.noOfRounds,
-      HerdMentality.maxNumberOfRounds
+      HerdMentality.maxNumberOfRounds,
     );
     this.roundDuration = (options.duration ?? 30) * 1000;
     this.init();
@@ -67,7 +68,7 @@ export class HerdMentality extends BaseGame {
     });
   }
 
-   override addPlayer(playerId: string) {
+  override addPlayer(playerId: string) {
     super.addPlayer(playerId);
 
     if (this.state === GameState.ROUND) {
@@ -135,7 +136,8 @@ export class HerdMentality extends BaseGame {
   public submitAnswer(playerId: string, answer: HerdMentalityOptions) {
     const exists = this.answers.get(playerId);
     if (exists) return;
-    this.answers.set(playerId, { answer });
+    const timeTaken = Date.now() - this.roundStartTime;
+    this.answers.set(playerId, { answer, timeTaken });
     this.toPlayer(playerId, WSEvent.HM_ROUND_ANSWERED, {
       answer: this.answers.get(playerId)?.answer ?? null,
     });
@@ -177,10 +179,17 @@ export class HerdMentality extends BaseGame {
       .map(([index]) => Number(index));
 
     // 4. Award points to players who picked one of the most-voted options
-    
+
     for (const [playerId, playerAnswer] of this.answers) {
       if (mostVotedAnswers.includes(playerAnswer.answer)) {
-        this.updateScore(playerId, HerdMentality.basePoints);
+        const bonus = Math.max(
+          0,
+          (1 - playerAnswer.timeTaken / this.roundDuration) *
+            HerdMentality.basePoints *
+            HerdMentality.timeBonusFactor,
+        );
+        const points = Math.round(HerdMentality.basePoints + bonus);
+        this.updateScore(playerId, points);
       }
     }
 
@@ -196,8 +205,7 @@ export class HerdMentality extends BaseGame {
     setTimeout(() => this.showLeaderboard(), 5000);
   }
 
-
-   private showLeaderboard() {
+  private showLeaderboard() {
     if (++this.currentRound >= this.noOfRounds) {
       this.state = GameState.LEADERBOARD;
       this.broadcast(WSEvent.GAME_STATE, GameManager.toGameState(this.id)!);
@@ -236,9 +244,7 @@ export class HerdMentality extends BaseGame {
     }
   }
 
-
   public myAnswer(playerId: string): HerdMentalityOptions | undefined {
     return this.answers.get(playerId)?.answer;
   }
-
 }

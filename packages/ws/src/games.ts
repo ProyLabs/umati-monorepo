@@ -7,12 +7,46 @@ type Game = {
   color: string;
   className: string;
   src?: string;
-  min?: number
+  min?: number;
+  max?: number;
   instructions?: string;
 };
 
 export const Games: Game[] = [
   // {id: "drawit", title: 'Draw It!', color: 'purple', className: 'from-[#9856FE] to-[var(--umati-purple)]', src: 'https://img.icons8.com/?size=400&id=13370&format=png&color=000000' },
+  {
+    id: "trivia",
+    title: "Trivia Go",
+    color: "red",
+    className: "from-[#FE566B] to-[var(--umati-red)]",
+    src: "https://img.icons8.com/?size=400&id=OQQN8J666Pau&format=png&color=000000",
+    min: 1,
+    max: 60,
+    instructions: `
+  <ul>
+    <li>Make sure this screen is being shared on Zoom (or others) or a TV.</li>
+    <li>Questions will appear on this screen.</li>
+    <li>Answer using the device you've joined with.</li>
+    <li>The faster you answer, the more points you'll get.</li>
+  </ul>
+`,
+  },
+  {
+    id: "herdmentality",
+    title: "Herd Mentality™",
+    color: "aqua",
+    className: "from-(--umati-aqua) to-[#00D9D5] text-black",
+    src: "https://img.icons8.com/?size=400&id=9186&format=png&color=000000",
+    min: 3,
+    instructions: `
+  <ul>
+    <li>Make sure this screen is being shared on Zoom (or others) or a TV.</li>
+    <li>A prompt will appear on this screen.</li>
+    <li>Answer using the device you've joined with.</li>
+    <li>Your goal is to match the majority answer!</li>
+    <li>If you're with the herd, you score points. If you're the odd one out, you don’t!</li>
+  </ul>`,
+  },
   {
     id: "chameleon",
     title: "Chameleon",
@@ -29,7 +63,7 @@ export const Games: Game[] = [
     <li>Discuss and try to identify who the Chameleon is.</li>
     <li>The Chameleon wins if they blend in or guess the secret word!</li>
   </ul>
-`
+`,
   },
   {
     id: "jaroflies",
@@ -37,48 +71,15 @@ export const Games: Game[] = [
     color: "purple",
     className: "from-[#9856FE] to-[var(--umati-purple)]",
     src: "https://img.icons8.com/?size=400&id=61211&format=png&color=000000",
-    min:1
+    min: 1,
   },
-  {
-    id: "trivia",
-    title: "Trivia Go",
-    color: "red",
-    className: "from-[#FE566B] to-[var(--umati-red)]",
-    src: "https://img.icons8.com/?size=400&id=OQQN8J666Pau&format=png&color=000000",
-     min:1,
-     instructions: `
-  <ul>
-    <li>Make sure this screen is being shared on Zoom (or others) or a TV.</li>
-    <li>Questions will appear on this screen.</li>
-    <li>Answer using the device you've joined with.</li>
-    <li>The faster you answer, the more points you'll get.</li>
-  </ul>
-`
-  },
+
   {
     id: "drawit",
-    title: "Most Likely to...",
+    title: "Draw It!",
     color: "sky",
     className: "from-[#9856FE] to-[var(--umati-purple)]",
     src: "https://img.icons8.com/?size=400&id=ziAWwQ4GdGVA&format=png&color=000000",
-     min:2
-  },
-  {
-    id: "herdmentality",
-    title: "Herd Mentality™",
-    color: "aqua",
-    className: "from-(--umati-aqua) to-[#00D9D5] text-black",
-    src: "https://img.icons8.com/?size=400&id=9186&format=png&color=000000",
-    min:3,
-    instructions: `
-  <ul>
-    <li>Make sure this screen is being shared on Zoom (or others) or a TV.</li>
-    <li>A prompt will appear on this screen.</li>
-    <li>Answer using the device you've joined with.</li>
-    <li>Your goal is to match the majority answer!</li>
-    <li>If you're with the herd, you score points. If you're the odd one out, you don’t!</li>
-  </ul>`
+    min: 2,
   },
 ];
-
-
