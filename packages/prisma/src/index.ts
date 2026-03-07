@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from "../../../node_modules/.prisma/clientPg";
 import { env } from "@umati/env";
 
 const globalForPrisma = global as unknown as { prisma: PrismaClient };
