@@ -215,9 +215,11 @@ export function LobbyPlayerProvider({ children }: { children: ReactNode }) {
   );
 
   const leaveLobby = useCallback(async () => {
-    send(WSEvent.PLAYER_LEAVE, {
+    return send(WSEvent.PLAYER_LEAVE, {
       roomId: identifier,
       playerId: user?.id!,
+      displayName: "",
+      avatar: "",
     });
   }, [identifier, send, user?.id]);
 
