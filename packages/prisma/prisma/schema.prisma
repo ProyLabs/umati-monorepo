@@ -48,10 +48,6 @@ model Lobby {
   hostUser  User?  @relation("UserHost", fields: [hostUserId], references: [id])
   hostGuest Guest? @relation("GuestHost", fields: [hostGuestId], references: [id])
 
-  // Removed hostId and hostType as they are no longer necessary for the relations
-  leaderboardId String? // optional future link
-  activeGameId  String? // optional current game reference
-
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
