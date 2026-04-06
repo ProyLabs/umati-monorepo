@@ -116,6 +116,12 @@ export function LobbyHostProvider({ children }: { children: ReactNode }) {
           });
           break;
 
+        case WSEvent.PLAYER_KICKED:
+          toast.success("Player removed from the lobby", {
+            position: "bottom-right",
+          });
+          break;
+
         case WSEvent.PLAYER_REACTION:
           setReactions((prev) => ({
             ...prev,
@@ -247,8 +253,8 @@ export function LobbyHostProvider({ children }: { children: ReactNode }) {
 
   const kickPlayer = useCallback(
     (playerId: string, reason?: string) =>
-      send(WSEvent.PLAYER_KICKED, { playerId, reason }),
-    [send]
+      send(WSEvent.PLAYER_KICKED, { roomId: identifier, playerId, reason }),
+    [identifier, send]
   );
 
   const closeLobby = useCallback(

@@ -72,9 +72,19 @@ export function handleStartGame(ws: WebSocket,  payload: WSPayloads[WSEvent.GAME
 }
 
 export function handleCancelGame(ws: WebSocket, payload: WSPayloads[WSEvent.GAME_CANCEL]) {
-   const { roomId } = payload;
+  const { roomId } = payload;
   const room = RoomManager.get(roomId);
   if (!room?.game) return;
+
+  if (!RoomManager.isHostSocket(roomId, ws)) {
+    ws.send(
+      JSON.stringify({
+        event: WSEvent.ERROR,
+        payload: { message: "Only the host can end the game." },
+      })
+    );
+    return;
+  }
 
   const game = GameManager.get(room.game.id);
   if (!game) return;

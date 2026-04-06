@@ -117,6 +117,7 @@ export interface WSPayloads {
     data: Record<string, any>;
   };
   [WSEvent.PLAYER_KICKED]: {
+    roomId: string;
     playerId: string;
     reason?: string;
   };

@@ -190,6 +190,54 @@ export async function handlePlayerLeft(
   });
 }
 
+/** When the host kicks a player */
+export async function handlePlayerKicked(
+  ws: WebSocket,
+  payload: WSPayloads[WSEvent.PLAYER_KICKED]
+) {
+  const { roomId, playerId, reason } = payload;
+  const room = RoomManager.get(roomId);
+  if (!room) return;
+
+  if (!RoomManager.isHostSocket(roomId, ws)) {
+    ws.send(
+      JSON.stringify({
+        event: WSEvent.ERROR,
+        payload: { message: "Only the host can kick players." },
+      })
+    );
+    return;
+  }
+
+  const player = room.players.find((p) => p.id === playerId);
+  if (!player) {
+    ws.send(
+      JSON.stringify({
+        event: WSEvent.ERROR,
+        payload: { message: "Player not found in room." },
+      })
+    );
+    return;
+  }
+
+  RoomManager.toPlayer(roomId, playerId, WSEvent.PLAYER_KICKED_ME, {
+    reason: reason ?? "You were removed from the lobby by the host.",
+  });
+  RoomManager.removePlayer(roomId, playerId, true);
+  logInfo(`🥾 Host kicked player ${playerId} from room ${roomId}`);
+
+  RoomManager.toHost(roomId, WSEvent.PLAYER_KICKED, {
+    roomId,
+    playerId,
+    reason,
+  });
+  RoomManager.broadcast(
+    roomId,
+    WSEvent.ROOM_STATE,
+    RoomManager.toLobbyState(roomId)
+  );
+}
+
 /** When a player sends a reaction */
 export async function handlePlayerReaction(
   ws: WebSocket,

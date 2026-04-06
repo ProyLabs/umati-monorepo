@@ -7,6 +7,7 @@ import {
   Maximize2Icon,
   MaximizeIcon,
   MinimizeIcon,
+  UserRoundX,
   Volume2,
   VolumeX,
   WifiHighIcon,
@@ -31,6 +32,16 @@ import {
   AvatarImage,
 } from "../ui/avatar";
 import AvatarSelect from "../ui/avatar-select";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "../ui/alert-dialog";
 import { Button } from "../ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Fbutton } from "../ui/fancy-button";
@@ -295,23 +306,70 @@ export const JoinLobbyCode = ({
 };
 
 export const WaitingForPlayers = ({ className }: { className?: string }) => {
-  const { players, lobby, uiState } = useLobbyHost();
+  const { players, lobby, uiState, kickPlayer } = useLobbyHost();
+  const [playerToKick, setPlayerToKick] = useState<Player | null>(null);
+  const [contextMenu, setContextMenu] = useState<{
+    player: Player;
+    x: number;
+    y: number;
+  } | null>(null);
+  const contextMenuRef = useRef<HTMLDivElement>(null);
+
+  useClickOutside(contextMenuRef, () => setContextMenu(null));
 
   return (
-    <div
-      className={cn(
-        "bg-foreground/5 w-full aspect-video rounded-2xl h-full p-4 flex flex-col flex-1",
-        className,
-      )}
-    >
-      <p className="font-bold text-2xl text-center mb-4">
-        {players.length} / {lobby?.maxPlayers} Players
-      </p>
+    <>
+      <div
+        className={cn(
+          "bg-foreground/5 w-full aspect-video rounded-2xl h-full p-4 flex flex-col flex-1",
+          className,
+        )}
+      >
+        <p className="font-bold text-2xl text-center mb-4">
+          {players.length} / {lobby?.maxPlayers} Players
+        </p>
 
-      <div className="relative w-full  h-fit overflow-visible rounded-xl flex flex-wrap gap-3 justify-center">
-        {players.slice(0, 24).map((player, i) => (
-          <div key={player.id} className="flex flex-col w-fit items-center">
-            <Avatar
+        <div className="relative w-full  h-fit overflow-visible rounded-xl flex flex-wrap gap-3 justify-center">
+          {players.slice(0, 24).map((player) => (
+            <div key={player.id} className="flex flex-col w-fit items-center">
+              <button
+                type="button"
+                className="rounded-full outline-hidden"
+                aria-label={`${player.displayName} actions`}
+                onContextMenu={(event) => {
+                  event.preventDefault();
+                  setContextMenu({
+                    player,
+                    x: event.clientX,
+                    y: event.clientY,
+                  });
+                }}
+              >
+                <Avatar
+                  className={cn(
+                    "ring-2 ring-background shadow-md hover:scale-110 transition-transform",
+                    {
+                      "size-16": uiState === RoomState.INIT,
+                      "size-12": uiState === RoomState.LOBBY,
+                    },
+                  )}
+                >
+                  <AvatarImage src={player.avatar} alt={player.displayName} />
+                  <AvatarFallback>{player.displayName?.[0]}</AvatarFallback>
+                </Avatar>
+              </button>
+              <p
+                className={cn("text-center font-semibold", {
+                  "text-sm mt-1": uiState === RoomState.INIT,
+                  "text-xs mt-0.5": uiState === RoomState.LOBBY,
+                })}
+              >
+                {player.displayName}
+              </p>
+            </div>
+          ))}
+          {players.length > 24 && (
+            <AvatarGroupCount
               className={cn(
                 "ring-2 ring-background shadow-md hover:scale-110 transition-transform",
                 {
@@ -320,40 +378,69 @@ export const WaitingForPlayers = ({ className }: { className?: string }) => {
                 },
               )}
             >
-              <AvatarImage src={player.avatar} alt={player.displayName} />
-              <AvatarFallback>{player.displayName?.[0]}</AvatarFallback>
-            </Avatar>
-            <p
-              className={cn("text-center font-semibold", {
-                "text-sm mt-1": uiState === RoomState.INIT,
-                "text-xs mt-0.5": uiState === RoomState.LOBBY,
-              })}
-            >
-              {player.displayName}
-            </p>
-          </div>
-        ))}
-        {players.length > 24 && (
-          <AvatarGroupCount
-            className={cn(
-              "ring-2 ring-background shadow-md hover:scale-110 transition-transform",
-              {
-                "size-16": uiState === RoomState.INIT,
-                "size-12": uiState === RoomState.LOBBY,
-              },
-            )}
-          >
-            +{Math.max(players.length - 24, 0)}
-          </AvatarGroupCount>
+              +{Math.max(players.length - 24, 0)}
+            </AvatarGroupCount>
+          )}
+        </div>
+        {players.length < lobby?.maxPlayers! / 2 && (
+          <p className="m-auto animate-pulse">Waiting for players...</p>
+        )}
+        {players.length === lobby?.maxPlayers! && uiState === RoomState.INIT && (
+          <p className="m-auto">Everyone is here 🥳</p>
         )}
       </div>
-      {players.length < lobby?.maxPlayers! / 2 && (
-        <p className="m-auto animate-pulse">Waiting for players...</p>
+      {contextMenu && (
+        <div
+          ref={contextMenuRef}
+          className="fixed z-50 min-w-40 rounded-md border bg-popover p-1 text-popover-foreground shadow-md"
+          style={{ top: contextMenu.y, left: contextMenu.x }}
+        >
+          <button
+            type="button"
+            className="flex w-full items-center gap-2 rounded-sm px-2 py-1.5 text-sm text-destructive transition hover:bg-destructive/10"
+            onClick={() => {
+              setPlayerToKick(contextMenu.player);
+              setContextMenu(null);
+            }}
+          >
+            <UserRoundX className="size-4" />
+            Kick player
+          </button>
+        </div>
       )}
-      {players.length === lobby?.maxPlayers! && uiState === RoomState.INIT && (
-        <p className="m-auto">Everyone is here 🥳</p>
-      )}
-    </div>
+      <AlertDialog
+        open={!!playerToKick}
+        onOpenChange={(open) => {
+          if (!open) setPlayerToKick(null);
+        }}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Kick player?</AlertDialogTitle>
+            <AlertDialogDescription>
+              {playerToKick
+                ? `${playerToKick.displayName} will be removed from the lobby immediately.`
+                : "This player will be removed from the lobby immediately."}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setPlayerToKick(null)}>
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction
+              className="bg-[#FE566B] text-white hover:bg-[#e64c61]"
+              onClick={() => {
+                if (!playerToKick) return;
+                kickPlayer(playerToKick.id, "The host removed you from the lobby.");
+                setPlayerToKick(null);
+              }}
+            >
+              Kick player
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
   );
 };
 

@@ -125,6 +125,11 @@ export function LobbyPlayerProvider({ children }: { children: ReactNode }) {
           router.replace("/");
           break;
 
+        case WSEvent.PLAYER_KICKED_ME:
+          toast.error(payload.reason ?? "You were removed from the lobby");
+          setPlayers((prev) => prev.filter((entry) => entry.id !== user?.id));
+          break;
+
         default:
           console.log("📩 Unhandled event:", event, payload);
       }
@@ -169,6 +174,7 @@ export function LobbyPlayerProvider({ children }: { children: ReactNode }) {
       WSEvent.OPEN,
       WSEvent.ROOM_STATE,
       WSEvent.ROOM_CLOSED,
+      WSEvent.PLAYER_KICKED_ME,
       WSEvent.ERROR,
       WSEvent.NOT_FOUND
     ];

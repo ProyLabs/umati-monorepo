@@ -1,6 +1,6 @@
 import { WSEvent, WSMessage, WSPayloads } from "@umati/ws";
 import type { WebSocket } from "ws";
-import { handlePlayerConnect, handlePlayerJoin, handlePlayerLeft, handlePlayerReaction } from "../handlers/player";
+import { handlePlayerConnect, handlePlayerJoin, handlePlayerKicked, handlePlayerLeft, handlePlayerReaction } from "../handlers/player";
 import { handleRoomClose, handleRoomInit, handleRoomStateChange } from "../handlers/room";
 import { logInfo } from "../utils/logger";
 import { handleCancelGame, handleGameAnswer, handleGameStateChange, handleInitGame, handleStartGame } from "../handlers/game";
@@ -36,6 +36,10 @@ export async function handleMessage(ws: WebSocket, msg: WSMessage, sid: string) 
 
     case WSEvent.PLAYER_LEAVE:
       await handlePlayerLeft(ws, msg.payload as WSPayloads[WSEvent.PLAYER_LEAVE]);
+      break;
+
+    case WSEvent.PLAYER_KICKED:
+      await handlePlayerKicked(ws, msg.payload as WSPayloads[WSEvent.PLAYER_KICKED]);
       break;
 
     case WSEvent.PLAYER_REACTION:
