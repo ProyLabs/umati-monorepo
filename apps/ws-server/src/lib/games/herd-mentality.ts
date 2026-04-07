@@ -26,6 +26,7 @@ export class HerdMentality extends BaseGame {
   public currentRound = 0;
   private answers: Map<string, HerdMentalityPlayerAnswer> = new Map();
   public round?: HerdMentalityRound | null;
+  private rankingsSubmitted = false;
 
   constructor(
     roomId: string,
@@ -106,6 +107,7 @@ export class HerdMentality extends BaseGame {
   public startGame(): void {
     this.state = GameState.ROUND;
     this.setRoomState(RoomState.PLAYING);
+    this.rankingsSubmitted = false;
     this.startRound();
   }
 
@@ -144,9 +146,7 @@ export class HerdMentality extends BaseGame {
 
     if (this.answers.size === this.scores.length) {
       if (this.roundTimer) clearTimeout(this.roundTimer);
-      setTimeout(() => {
-        this.endRound();
-      }, 1500);
+      this.endRound();
     }
   }
 
@@ -200,48 +200,53 @@ export class HerdMentality extends BaseGame {
       scores: this.scores.sort((a, b) => b.score - a.score),
       counts: counts,
     });
+  }
 
-    // 6. Move to leaderboard after short delay
-    setTimeout(() => this.showLeaderboard(), 5000);
+  public advanceToState(state: GameState) {
+    if (state === GameState.LEADERBOARD && this.state === GameState.ROUND_END) {
+      this.showLeaderboard();
+      return;
+    }
+
+    if (state === GameState.ROUND && this.state === GameState.LEADERBOARD) {
+      if (this.currentRound >= this.noOfRounds - 1) return;
+      this.currentRound += 1;
+      this.startRound();
+      return;
+    }
+
+    if (state === GameState.RANKING && this.state === GameState.LEADERBOARD) {
+      if (this.currentRound !== this.noOfRounds - 1) return;
+      this.showRanking();
+    }
   }
 
   private showLeaderboard() {
-    if (++this.currentRound >= this.noOfRounds) {
-      this.state = GameState.LEADERBOARD;
-      this.broadcast(WSEvent.GAME_STATE, GameManager.toGameState(this.id)!);
+    this.state = GameState.LEADERBOARD;
+    this.broadcast(WSEvent.GAME_STATE, GameManager.toGameState(this.id)!);
+  }
 
-      setTimeout(() => {
-        this.state = GameState.RANKING;
-        this.broadcast(WSEvent.GAME_STATE, GameManager.toGameState(this.id)!);
+  private showRanking() {
+    this.state = GameState.RANKING;
+    this.broadcast(WSEvent.GAME_STATE, GameManager.toGameState(this.id)!);
 
-        const sorted = Array.from(this.gameScore.entries())
-          .map(([id, data]) => ({
-            id,
-            displayName: data.displayName,
-            score: data.score,
-          }))
-          .sort((a, b) => b.score - a.score);
+    if (this.rankingsSubmitted) return;
+    this.rankingsSubmitted = true;
 
-        // Get top 3 (pad with empty entries if less than 3 players)
-        const top3 = sorted.slice(0, 3);
-        while (top3.length < 3) {
-          top3.push({ id: "", displayName: "", score: 0 });
-        }
+    const sorted = Array.from(this.gameScore.entries())
+      .map(([id, data]) => ({
+        id,
+        displayName: data.displayName,
+        score: data.score,
+      }))
+      .sort((a, b) => b.score - a.score);
 
-        RoomManager.submitGameResult(this.roomId, top3);
-
-        setTimeout(() => {
-          this.endGame();
-        }, 10000);
-      }, 5000);
-    } else {
-      this.state = GameState.LEADERBOARD;
-      this.broadcast(WSEvent.GAME_STATE, GameManager.toGameState(this.id)!);
-
-      setTimeout(() => {
-        this.startRound();
-      }, 5000);
+    const top3 = sorted.slice(0, 3);
+    while (top3.length < 3) {
+      top3.push({ id: "", displayName: "", score: 0 });
     }
+
+    RoomManager.submitGameResult(this.roomId, top3);
   }
 
   public myAnswer(playerId: string): HerdMentalityOptions | undefined {

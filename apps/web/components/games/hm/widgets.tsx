@@ -142,20 +142,10 @@ export const PlayerOptions = ({
   options: { letter: OptionLetter; text: string }[];
   onSelect?: (letter: OptionLetter) => void;
 }) => {
-  console.log("🚀 ~ PlayerOptions ~ selected:", selected)
-  const [internalSelected, setSelected] = useState<OptionLetter | null>(
-    selected || null
-  );
-
   const handleSelect = (letter: OptionLetter) => {
-    if (internalSelected) return;
-    setSelected(letter);
+    if (selected) return;
     onSelect?.(letter);
   };
-
-  useEffect(() => {
-    setSelected(selected)
-  }, [selected])
   
 
   return (
@@ -164,8 +154,8 @@ export const PlayerOptions = ({
         <PlayerOption
           key={opt.letter}
           {...opt}
-          selected={opt.letter === internalSelected}
-          disabled={!!internalSelected}
+          selected={opt.letter === selected}
+          disabled={!!selected}
           onClick={() => handleSelect(opt.letter)}
         />
       ))}
@@ -372,7 +362,7 @@ export const PlayerRound = () => {
       <h6 className="text-3xl font-bold">Round {round?.number!}</h6>
 
       <PlayerOptions
-        selected={myAnswer ? letters[myAnswer] : null}
+        selected={myAnswer !== null ? letters[myAnswer] : null}
         options={
           round?.choices.map((choice, index) => ({
             letter: letters[index],

@@ -16,6 +16,8 @@ import { chameleonCategories } from "./chameleon-categories";
 export class Chameleon extends BaseGame {
   static maxRounds = 10;
   static basePoints = 100;
+  static timeBonusFactor = 0.5;
+  static skipVote = "__skip__";
 
   public noOfRounds: number;
   public noOfChameleons: number;
@@ -61,7 +63,7 @@ export class Chameleon extends BaseGame {
     this.noOfRounds = Math.min(options.noOfRounds, Chameleon.maxRounds);
     this.noOfChameleons = options.chameleons ?? 1;
     this.roundSpeakingDuration = (options.speakingDuration ?? 90) * 1000;
-    this.roundVotingDuration = (options.votingDuration ?? 60) * 1000;
+    this.roundVotingDuration = (options.votingDuration ?? 30) * 1000;
     this.init();
   }
 
@@ -181,7 +183,7 @@ export class Chameleon extends BaseGame {
     this.roundDuration = this.roundVotingDuration;
     if (this.roundTimer) { clearTimeout(this.roundTimer); }
     this.roundTimer = setTimeout(() => {
-      this.startVoting();
+      this.endRound();
     }, this.roundDuration);
 
     this.broadcast(WSEvent.GAME_STATE, GameManager.toGameState(this.id)!);
@@ -201,10 +203,7 @@ export class Chameleon extends BaseGame {
 
     if (this.votes.size === this.scores.length) {
       if (this.roundTimer) { clearTimeout(this.roundTimer); }
-
-      setTimeout(() => {
-        this.endRound();
-      }, 1500);
+      this.endRound();
     }
   }
 
@@ -214,6 +213,7 @@ export class Chameleon extends BaseGame {
 
     const counts: Record<string, number> = {};
     for (const suspect of this.votes.values()) {
+      if (suspect === Chameleon.skipVote) continue;
       if (counts[suspect]) {
         counts[suspect]++;
       } else {
@@ -232,8 +232,17 @@ export class Chameleon extends BaseGame {
     if (isChameleon) {
       // ✅ Chameleon caught — voters get points
       for (const [voter, vote] of this.votes.entries()) {
-        if (vote === suspect)
-          this.updateScore(voter, Chameleon.basePoints);
+        if (vote !== suspect) continue;
+        const voteTime = this.roundStartTime
+          ? Date.now() - this.roundStartTime
+          : this.roundVotingDuration;
+        const bonus = Math.max(
+          0,
+          (1 - voteTime / this.roundVotingDuration) *
+            Chameleon.basePoints *
+            Chameleon.timeBonusFactor,
+        );
+        this.updateScore(voter, Math.round(Chameleon.basePoints + bonus));
       }
     } else {
       // ❌ Chameleon wins

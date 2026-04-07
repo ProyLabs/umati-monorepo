@@ -72,6 +72,8 @@ export const PlayerSetup = () => {
 export const VotingRound = () => {
   const { players } = useLobbyHost();
   const { counts, state, round } = useChameleonHost();
+  const votedCount = Object.keys(round?.votes ?? {}).length;
+  const totalVoters = players.length;
   return (
     <div className="flex flex-col items-center justify-center h-full gap-8">
       <div className="mb-16 ">
@@ -81,6 +83,9 @@ export const VotingRound = () => {
         <h2 className="text-4xl font-semibold text-center">
           Who do you think is the chameleon?
         </h2>
+        <p className="mt-4 text-center text-xl font-semibold">
+          {votedCount}/{totalVoters} voted
+        </p>
       </div>
 
       <div className="grid grid-cols-2 gap-4 max-w-2xl w-full">
@@ -97,7 +102,13 @@ export const VotingRound = () => {
         })}
       </div>
 
-    { state === GameState.ROUND_END && <Timer variant="compact" duration={round?.timer?.duration!} startTime={round?.timer?.startedAt!} />}
+      {state === GameState.VOTING && (
+        <Timer
+          variant="compact"
+          duration={round?.timer?.duration!}
+          startTime={round?.timer?.startedAt!}
+        />
+      )}
     </div>
   );
 };
@@ -147,13 +158,19 @@ export const VotingRoundPlayer = () => {
   const { players, player } = useLobbyPlayer();
   const { submitVote, myVote } = useChameleonPlayer();
   const [vote, setVote] = useState<string | null>(myVote);
+  const hasVoted = vote !== null;
 
   const handleVote = (id: string) => {
-    // console.log("🚀 ~ handleVote ~ id:", id)
-    if (vote) return;
+    if (hasVoted) return;
     setVote(id);
     submitVote(id);
     return;
+  };
+
+  const handleSkip = () => {
+    if (hasVoted) return;
+    setVote("__skip__");
+    submitVote("__skip__");
   };
 
   // const selectedPlayer = useMemo(() => {
@@ -168,7 +185,9 @@ export const VotingRoundPlayer = () => {
       <div className="">
         <h2 className="text-3xl font-bold text-center max-w-4xl mx-auto w-full">
           {vote
-            ? "You have cast your vote."
+            ? vote === "__skip__"
+              ? "You skipped voting."
+              : "You have cast your vote."
             : "Who do you think is the chameleon?"}
         </h2>
         {vote && (
@@ -184,12 +203,20 @@ export const VotingRoundPlayer = () => {
                 key={p.id}
                 player={p}
                 selected={vote === p.id}
-                disabled={!!vote}
+                disabled={hasVoted}
                 onClick={() => handleVote(p.id)}
               />
             );
           })}
       </div>
+      <Fbutton
+        variant="secondary"
+        className="min-w-44"
+        disabled={hasVoted}
+        onClick={handleSkip}
+      >
+        Skip Vote
+      </Fbutton>
     </div>
   );
 };

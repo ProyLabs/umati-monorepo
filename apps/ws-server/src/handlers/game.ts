@@ -108,5 +108,14 @@ export async function handleGameStateChange(ws: WebSocket, payload: WSPayloads[W
     const room = RoomManager.get(roomId);
     if(!room) return;
     if(!room.game) return;
+    if (!RoomManager.isHostSocket(roomId, ws)) {
+      ws.send(
+        JSON.stringify({
+          event: WSEvent.ERROR,
+          payload: { message: "Only the host can change game state." },
+        })
+      );
+      return;
+    }
     GameManager.updateState(room.game.id, state);
 }

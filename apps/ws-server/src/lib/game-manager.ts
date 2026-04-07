@@ -76,7 +76,19 @@ export const GameManager = {
     const game = games.get(gameId);
     if (!game) return;
 
-     if (game.type === GameType.CHAMELEON) {
+    if (game.type === GameType.TRIVIA) {
+      const triviaGame = game as TriviaGame & { advanceToState: (state: GameState) => void };
+      triviaGame.advanceToState(state);
+      return;
+    }
+
+    if (game.type === GameType.HM) {
+      const herdMentalityGame = game as HerdMentality & { advanceToState: (state: GameState) => void };
+      herdMentalityGame.advanceToState(state);
+      return;
+    }
+
+    if (game.type === GameType.CHAMELEON) {
       const chameleonGame = game as Chameleon;
         switch (state) {
           case GameState.SPEAKING:

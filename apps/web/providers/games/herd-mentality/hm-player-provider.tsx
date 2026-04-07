@@ -44,6 +44,10 @@ export const HerdMentalityPlayerProvider = ({ children }: { children: React.Reac
       setMyAnswer(answer);
     });
 
+    wsClient.on(WSEvent.HM_ROUND_ANSWERED, ({ answer }) => {
+      setMyAnswer(answer);
+    });
+
     wsClient.on(WSEvent.HM_ROUND_START, ({ round }) => {
       setState("ROUND");
       setRound(round);

@@ -65,13 +65,21 @@ export const TriviaHostProvider = ({ children }: { children: React.ReactNode }) 
   };
 
   const nextRound = () => {
-    // if (!wsClient || !lobby) return;
-    // wsClient.send(
-    //   JSON.stringify({
-    //     event: "GAME_NEXT_ROUND",
-    //     payload: { roomId: lobby.id },
-    //   })
-    // );
+    if (!wsClient || !lobby) return;
+    const nextState =
+      state === GameState.ROUND_END
+        ? GameState.LEADERBOARD
+        : state === GameState.LEADERBOARD
+          ? round && round.number >= round.totalRounds
+            ? GameState.RANKING
+            : GameState.ROUND
+          : null;
+
+    if (!nextState) return;
+    wsClient.send(WSEvent.GAME_STATE_CHANGE, {
+      roomId: lobby.id,
+      state: nextState,
+    });
   };
 
   return (
