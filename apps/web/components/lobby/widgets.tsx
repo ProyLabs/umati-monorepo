@@ -226,17 +226,17 @@ export const HostLobbyFooter = () => {
   const { loading, uiState, closeLobby } = useLobbyHost();
   return (
     <div className="fixed bottom-0 px-4 md:px-8 py-4 w-screen">
-      <div className="flex items-center justify-between w-full ">
-        <div className="flex-1 flex items-center justify-start gap-4">
+      <div className="flex items-center justify-between w-full gap-3">
+        <div className="flex-1 flex items-center justify-start gap-3 md:gap-4 min-w-0">
           <SettingsBar />
           {/* <Latency ms={34} /> */}
           {!loading && uiState === "LOBBY" && (
-            <Fbutton variant="default" className="w-60" onClick={closeLobby}>
+            <Fbutton variant="default" className="w-full max-w-40 md:max-w-60" onClick={closeLobby}>
               Close Lobby
             </Fbutton>
           )}
         </div>
-        <div className="flex items-center justify-end gap-4 flex-1">
+        <div className="flex items-center justify-end gap-2 md:gap-4">
           <UmatiFullLogo className="w-32 text-foreground hidden md:block" />
           <UmatiLogo className="w-8 text-foreground block md:hidden" />
         </div>
@@ -248,7 +248,7 @@ export const HostLobbyFooter = () => {
 export const LobbyTitle = () => {
   const { lobby } = useLobbyHost();
   return (
-    <h1 className="text-6xl text-center font-bold w-4/5">{lobby?.name}</h1>
+    <h1 className="text-4xl md:text-6xl text-center font-bold w-full md:w-4/5">{lobby?.name}</h1>
   );
 };
 
@@ -283,12 +283,12 @@ export const JoinLobbyCode = ({
       )}
       <div
         data-vertical={vertical}
-        className="flex gap-4 items-center w-full data-[vertical='true']:flex-col my-auto data-[vertical='true']:gap-8 md:mb-8"
+        className="flex flex-col sm:flex-row gap-4 items-center w-full data-[vertical='true']:flex-col my-auto data-[vertical='true']:gap-8 md:mb-8"
       >
         <div className="flex flex-col items-center gap-2 flex-1 w-full">
           <p className="text-lg font-semibold">Scan to join</p>
           <QRCode
-            className="size-48 rounded border bg-white p-4 shadow-xs"
+            className="size-36 md:size-48 rounded border bg-white p-4 shadow-xs"
             data={joinUrl}
           />
         </div>
@@ -297,7 +297,7 @@ export const JoinLobbyCode = ({
 
         <div className="flex flex-col gap-2 flex-1 items-center">
           <p className="text-lg font-semibold">Or Join by Code</p>
-          <p className="text-6xl font-bold">{lobby?.code}</p>
+          <p className="text-5xl md:text-6xl font-bold">{lobby?.code}</p>
         </div>
       </div>
       <CopyLinkButton />
@@ -321,7 +321,7 @@ export const WaitingForPlayers = ({ className }: { className?: string }) => {
     <>
       <div
         className={cn(
-          "bg-foreground/5 w-full aspect-video rounded-2xl h-full p-4 flex flex-col flex-1",
+          "bg-foreground/5 w-full aspect-video rounded-2xl h-full p-4 flex flex-col flex-1 overflow-hidden",
           className,
         )}
       >
@@ -329,7 +329,7 @@ export const WaitingForPlayers = ({ className }: { className?: string }) => {
           {players.length} / {lobby?.maxPlayers} Players
         </p>
 
-        <div className="relative w-full  h-fit overflow-visible rounded-xl flex flex-wrap gap-3 justify-center">
+        <div className="relative w-full h-fit overflow-y-auto rounded-xl flex flex-wrap gap-3 justify-center">
           {players.slice(0, 24).map((player) => (
             <div key={player.id} className="flex flex-col w-fit items-center">
               <button
