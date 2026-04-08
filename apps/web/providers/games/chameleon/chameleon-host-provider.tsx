@@ -8,8 +8,10 @@ interface ChameleonHostContextType {
   gameType: string | null;
   state: GameState; // BEFORE, ROUND, ROUND_END, etc.
   round?: ChameleonRound;
-    scores: Scores;
-    counts?: Record<string, number>;
+  scores: Scores;
+  counts?: Record<string, number>;
+  votedCount: number;
+  totalVoters: number;
   startGame: () => void;
   nextRound: () => void;
   startSpeakingRound: () => void;
@@ -27,6 +29,8 @@ export const ChameleonHostProvider = ({ children }: { children: React.ReactNode 
   const [round, setRound] = useState<ChameleonRound | undefined>(undefined);
   const [counts, setCounts] = useState<Record<string, number> | undefined>(undefined);
   const [scores, setScores] = useState<Scores>([]);
+  const [votedCount, setVotedCount] = useState(0);
+  const [totalVoters, setTotalVoters] = useState(0);
 
   // --- WS Event Handlers ---
   useEffect(() => {
@@ -37,21 +41,35 @@ export const ChameleonHostProvider = ({ children }: { children: React.ReactNode 
       setGameId(payload.id);
       setGameType(payload.type);
       setState(payload.state);
-        if (payload.round) setRound(payload.round as ChameleonRound);
+      if (payload.round) {
+        setRound(payload.round as ChameleonRound);
         setCounts(payload.round.counts);
-        if (payload.scores) setScores(payload.scores ?? []);
+        setVotedCount(payload.round.votedCount ?? 0);
+        setTotalVoters(payload.round.totalVoters ?? 0);
+      }
+      if (payload.scores) setScores(payload.scores ?? []);
     });
 
     wsClient.on(WSEvent.CH_ROUND_START, ({ state, round }) => {
       setState(state);
       setRound(round);
+      setCounts(undefined);
+      setVotedCount(round.votedCount ?? 0);
+      setTotalVoters(round.totalVoters ?? 0);
     });
 
     wsClient.on(WSEvent.CH_ROUND_END, ({ state, round, scores }) => {
       setState(state);
       setRound(round);
       setScores(scores ?? []);
-      // setCounts(counts);
+      setCounts(round.counts);
+      setVotedCount(round.votedCount ?? 0);
+      setTotalVoters(round.totalVoters ?? 0);
+    });
+
+    wsClient.on(WSEvent.CH_VOTE_PROGRESS, ({ votedCount, totalVoters }) => {
+      setVotedCount(votedCount);
+      setTotalVoters(totalVoters);
     });
 
     // wsClient.on("GAME_ENDED", ({ finalScores }) => {
@@ -95,6 +113,8 @@ export const ChameleonHostProvider = ({ children }: { children: React.ReactNode 
         round,
         scores,
         counts,
+        votedCount,
+        totalVoters,
         startGame,
         nextRound,
         startSpeakingRound,

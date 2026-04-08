@@ -196,6 +196,7 @@ export type ChameleonRound = {
   totalRounds: number;
   category: ChameleonCategory
   roles: Record<string, ChameleonRoundRole>
+  myRole?: ChameleonRoundRole;
   roll: string; 
   speakingOrder?: {starter: Player; direction: "CLOCKWISE"|"ANTICLOCKWISE"};
   timer: {
@@ -204,6 +205,8 @@ export type ChameleonRound = {
   }
   votes: Record<string, string>;
   counts?: Record<string, number>;
+  votedCount?: number;
+  totalVoters?: number;
 }
 
 export type ChameleonCategory = {

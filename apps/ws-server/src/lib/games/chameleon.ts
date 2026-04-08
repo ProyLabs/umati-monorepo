@@ -10,8 +10,13 @@ import {
   WSEvent,
 } from "@umati/ws";
 import { RoomManager } from "../room-manager";
-import { GameManager } from "../game-manager";
 import { chameleonCategories } from "./chameleon-categories";
+import type { WebSocket } from "ws";
+
+type ChameleonVote = {
+  vote: string;
+  timeTaken: number;
+};
 
 export class Chameleon extends BaseGame {
   static maxRounds = 10;
@@ -24,7 +29,7 @@ export class Chameleon extends BaseGame {
 
   private categories = chameleonCategories;
   private roles: Map<string, ChameleonRoundRole> = new Map();
-  private votes: Map<string, string> = new Map();
+  private votes: Map<string, ChameleonVote> = new Map();
   private counts: Record<string, number> = {};
   private chameleons: string[] = [];
   private currentCategory?: ChameleonCategory;
@@ -33,7 +38,14 @@ export class Chameleon extends BaseGame {
   private roundSpeakingDuration: number = 0;
   private roundVotingDuration: number = 0;
 
-  get round(): ChameleonRound {
+  private get voteProgress() {
+    return {
+      votedCount: this.votes.size,
+      totalVoters: this.scores.length,
+    };
+  }
+
+  private buildRound(overrides?: Partial<ChameleonRound>): ChameleonRound {
     return {
       number: this.currentRound + 1,
       totalRounds: this.noOfRounds,
@@ -45,9 +57,17 @@ export class Chameleon extends BaseGame {
         duration: this.roundDuration / 1000,
         startedAt: this.roundStartTime,
       },
-      votes: Object.fromEntries(this.votes),
+      votes: Object.fromEntries(
+        Array.from(this.votes.entries()).map(([playerId, value]) => [playerId, value.vote])
+      ),
       counts: this.counts,
+      ...this.voteProgress,
+      ...overrides,
     };
+  }
+
+  get round(): ChameleonRound {
+    return this.buildRound();
   }
 
   constructor(
@@ -87,6 +107,72 @@ export class Chameleon extends BaseGame {
     this.setRoomState(RoomState.PLAYING);
     this.state = GameState.ROUND_SETUP;
     this.startRound();
+  }
+
+  private clearPhaseTimer() {
+    if (!this.roundTimer) return;
+    clearTimeout(this.roundTimer);
+    this.roundTimer = undefined;
+  }
+
+  private schedulePhaseTransition(delay: number, next: () => void) {
+    this.clearPhaseTimer();
+    this.roundTimer = setTimeout(next, delay);
+  }
+
+  private buildHostState() {
+    return {
+      id: this.id,
+      type: this.type,
+      state: this.state,
+      round: this.buildRound({
+        roles: Object.fromEntries(this.roles),
+      }),
+      scores: this.scores,
+    };
+  }
+
+  private buildPlayerState(playerId: string) {
+    const myRole = this.roles.get(playerId);
+    return {
+      id: this.id,
+      type: this.type,
+      state: this.state,
+      round: this.buildRound({
+        roles: myRole ? { [playerId]: myRole } : {},
+        myRole,
+        votes: {},
+      }),
+      scores: this.scores,
+    };
+  }
+
+  public sendStateToSocket(ws: WebSocket, options?: { playerId?: string; isHost?: boolean }) {
+    const payload =
+      options?.isHost || !options?.playerId
+        ? this.buildHostState()
+        : this.buildPlayerState(options.playerId);
+
+    ws.send(JSON.stringify({ event: WSEvent.GAME_STATE, payload }));
+  }
+
+  private emitState() {
+    const room = RoomManager.get(this.roomId);
+    if (!room) return;
+
+    RoomManager.toHost(this.roomId, WSEvent.GAME_STATE, this.buildHostState());
+    for (const player of room.players) {
+      RoomManager.toPlayer(
+        this.roomId,
+        player.id,
+        WSEvent.GAME_STATE,
+        this.buildPlayerState(player.id)
+      );
+    }
+  }
+
+  private emitVoteProgress() {
+    this.broadcast(WSEvent.CH_VOTE_PROGRESS, this.voteProgress);
   }
 
   private startRound() {
@@ -134,11 +220,22 @@ export class Chameleon extends BaseGame {
 
     console.log("🚀 ~ Chameleon ~ startRound ~ this.round:", this.round);
 
-    // 🧩 Announce round start
-    this.broadcast(WSEvent.CH_ROUND_START, {
+    this.toHost(WSEvent.CH_ROUND_START, {
       state: this.state,
-      round: this.round,
+      round: this.buildRound({
+        roles: Object.fromEntries(this.roles),
+      }),
     });
+    for (const player of room.players) {
+      this.toPlayer(player.id, WSEvent.CH_ROUND_START, {
+        state: this.state,
+        round: this.buildRound({
+          roles: this.roles.get(player.id) ? { [player.id]: this.roles.get(player.id)! } : {},
+          myRole: this.roles.get(player.id),
+          votes: {},
+        }),
+      });
+    }
   }
 
   public startSpeaking() {
@@ -165,11 +262,11 @@ export class Chameleon extends BaseGame {
 
     this.roundStartTime = Date.now();
     this.roundDuration = this.roundSpeakingDuration;
-    this.roundTimer = setTimeout(() => {
+    this.schedulePhaseTransition(this.roundDuration, () => {
       this.startVoting();
-    }, this.roundDuration);
+    });
 
-    this.broadcast(WSEvent.GAME_STATE, GameManager.toGameState(this.id)!);
+    this.emitState();
   }
 
   public startVoting() {
@@ -181,28 +278,30 @@ export class Chameleon extends BaseGame {
 
     this.roundStartTime = Date.now();
     this.roundDuration = this.roundVotingDuration;
-    if (this.roundTimer) { clearTimeout(this.roundTimer); }
-    this.roundTimer = setTimeout(() => {
+    this.schedulePhaseTransition(this.roundDuration, () => {
       this.endRound();
-    }, this.roundDuration);
+    });
 
-    this.broadcast(WSEvent.GAME_STATE, GameManager.toGameState(this.id)!);
+    this.emitState();
+    this.emitVoteProgress();
   }
 
   public castVote(playerId: string, vote: string) {
     const exists = this.votes.get(playerId);
     if (exists) return;
-    this.votes.set(playerId, vote);
+    this.votes.set(playerId, {
+      vote,
+      timeTaken: Date.now() - this.roundStartTime,
+    });
 
     this.toPlayer(playerId, WSEvent.CH_ROUND_VOTED, {
       vote: vote,
     });
 
-    this.broadcast(WSEvent.GAME_STATE, GameManager.toGameState(this.id)!);
-
+    this.emitVoteProgress();
 
     if (this.votes.size === this.scores.length) {
-      if (this.roundTimer) { clearTimeout(this.roundTimer); }
+      this.clearPhaseTimer();
       this.endRound();
     }
   }
@@ -212,7 +311,8 @@ export class Chameleon extends BaseGame {
     this.state = GameState.ROUND_END;
 
     const counts: Record<string, number> = {};
-    for (const suspect of this.votes.values()) {
+    for (const { vote } of this.votes.values()) {
+      const suspect = vote;
       if (suspect === Chameleon.skipVote) continue;
       if (counts[suspect]) {
         counts[suspect]++;
@@ -231,14 +331,11 @@ export class Chameleon extends BaseGame {
 
     if (isChameleon) {
       // ✅ Chameleon caught — voters get points
-      for (const [voter, vote] of this.votes.entries()) {
-        if (vote !== suspect) continue;
-        const voteTime = this.roundStartTime
-          ? Date.now() - this.roundStartTime
-          : this.roundVotingDuration;
+      for (const [voter, voteData] of this.votes.entries()) {
+        if (voteData.vote !== suspect) continue;
         const bonus = Math.max(
           0,
-          (1 - voteTime / this.roundVotingDuration) *
+          (1 - voteData.timeTaken / this.roundVotingDuration) *
             Chameleon.basePoints *
             Chameleon.timeBonusFactor,
         );
@@ -251,39 +348,58 @@ export class Chameleon extends BaseGame {
       }
     }
 
-    this.broadcast(WSEvent.GAME_STATE, GameManager.toGameState(this.id)!);
-
-    setTimeout(() => this.showChameleonReveal(), 4000);
+    this.toHost(WSEvent.CH_ROUND_END, {
+      state: this.state,
+      round: this.buildRound({
+        roles: Object.fromEntries(this.roles),
+      }),
+      scores: this.scores.sort((a, b) => b.score - a.score),
+    });
+    const room = RoomManager.get(this.roomId);
+    if (room) {
+      for (const player of room.players) {
+        this.toPlayer(player.id, WSEvent.CH_ROUND_END, {
+          state: this.state,
+          round: this.buildRound({
+            roles: this.roles.get(player.id) ? { [player.id]: this.roles.get(player.id)! } : {},
+            myRole: this.roles.get(player.id),
+            votes: {},
+          }),
+          scores: this.scores.sort((a, b) => b.score - a.score),
+        });
+      }
+    }
+    this.schedulePhaseTransition(4000, () => this.showChameleonReveal());
   }
 
   private showChameleonReveal() {
     this.state = GameState.REVEAL;
-    this.broadcast(WSEvent.GAME_STATE, GameManager.toGameState(this.id)!);
+    this.emitState();
 
-    setTimeout(() => {
+    this.schedulePhaseTransition(4000, () => {
       this.showLeaderboard();
-    }, 4000);
+    });
   }
 
   private showLeaderboard() {
     this.state = GameState.LEADERBOARD;
-    this.broadcast(WSEvent.GAME_STATE, GameManager.toGameState(this.id)!);
+    this.emitState();
 
-    setTimeout(() => {
+    this.schedulePhaseTransition(4000, () => {
       if (++this.currentRound >= this.noOfRounds) {
         this.finishGame();
       } else {
         this.showGetReadyScreen();
       }
-    }, 4000);
+    });
   }
 
 
   private showGetReadyScreen() {
     this.state = GameState.ROUND;
-    this.broadcast(WSEvent.GAME_STATE, GameManager.toGameState(this.id)!);
+    this.emitState();
 
-    setTimeout(() => this.startRound(), 4000);
+    this.schedulePhaseTransition(4000, () => this.startRound());
   }
 
 
@@ -294,7 +410,8 @@ export class Chameleon extends BaseGame {
     while (top3.length < 3) top3.push({ id: "", displayName: "", score: 0 });
 
     RoomManager.submitGameResult(this.roomId, top3);
-    setTimeout(() => this.endGame(), 4000);
+    this.emitState();
+    this.schedulePhaseTransition(4000, () => this.endGame());
   }
 }
 

@@ -1,9 +1,10 @@
 import type { WebSocket } from "ws";
-import { WSEvent, WSPayloads } from "@umati/ws";
+import { GameType, WSEvent, WSPayloads } from "@umati/ws";
 import { prisma } from "@umati/prisma";
 import { RoomManager } from "../lib/room-manager";
 import { logInfo, logError } from "../utils/logger";
 import { GameManager } from "../lib/game-manager";
+import { Chameleon } from "../lib/games/chameleon";
 
 export async function handleRoomInit(
   ws: WebSocket,
@@ -32,12 +33,16 @@ export async function handleRoomInit(
         if (!game) return;
 
         setTimeout(() => {
-          ws.send(
-            JSON.stringify({
-              event: WSEvent.GAME_STATE,
-              payload: GameManager.toGameState(game.id),
-            })
-          );
+          if (game.type === GameType.CHAMELEON) {
+            (game as Chameleon).sendStateToSocket(ws, { isHost: true });
+          } else {
+            ws.send(
+              JSON.stringify({
+                event: WSEvent.GAME_STATE,
+                payload: GameManager.toGameState(game.id),
+              })
+            );
+          }
         }, 200);
       }
       return;

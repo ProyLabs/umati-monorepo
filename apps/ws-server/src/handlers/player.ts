@@ -4,6 +4,7 @@ import { RoomManager } from "../lib/room-manager";
 import { logInfo } from "../utils/logger";
 import { GameManager } from "../lib/game-manager";
 import { HerdMentality } from "../lib/games/herd-mentality";
+import { Chameleon } from "../lib/games/chameleon";
 
 /** When a player connects to a room */
 export async function handlePlayerConnect(
@@ -45,12 +46,16 @@ export async function handlePlayerConnect(
     if (!game) return;
 
     setTimeout(() => {
-      ws.send(
-        JSON.stringify({
-          event: WSEvent.GAME_STATE,
-          payload: GameManager.toGameState(game.id),
-        })
-      );
+      if (game.type === GameType.CHAMELEON) {
+        (game as Chameleon).sendStateToSocket(ws, { playerId, isHost: false });
+      } else {
+        ws.send(
+          JSON.stringify({
+            event: WSEvent.GAME_STATE,
+            payload: GameManager.toGameState(game.id),
+          })
+        );
+      }
 
       //game.type === GameType.TRIVIA ||
 

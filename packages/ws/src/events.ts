@@ -76,6 +76,7 @@ export enum WSEvent {
   CH_ROUND_STATE_CHANGE="GAME:CH:ROUND:STATE:CHANGE",
   CH_ROUND_VOTE="GAME:CH:ROUND:VOTE",
   CH_ROUND_VOTED="GAME:CH:ROUND:VOTED",
+  CH_VOTE_PROGRESS="GAME:CH:VOTE:PROGRESS",
   CH_ROUND_END="GAME:CH:ROUND:END",
 
 
@@ -184,6 +185,7 @@ export interface WSPayloads {
   [WSEvent.CH_ROUND_STATE_CHANGE]: {roomId: string; state: GameState,}
   [WSEvent.CH_ROUND_VOTE]: {roomId: string; playerId: string; answer: string }
   [WSEvent.CH_ROUND_VOTED]: {vote: string; }
+  [WSEvent.CH_VOTE_PROGRESS]: {votedCount: number; totalVoters: number;}
   [WSEvent.CH_ROUND_END]: {state: GameState, round: ChameleonRound, scores: Scores,}
 
 

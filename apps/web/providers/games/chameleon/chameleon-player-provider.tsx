@@ -1,5 +1,5 @@
 "use client";
-import React, { createContext, useContext, useEffect, useMemo, useState } from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 import { useLobbyPlayer } from "@/providers/lobby-player-provider"; // Player context provides wsClient
 import {
   ChameleonRound,
@@ -41,7 +41,7 @@ export const ChameleonPlayerProvider = ({
   const [state, setState] = useState<GameState>("BEFORE");
   const [round, setRound] = useState<ChameleonRound | undefined>(undefined);
   const [role, setRole] = useState<ChameleonRoundRole | undefined>(undefined);
-  const [votes, setVotes] = useState<Record<string,string>| undefined>(undefined);
+  const [myVote, setMyVote] = useState<string | null>(null);
   // const [counts, setCounts] = useState<Record<ChameleonOptions, number> | undefined>(undefined);
   const [scores, setScores] = useState<Scores>([]);
 
@@ -56,9 +56,8 @@ export const ChameleonPlayerProvider = ({
       setState(payload.state);
       if (payload.round) {
         setRound(payload.round as ChameleonRound);
-        const role = payload.round.roles[player?.id!];
+        const role = payload.round.myRole ?? payload.round.roles[player?.id!];
         setRole(role);
-        setVotes(payload.round.votes);
       }
       // if (payload.counts) setCounts(payload.counts);
       if (payload.scores) setScores(payload.scores ?? []);
@@ -67,18 +66,23 @@ export const ChameleonPlayerProvider = ({
     wsClient.on(WSEvent.CH_ROUND_START, ({ state, round }) => {
       setState(state);
       setRound(round);
-      const role = round.roles[player?.id!];
+      const role = round.myRole ?? round.roles[player?.id!];
       console.log("🚀 ~ ChameleonPlayerProvider ~ role:", role);
       setRole(role);
+      setMyVote(null);
     });
 
     wsClient.on(WSEvent.CH_ROUND_END, ({ state, round, scores }) => {
       setState(state);
       setRound(round);
-      const role = round.roles[player?.id!];
+      const role = round.myRole ?? round.roles[player?.id!];
       setRole(role);
       setScores(scores ?? []);
       // setCounts(counts);
+    });
+
+    wsClient.on(WSEvent.CH_ROUND_VOTED, ({ vote }) => {
+      setMyVote(vote);
     });
 
     // wsClient.on("GAME_ENDED", ({ finalScores }) => {
@@ -108,14 +112,6 @@ export const ChameleonPlayerProvider = ({
         wsClient.send(WSEvent.CH_ROUND_VOTE, { roomId: lobby.id, playerId: player?.id!, answer: id });
   }
 
-
-  const myVote = useMemo(() => {
-    console.log("🚀 ~ ChameleonPlayerProvider ~ votes:", votes)
-    if (!votes || !player) return null;
-    const x = votes[player.id];
-    console.log("🚀 ~ ChameleonPlayerProvider ~ myVote ~ x:", x)
-    return votes[player.id] ?? null;
-  }, [votes, player])
 
   return (
     <ChameleonPlayerContext.Provider
