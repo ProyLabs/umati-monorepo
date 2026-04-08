@@ -14,6 +14,7 @@ import { triviaquestions } from "./trivia-questions";
 
 export class TriviaGame extends BaseGame {
   static maxNumberOfRounds = 20;
+  private static recentQuestionKeys: string[] = [];
 
   public noOfRounds: number;
   public data: TriviaDataItem[] = [];
@@ -42,23 +43,83 @@ export class TriviaGame extends BaseGame {
     this.initPlayerScores();
   }
 
+  private static normalizeQuestion(question: string) {
+    return question.trim().toLowerCase();
+  }
+
   private selectQuestions() {
-    this.data = this.randomize
-      .sample(triviaquestions, this.noOfRounds)
-      .map((s) => {
-        const options = [
-          ...this.randomize.sample(
-            s.options.filter((o) => o !== s.correctAnswer),
-            3
-          ),
-          s.correctAnswer,
-        ];
-        return {
-          question: s.question,
-          choices: this.randomize.shuffle(options),
-          answer: s.correctAnswer,
-        };
-      });
+    const uniqueQuestions = Array.from(
+      new Map(
+        triviaquestions.map((question) => [
+          TriviaGame.normalizeQuestion(question.question),
+          question,
+        ]),
+      ).values(),
+    );
+
+    const roundCount = Math.min(this.noOfRounds, uniqueQuestions.length);
+    const recentQuestionKeys = new Set(TriviaGame.recentQuestionKeys);
+    const freshQuestions = uniqueQuestions.filter(
+      (question) =>
+        !recentQuestionKeys.has(
+          TriviaGame.normalizeQuestion(question.question),
+        ),
+    );
+
+    const selectedQuestions = [
+      ...this.randomize.sample(
+        freshQuestions,
+        Math.min(roundCount, freshQuestions.length),
+      ),
+    ];
+
+    if (selectedQuestions.length < roundCount) {
+      const selectedKeys = new Set(
+        selectedQuestions.map((question) =>
+          TriviaGame.normalizeQuestion(question.question),
+        ),
+      );
+      const fallbackPool = uniqueQuestions.filter(
+        (question) =>
+          !selectedKeys.has(TriviaGame.normalizeQuestion(question.question)),
+      );
+
+      selectedQuestions.push(
+        ...this.randomize.sample(
+          fallbackPool,
+          roundCount - selectedQuestions.length,
+        ),
+      );
+    }
+
+    this.noOfRounds = selectedQuestions.length;
+    this.data = selectedQuestions.map((question) => {
+      const wrongAnswers = Array.from(
+        new Set(question.options.filter((option) => option !== question.correctAnswer)),
+      );
+      const options = [
+        ...this.randomize.sample(wrongAnswers, Math.min(3, wrongAnswers.length)),
+        question.correctAnswer,
+      ];
+
+      return {
+        question: question.question,
+        choices: this.randomize.shuffle(options),
+        answer: question.correctAnswer,
+      };
+    });
+
+    TriviaGame.recentQuestionKeys.push(
+      ...selectedQuestions.map((question) =>
+        TriviaGame.normalizeQuestion(question.question),
+      ),
+    );
+
+    if (TriviaGame.recentQuestionKeys.length > uniqueQuestions.length) {
+      TriviaGame.recentQuestionKeys = TriviaGame.recentQuestionKeys.slice(
+        -uniqueQuestions.length,
+      );
+    }
   }
 
   private initPlayerScores() {
