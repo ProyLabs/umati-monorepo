@@ -15,7 +15,7 @@ import { useTriviaHost } from "@/providers/games/trivia/trivia-host-provider";
 import { useLobbyHost } from "@/providers/lobby-host-provider";
 import { useTriviaPlayer } from "@/providers/games/trivia/trivia-player-provider";
 import { TriviaOptions } from "@umati/ws";
-import { EndGameButton } from "../shared";
+import { EndGameButton, ScoreGapHint } from "../shared";
 
 export const Question = ({ text }: { text: string }) => {
   return (
@@ -368,6 +368,8 @@ export const PlayerRoundEnd = () => {
           {scores?.find((p) => p.id === player?.id)?.score ?? 0} pts
         </p>
       </div>
+
+      <ScoreGapHint scores={scores} />
     </div>
   );
 };

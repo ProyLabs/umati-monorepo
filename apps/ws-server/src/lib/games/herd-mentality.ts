@@ -10,11 +10,13 @@ import {
   HerdMentalityOptions,
   HerdMentalityPlayerAnswer,
   HerdMentalityRound,
+  QuestionProfile,
   RoomState,
   TruviaPlayerAnswer,
   WSEvent,
 } from "@umati/ws";
 import { GameManager } from "../game-manager";
+import { getHerdMentalityQuestionPool } from "./question-profiles";
 
 export class HerdMentality extends BaseGame {
   static maxNumberOfRounds = 20;
@@ -27,10 +29,15 @@ export class HerdMentality extends BaseGame {
   private answers: Map<string, HerdMentalityPlayerAnswer> = new Map();
   public round?: HerdMentalityRound | null;
   private rankingsSubmitted = false;
+  public questionProfile: QuestionProfile;
 
   constructor(
     roomId: string,
-    options: { noOfRounds: number; duration?: number },
+    options: {
+      noOfRounds: number;
+      duration?: number;
+      questionProfile?: QuestionProfile;
+    },
   ) {
     super(roomId, GameType.HM);
     this.noOfRounds = Math.min(
@@ -38,6 +45,7 @@ export class HerdMentality extends BaseGame {
       HerdMentality.maxNumberOfRounds,
     );
     this.roundDuration = (options.duration ?? 30) * 1000;
+    this.questionProfile = options.questionProfile ?? QuestionProfile.GLOBAL;
     this.init();
   }
 
@@ -47,14 +55,21 @@ export class HerdMentality extends BaseGame {
   }
 
   private selectQuestions() {
+    const questionPool = getHerdMentalityQuestionPool(
+      herdmentalityquestions,
+      this.questionProfile,
+    );
+
     this.data = this.randomize
-      .sample(herdmentalityquestions, this.noOfRounds)
+      .sample(questionPool, Math.min(this.noOfRounds, questionPool.length))
       .map((s) => {
         return {
           question: s.question,
           choices: this.randomize.shuffle(s.options),
         };
       });
+
+    this.noOfRounds = this.data.length;
   }
 
   private initPlayerScores() {

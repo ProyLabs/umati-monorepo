@@ -11,7 +11,7 @@ import { Fragment, useEffect, useState } from "react";
 import { cn } from "../../../lib/utils";
 import { useHerdMentalityPlayer } from "@/providers/games/herd-mentality/hm-player-provider";
 import { Fbutton } from "@/components/ui/fancy-button";
-import { EndGameButton } from "../shared";
+import { EndGameButton, ScoreGapHint } from "../shared";
 
 export const Question = ({ text }: { text: string }) => {
   return (
@@ -416,6 +416,8 @@ export const PlayerRoundEnd = () => {
           {scores?.find((p) => p.id === player?.id)?.score ?? 0} pts
         </p>
       </div>
+
+      <ScoreGapHint scores={scores} />
     </div>
   );
 };

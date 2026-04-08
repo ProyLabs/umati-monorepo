@@ -430,7 +430,59 @@ export const PlayerPodium = ({ scores }: { scores: Scores }) => {
           {scores?.find((p) => p.id === player?.id)?.score ?? 0} pts
         </p>
       </div>
+
+      <ScoreGapHint scores={scores} />
     </div>
+  );
+};
+
+export const ScoreGapHint = ({ scores }: { scores: Scores }) => {
+  const { player } = useLobbyPlayer();
+
+  const hint = useMemo(() => {
+    if (!player) return null;
+
+    const orderedScores = [...scores].sort((a, b) => b.score - a.score);
+    const playerIndex = orderedScores.findIndex((entry) => entry.id === player.id);
+    if (playerIndex === -1) return null;
+
+    const playerScore = orderedScores[playerIndex]?.score ?? 0;
+
+    const nextAhead = orderedScores
+      .slice(0, playerIndex)
+      .find((entry) => entry.score > playerScore);
+
+    if (nextAhead) {
+      return {
+        type: "behind" as const,
+        gap: nextAhead.score - playerScore,
+        name: nextAhead.displayName,
+      };
+    }
+
+    const nextBehind = orderedScores
+      .slice(playerIndex + 1)
+      .find((entry) => entry.score < playerScore);
+
+    if (nextBehind) {
+      return {
+        type: "ahead" as const,
+        gap: playerScore - nextBehind.score,
+        name: nextBehind.displayName,
+      };
+    }
+
+    return null;
+  }, [player, scores]);
+
+  if (!hint) return null;
+
+  return (
+    <p className="text-center text-lg font-medium text-white/85">
+      {hint.type === "behind"
+        ? `You're ${hint.gap} pts behind ${hint.name}`
+        : `You're ${hint.gap} pts ahead of ${hint.name}`}
+    </p>
   );
 };
 

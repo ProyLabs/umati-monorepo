@@ -106,6 +106,16 @@ export const GameType = {
 
 export type GameType = (typeof GameType)[keyof typeof GameType];
 
+export const QuestionProfile = {
+  AUTO: "auto",
+  GLOBAL: "global",
+  AFRICA: "africa",
+  NIGERIA: "nigeria",
+} as const;
+
+export type QuestionProfile =
+  (typeof QuestionProfile)[keyof typeof QuestionProfile];
+
 
 export type Score = { id: string; displayName: string; score: number };
 export type Scores = Score[];

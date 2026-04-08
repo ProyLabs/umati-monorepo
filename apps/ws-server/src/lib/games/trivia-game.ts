@@ -1,5 +1,6 @@
 import {
   GameState,
+  QuestionProfile,
   TruviaPlayerAnswer,
   RoomState,
   TriviaOptions,
@@ -11,6 +12,7 @@ import { GameManager } from "../game-manager";
 import { RoomManager } from "../room-manager";
 import { BaseGame } from "./base";
 import { triviaquestions } from "./trivia-questions";
+import { getTriviaQuestionPool } from "./question-profiles";
 
 export class TriviaGame extends BaseGame {
   static maxNumberOfRounds = 20;
@@ -22,12 +24,17 @@ export class TriviaGame extends BaseGame {
   private answers: Map<string, TruviaPlayerAnswer> = new Map();
   public round?: TriviaRound | null;
   private rankingsSubmitted = false;
+  public questionProfile: QuestionProfile;
 
  
 
   constructor(
     roomId: string,
-    options: { noOfRounds: number; duration?: number }
+    options: {
+      noOfRounds: number;
+      duration?: number;
+      questionProfile?: QuestionProfile;
+    }
   ) {
     super(roomId, "trivia");
     this.noOfRounds = Math.min(
@@ -35,6 +42,7 @@ export class TriviaGame extends BaseGame {
       TriviaGame.maxNumberOfRounds
     );
     this.roundDuration = (options.duration ?? 30) * 1000;
+    this.questionProfile = options.questionProfile ?? QuestionProfile.GLOBAL;
     this.init();
   }
 
@@ -48,9 +56,14 @@ export class TriviaGame extends BaseGame {
   }
 
   private selectQuestions() {
+    const questionPool = getTriviaQuestionPool(
+      triviaquestions,
+      this.questionProfile,
+    );
+
     const uniqueQuestions = Array.from(
       new Map(
-        triviaquestions.map((question) => [
+        questionPool.map((question) => [
           TriviaGame.normalizeQuestion(question.question),
           question,
         ]),

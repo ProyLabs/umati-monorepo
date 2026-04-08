@@ -1,9 +1,20 @@
-import { Games, GameType } from "@umati/ws";
-import { useState } from "react";
+import { Games, GameType, QuestionProfile } from "@umati/ws";
+import { useMemo, useState } from "react";
 import { useModal } from "../../providers/modal-provider";
 import ButtonOptions from "../ui/button-options";
 import { Fbutton } from "../ui/fancy-button";
 import { Label } from "../ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
+import {
+  inferQuestionProfile,
+  QUESTION_PROFILE_OPTIONS,
+} from "@/lib/question-profile";
 
 type GameConfigAction = (options: Record<string, any>) => void
 type GameConfigProps = {
@@ -40,9 +51,18 @@ function GameConfig({ game, action }: GameConfigProps) {
 export default GameConfig;
 
 const TriviaGameConfig = ({action}: { action: GameConfigAction}) => {
-  console.log("🚀 ~ TriviaGameConfig ~ action:", action)
   const { closeModal } = useModal();
   const [noOfRounds, setNoOfRounds] = useState(10);
+  const inferredQuestionProfile = useMemo(() => inferQuestionProfile(), []);
+  const [questionProfile, setQuestionProfile] = useState<QuestionProfile>(
+    QuestionProfile.AUTO,
+  );
+
+  const resolvedQuestionProfile =
+    questionProfile === QuestionProfile.AUTO
+      ? inferredQuestionProfile
+      : questionProfile;
+
   return (
     <div className="grid gap-8">
       <div className="grid gap-2">
@@ -54,6 +74,26 @@ const TriviaGameConfig = ({action}: { action: GameConfigAction}) => {
         />
       </div>
       <div className="grid gap-2">
+        <Label>Question Region</Label>
+        <Select
+          value={questionProfile}
+          onValueChange={(value) => setQuestionProfile(value as QuestionProfile)}
+        >
+          <SelectTrigger className="w-full">
+            <SelectValue placeholder="Select question region" />
+          </SelectTrigger>
+          <SelectContent>
+            {QUESTION_PROFILE_OPTIONS.map((option) => (
+              <SelectItem key={option.value} value={option.value}>
+                {option.value === QuestionProfile.AUTO
+                  ? `${option.label} (${resolvedQuestionProfile})`
+                  : option.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+      <div className="grid gap-2">
         <Fbutton
           type="submit"
           variant="secondary"
@@ -61,6 +101,7 @@ const TriviaGameConfig = ({action}: { action: GameConfigAction}) => {
           onClick={async () => {
             await action({
               noOfRounds,
+              questionProfile: resolvedQuestionProfile,
             });
           }}
         >
@@ -110,9 +151,18 @@ const DrawItGameConfig = () => {
 };
 
 const HMGameConfig = ({action}: { action: GameConfigAction}) => {
-  console.log("🚀 ~ HMGameConfig ~ action:", action)
   const { closeModal } = useModal();
   const [noOfRounds, setNoOfRounds] = useState(10);
+  const inferredQuestionProfile = useMemo(() => inferQuestionProfile(), []);
+  const [questionProfile, setQuestionProfile] = useState<QuestionProfile>(
+    QuestionProfile.AUTO,
+  );
+
+  const resolvedQuestionProfile =
+    questionProfile === QuestionProfile.AUTO
+      ? inferredQuestionProfile
+      : questionProfile;
+
   return (
     <div className="grid gap-8">
       <div className="grid gap-2">
@@ -125,6 +175,26 @@ const HMGameConfig = ({action}: { action: GameConfigAction}) => {
         />
       </div>
       <div className="grid gap-2">
+        <Label>Question Region</Label>
+        <Select
+          value={questionProfile}
+          onValueChange={(value) => setQuestionProfile(value as QuestionProfile)}
+        >
+          <SelectTrigger className="w-full">
+            <SelectValue placeholder="Select question region" />
+          </SelectTrigger>
+          <SelectContent>
+            {QUESTION_PROFILE_OPTIONS.map((option) => (
+              <SelectItem key={option.value} value={option.value}>
+                {option.value === QuestionProfile.AUTO
+                  ? `${option.label} (${resolvedQuestionProfile})`
+                  : option.label}
+              </SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
+      </div>
+      <div className="grid gap-2">
         <Fbutton
           type="submit"
           variant="secondary"
@@ -132,6 +202,7 @@ const HMGameConfig = ({action}: { action: GameConfigAction}) => {
           onClick={async () => {
             await action({
               noOfRounds,
+              questionProfile: resolvedQuestionProfile,
             });
           }}
         >
