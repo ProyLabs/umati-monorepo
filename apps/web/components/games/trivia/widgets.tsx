@@ -15,6 +15,7 @@ import { useTriviaHost } from "@/providers/games/trivia/trivia-host-provider";
 import { useLobbyHost } from "@/providers/lobby-host-provider";
 import { useTriviaPlayer } from "@/providers/games/trivia/trivia-player-provider";
 import { TriviaOptions } from "@umati/ws";
+import { EndGameButton } from "../shared";
 
 export const Question = ({ text }: { text: string }) => {
   return (
@@ -250,7 +251,7 @@ export const TriviaTitleScreen = () => {
 
 export const RoundHost = () => {
   const { lobby } = useLobbyHost();
-  const { round, state, counts } = useTriviaHost();
+  const { round, state, counts, nextRound } = useTriviaHost();
 
   const letters: OptionLetter[] = ["A", "B", "C", "D"];
   return (
@@ -265,6 +266,20 @@ export const RoundHost = () => {
             <p className="text-xl font-bold">
               Round {round?.number} of {round?.totalRounds}
             </p>
+          </div>
+          <div className="flex items-center gap-">
+            <div className="flex items-center gap-">
+              {state === "ROUND_END" && (
+                <Fbutton
+                  className="max-w-40 mx-auto w-full"
+                  variant="secondary"
+                  onClick={nextRound}
+                >
+                  Next
+                </Fbutton>
+              )}
+              <EndGameButton />
+            </div>
           </div>
         </div>
       </div>

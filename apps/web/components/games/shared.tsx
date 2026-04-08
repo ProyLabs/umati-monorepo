@@ -8,8 +8,26 @@ import { useLobbyHost } from "@/providers/lobby-host-provider";
 import { Scores } from "@umati/ws";
 import { useLobbyPlayer } from "@/providers/lobby-player-provider";
 import { PlayerAvatar } from "../lobby/widgets";
+import { Fbutton, fbuttonVariants } from "../ui/fancy-button";
+import {
+  AlertDialog,
+  AlertDialogContent,
+  AlertDialogTitle,
+  AlertDialogDescription,
+  AlertDialogCancel,
+  AlertDialogAction,
+} from "@radix-ui/react-alert-dialog";
+import { AlertDialogHeader, AlertDialogFooter } from "../ui/alert-dialog";
+import { Lobby } from "@/lib/types/lobby-shared";
+import { buttonVariants } from "../ui/button";
 
-export const Leaderboard = ({ scores }: { scores: Scores }) => {
+export const Leaderboard = ({
+  scores,
+  nextRound,
+}: {
+  scores: Scores;
+  nextRound: () => void;
+}) => {
   return (
     <div className="flex flex-col items-center justify-center h-full gap-16">
       <h2 className="text-5xl font-bold mb-4 text-center max-w-4xl mx-auto w-full">
@@ -32,10 +50,17 @@ export const Leaderboard = ({ scores }: { scores: Scores }) => {
         </AnimatePresence>
       </div>
 
-      <span className="text-lg font-semibold flex">
+      <span className="text-lg font-semibold flex mb-4">
         <LightbulbIcon />
         <span>Tip: the faster you answer, the more points you score!</span>
       </span>
+      <Fbutton
+        className="max-w-xs mx-auto w-full"
+        variant="secondary"
+        onClick={nextRound}
+      >
+        Next
+      </Fbutton>
     </div>
   );
 };
@@ -225,7 +250,11 @@ export const PodiumItem = ({
         style={{ backgroundColor: bgColor }}
         initial={{ scaleY: 0 }}
         animate={{ scaleY: 1 }}
-        transition={{ duration: 0.8, ease: "easeOut",    delay: (4-position)/2 }}
+        transition={{
+          duration: 0.8,
+          ease: "easeOut",
+          delay: (4 - position) / 2,
+        }}
         onAnimationComplete={() => setShowName(true)} // reveal name after rise
       >
         <span className="text-6xl font-bold bg-white/30 rounded-full p-1 aspect-square flex items-center justify-center text-center h-24 mx-auto">
@@ -279,18 +308,18 @@ export const Rankings = () => {
 export const RankingHeader = ({ className }: { className?: string }) => {
   return (
     <div className="bg-white/10 backdrop-blur-sm rounded-2xl mb-2 sticky top-0">
-    <div
-      className={cn(
-        " grid grid-cols-[1fr_2fr_repeat(3,1fr)] gap-4 px-6 py-3  font-semibold text-lg text-center ",
-        className
-      )}
-    >
-      <span>#</span>
-      <span>Player</span>
-      <span>🥇</span>
-      <span>🥈</span>
-      <span>🥉</span>
-    </div>
+      <div
+        className={cn(
+          " grid grid-cols-[1fr_2fr_repeat(3,1fr)] gap-4 px-6 py-3  font-semibold text-lg text-center ",
+          className,
+        )}
+      >
+        <span>#</span>
+        <span>Player</span>
+        <span>🥇</span>
+        <span>🥈</span>
+        <span>🥉</span>
+      </div>
     </div>
   );
 };
@@ -328,7 +357,7 @@ export const RankingRow = ({
       transition={{ duration: 0.3 }}
       className={cn(
         `grid grid-cols-[1fr_2fr_repeat(3,1fr)] gap-4 px-6 py-3 rounded-xl text-center items-center shadow-sm text-black`,
-        variant == "single" && "rounded-t-none opacity-10"
+        variant == "single" && "rounded-t-none opacity-10",
       )}
       style={{
         backgroundColor: bg,
@@ -388,9 +417,9 @@ export const PlayerPodium = ({ scores }: { scores: Scores }) => {
         Game Over!
       </motion.h2>
 
-        <p className="text-2xl">
-          You finished in {getOrdinal(playerPosition?.position)} place
-        </p>
+      <p className="text-2xl">
+        You finished in {getOrdinal(playerPosition?.position)} place
+      </p>
 
       <div className="animate-bounce animation-duration-[5s] mt-10">
         <PlayerAvatar
@@ -402,5 +431,47 @@ export const PlayerPodium = ({ scores }: { scores: Scores }) => {
         </p>
       </div>
     </div>
+  );
+};
+
+export const EndGameButton = () => {
+  const { loading, lobby, cancelGame } = useLobbyHost();
+  const [showEndDialog, setShowEndDialog] = useState(false);
+  return (
+    <>
+      <div className="absolute right-4 top-4 z-40 md:right-8 md:top-8">
+        <Fbutton variant="secondary" onClick={() => setShowEndDialog(true)}>
+          End Game
+        </Fbutton>
+      </div>
+      <AlertDialog open={showEndDialog} onOpenChange={setShowEndDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>End game now?</AlertDialogTitle>
+            <AlertDialogDescription>
+              The current game in {lobby?.name ?? "this lobby"} will end
+              immediately and everyone will return to the lobby.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel
+              onClick={() => setShowEndDialog(false)}
+              className={fbuttonVariants({ variant: "outline" })}
+            >
+              Keep playing
+            </AlertDialogCancel>
+            <AlertDialogAction
+              className={fbuttonVariants({ variant: "default" })}
+              onClick={() => {
+                cancelGame();
+                setShowEndDialog(false);
+              }}
+            >
+              End Game
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
   );
 };

@@ -10,6 +10,8 @@ import { AnimatePresence, motion, Variants } from "motion/react";
 import { Fragment, useEffect, useState } from "react";
 import { cn } from "../../../lib/utils";
 import { useHerdMentalityPlayer } from "@/providers/games/herd-mentality/hm-player-provider";
+import { Fbutton } from "@/components/ui/fancy-button";
+import { EndGameButton } from "../shared";
 
 export const Question = ({ text }: { text: string }) => {
   return (
@@ -245,7 +247,7 @@ const letters: OptionLetter[] = ["A", "B", "C", "D", "E", "F"];
 
 export const RoundHost = () => {
   const { lobby } = useLobbyHost();
-  const { round, state, counts } = useHerdMentalityHost();
+  const { round, state, counts, nextRound } = useHerdMentalityHost();
 
 
 
@@ -306,6 +308,19 @@ export const RoundHost = () => {
               Round {round?.number} of {round?.totalRounds}
             </p>
           </div>
+
+          <div className="flex items-center gap-">
+            {state === "ROUND_END" && (
+              <Fbutton
+                className="max-w-40 mx-auto w-full"
+                variant="secondary"
+                onClick={nextRound}
+              >
+                Next
+              </Fbutton>
+            )}
+            <EndGameButton />
+          </div>
         </div>
       </div>
 
@@ -313,7 +328,6 @@ export const RoundHost = () => {
       <AnimatePresence>
         <div className="flex flex-col items-center justify-center h-full gap-16">
           <Question text={round?.question!} />
-
 
           <div className="grid grid-cols-3 gap-4 max-w-4xl w-full px-4 relative z-10">
             {round?.choices.map((choice, index) => (
@@ -326,8 +340,8 @@ export const RoundHost = () => {
                   dealPhase === "dealing" || dealPhase === "dealt"
                     ? "deal"
                     : dealPhase === "returning"
-                    ? "exit"
-                    : "initial"
+                      ? "exit"
+                      : "initial"
                 }
                 className="flex justify-center"
               >
