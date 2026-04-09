@@ -65,8 +65,18 @@ export async function handleMessage(ws: WebSocket, msg: WSMessage, sid: string) 
       await handleGameAnswer(ws, msg.payload as WSPayloads[WSEvent.GAME_ANSWER]);
       break;
     
+    case WSEvent.GAME_STATE_CHANGE:
+      await handleGameStateChange(
+        ws,
+        msg.payload as WSPayloads[WSEvent.GAME_STATE_CHANGE],
+      );
+      break;
+
     case WSEvent.CH_ROUND_STATE_CHANGE: 
-      await handleGameStateChange(ws, msg.payload as WSPayloads[WSEvent.CH_ROUND_STATE_CHANGE]);
+      await handleGameStateChange(
+        ws,
+        msg.payload as WSPayloads[WSEvent.CH_ROUND_STATE_CHANGE],
+      );
       break;
 
     // // --- Player events ---

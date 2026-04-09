@@ -1,7 +1,7 @@
 "use client";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { useLobbyHost } from "@/providers/lobby-host-provider"; // Host context provides wsClient
-import { GameState, Scores, TriviaOptions, TriviaRound, WSEvent } from "@umati/ws";
+import { GameState, GameType, Scores, TriviaOptions, TriviaRound, WSEvent } from "@umati/ws";
 
 interface TriviaHostContextType {
   gameId: string | null;
@@ -95,7 +95,13 @@ export const TriviaHostProvider = ({ children }: { children: React.ReactNode }) 
         nextRound,
       }}
     >
-      <div className='bg-gradient-to-br from-[#FE566B] to-[var(--umati-red)] h-dvh w-dvw'>
+      <div
+        className={
+          gameType === GameType.QUIZZER
+            ? "bg-gradient-to-br from-orange-400 to-orange-600 h-dvh w-dvw"
+            : "bg-gradient-to-br from-[#FE566B] to-[var(--umati-red)] h-dvh w-dvw"
+        }
+      >
       {children}
       </div>
     </TriviaHostContext.Provider>

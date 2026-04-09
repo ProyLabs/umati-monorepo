@@ -491,11 +491,9 @@ export const EndGameButton = () => {
   const [showEndDialog, setShowEndDialog] = useState(false);
   return (
     <>
-      <div className="absolute right-4 top-4 z-40 md:right-8 md:top-8">
-        <Fbutton variant="secondary" onClick={() => setShowEndDialog(true)}>
-          End Game
-        </Fbutton>
-      </div>
+      <Fbutton variant="secondary" onClick={() => setShowEndDialog(true)}>
+        End Game
+      </Fbutton>
       <AlertDialog open={showEndDialog} onOpenChange={setShowEndDialog}>
         <AlertDialogContent>
           <AlertDialogHeader>

@@ -309,7 +309,7 @@ export const RoundHost = () => {
             </p>
           </div>
 
-          <div className="flex items-center gap-">
+          <div className="flex items-center gap-2">
             {state === "ROUND_END" && (
               <Fbutton
                 className="max-w-40 mx-auto w-full"

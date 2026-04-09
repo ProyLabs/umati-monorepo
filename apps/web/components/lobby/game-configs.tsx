@@ -1,5 +1,10 @@
-import { Games, GameType, QuestionProfile } from "@umati/ws";
-import { useMemo, useState } from "react";
+import {
+  Games,
+  GameType,
+  QuestionProfile,
+  type QuizzerQuestionInput,
+} from "@umati/ws";
+import { useMemo, useState, type ChangeEvent } from "react";
 import { useModal } from "../../providers/modal-provider";
 import ButtonOptions from "../ui/button-options";
 import { Fbutton } from "../ui/fancy-button";
@@ -15,6 +20,10 @@ import {
   inferQuestionProfile,
   QUESTION_PROFILE_OPTIONS,
 } from "@/lib/question-profile";
+import {
+  quizzerTemplate,
+  validateQuizzerQuestions,
+} from "@/lib/quizzer-template";
 
 type GameConfigAction = (options: Record<string, any>) => void
 type GameConfigProps = {
@@ -40,6 +49,8 @@ function GameConfig({ game, action }: GameConfigProps) {
             return <HMGameConfig action={action} />
           case GameType.CHAMELEON:
             return <ChameleonGameConfig action={action} />
+          case GameType.QUIZZER:
+            return <QuizzerGameConfig action={action} />;
           default:
             return null;
         }
@@ -249,6 +260,141 @@ const ChameleonGameConfig = ({action}: { action: GameConfigAction}) => {
           Start Game
         </Fbutton>
         <Fbutton variant="outline"  className="w-full" onClick={closeModal}>
+          Cancel
+        </Fbutton>
+      </div>
+    </div>
+  );
+};
+
+const QuizzerGameConfig = ({ action }: { action: GameConfigAction }) => {
+  const { closeModal } = useModal();
+  const [noOfRounds, setNoOfRounds] = useState(10);
+  const [jsonValue, setJsonValue] = useState(
+    JSON.stringify(quizzerTemplate, null, 2),
+  );
+  const [error, setError] = useState<string | null>(null);
+  const [questionCount, setQuestionCount] = useState(quizzerTemplate.length);
+
+  const handleQuestionsChange = (value: string) => {
+    setJsonValue(value);
+
+    try {
+      const parsed = JSON.parse(value);
+      const result = validateQuizzerQuestions(parsed);
+      if (!result.ok) {
+        setError(result.error);
+        return;
+      }
+
+      setQuestionCount(result.questions.length);
+      setError(null);
+    } catch {
+      setError("JSON is not valid yet.");
+    }
+  };
+
+  const handleFileUpload = async (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    const text = await file.text();
+    handleQuestionsChange(text);
+  };
+
+  const downloadTemplate = () => {
+    const blob = new Blob([JSON.stringify(quizzerTemplate, null, 2)], {
+      type: "application/json",
+    });
+    const url = URL.createObjectURL(blob);
+    const anchor = document.createElement("a");
+    anchor.href = url;
+    anchor.download = "quizzer-template.json";
+    anchor.click();
+    URL.revokeObjectURL(url);
+  };
+
+  return (
+    <div className="grid gap-6">
+      <div className="grid gap-2">
+        <Label htmlFor="quizzer-rounds">Number of Rounds</Label>
+        <ButtonOptions
+          value={noOfRounds}
+          options={[3, 5, 10, 15, 20]}
+          onChange={(val) => setNoOfRounds(val as number)}
+        />
+      </div>
+
+      <div className="grid gap-2">
+        <Label htmlFor="quizzer-upload">Questions JSON</Label>
+        <input
+          id="quizzer-upload"
+          type="file"
+          accept="application/json"
+          onChange={handleFileUpload}
+          className="w-full rounded-md border px-3 py-2 text-sm"
+        />
+        <div className="flex gap-2">
+          <Fbutton type="button" variant="outline" className="w-full" onClick={downloadTemplate}>
+            Download Template
+          </Fbutton>
+          <Fbutton
+            type="button"
+            variant="outline"
+            className="w-full"
+            onClick={() => handleQuestionsChange(JSON.stringify(quizzerTemplate, null, 2))}
+          >
+            Reset Template
+          </Fbutton>
+        </div>
+      </div>
+
+      <div className="grid gap-2">
+        <Label htmlFor="quizzer-json">Edit Questions</Label>
+        <textarea
+          id="quizzer-json"
+          value={jsonValue}
+          onChange={(event) => handleQuestionsChange(event.target.value)}
+          className="min-h-72 w-full rounded-md border bg-white/80 px-3 py-2 text-sm font-mono text-black"
+          spellCheck={false}
+        />
+        <p className="text-sm opacity-80">
+          Supports `selection` with 2-4 options and `true_false`.
+        </p>
+        <p className="text-sm font-medium">
+          {error ? error : `${questionCount} questions ready`}
+        </p>
+      </div>
+
+      <div className="grid gap-2">
+        <Fbutton
+          type="button"
+          variant="secondary"
+          className="w-full"
+          onClick={async () => {
+            let parsed: unknown;
+
+            try {
+              parsed = JSON.parse(jsonValue);
+            } catch {
+              setError("JSON is not valid.");
+              return;
+            }
+
+            const result = validateQuizzerQuestions(parsed);
+            if (!result.ok) {
+              setError(result.error);
+              return;
+            }
+
+            await action({
+              noOfRounds: Math.min(noOfRounds, result.questions.length),
+              questions: result.questions as QuizzerQuestionInput[],
+            });
+          }}
+        >
+          Start Game
+        </Fbutton>
+        <Fbutton variant="outline" className="w-full" onClick={closeModal}>
           Cancel
         </Fbutton>
       </div>

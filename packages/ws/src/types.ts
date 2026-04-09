@@ -97,6 +97,7 @@ export interface GameLobbyMeta {
 
 export const GameType = {
   TRIVIA: "trivia",
+  QUIZZER: "quizzer",
   DRAWIT: "drawit",
   OOO: "oddoneout",
   HM: "herdmentality",
@@ -133,6 +134,21 @@ export interface TriviaDataItem {
   question: string;
   choices: string[];
   answer: string;
+}
+
+export const QuizzerQuestionType = {
+  SELECTION: "selection",
+  TRUE_FALSE: "true_false",
+} as const;
+
+export type QuizzerQuestionType =
+  (typeof QuizzerQuestionType)[keyof typeof QuizzerQuestionType];
+
+export interface QuizzerQuestionInput {
+  question: string;
+  type: QuizzerQuestionType;
+  options?: string[];
+  correctAnswer: string | boolean;
 }
 
 

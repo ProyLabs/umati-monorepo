@@ -2,7 +2,7 @@
 import { PlayerLeaveButton, Reactions } from "@/components/lobby/widgets";
 import UmatiLogo from "@/components/ui/logo";
 import { useLobbyPlayer } from "@/providers/lobby-player-provider"; // Player context provides wsClient
-import { GameState, Scores, TriviaOptions, TriviaRound, WSEvent } from "@umati/ws";
+import { GameState, GameType, Scores, TriviaOptions, TriviaRound, WSEvent } from "@umati/ws";
 import React, { createContext, useContext, useEffect, useState } from "react";
 
 interface TriviaPlayerContextType {
@@ -72,7 +72,13 @@ export const TriviaPlayerProvider = ({ children }: { children: React.ReactNode }
         submitAnswer,
       }}
     >
-      <div className='bg-gradient-to-br from-[#FE566B] to-[var(--umati-red)] h-dvh w-dvw flex flex-col'>
+      <div
+        className={
+          gameType === GameType.QUIZZER
+            ? "bg-gradient-to-br from-orange-400 to-orange-600 h-dvh w-dvw flex flex-col"
+            : "bg-gradient-to-br from-[#FE566B] to-[var(--umati-red)] h-dvh w-dvw flex flex-col"
+        }
+      >
       {children}
 
        <div className="flex items-center justify-center gap-4 w-full relative max-w-md mt-auto mx-auto px-4 pb-4">

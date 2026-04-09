@@ -15,6 +15,24 @@ type Game = {
 export const Games: Game[] = [
   // {id: "drawit", title: 'Draw It!', color: 'purple', className: 'from-[#9856FE] to-[var(--umati-purple)]', src: 'https://img.icons8.com/?size=400&id=13370&format=png&color=000000' },
   {
+    id: "quizzer",
+    title: "Quizzer",
+    color: "orange",
+    className: "from-orange-400 to-orange-600",
+    src: "https://img.icons8.com/?size=400&id=60229&format=png&color=000000",
+    min: 1,
+    max: 60,
+    instructions: `
+  <ul>
+    <li>Upload your own JSON question set before starting.</li>
+    <li>Make sure this screen is being shared on Zoom (or others) or a TV.</li>
+    <li>Questions will appear on this screen.</li>
+    <li>Players answer on their own device.</li>
+    <li>Supports both selection questions and true/false.</li>
+  </ul>
+`,
+  },
+  {
     id: "trivia",
     title: "Trivia Go",
     color: "red",

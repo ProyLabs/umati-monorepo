@@ -8,6 +8,7 @@ import { BaseGame } from "./games/base";
 import { TriviaGame } from "./games/trivia-game";
 import { HerdMentality } from "./games/herd-mentality";
 import { Chameleon } from "./games/chameleon";
+import { QuizzerGame } from "./games/quizzer-game";
 
 const games = new Map<string, BaseGame>();
 
@@ -17,6 +18,9 @@ export const GameManager = {
     switch (type) {
       case GameType.TRIVIA:
         game = new TriviaGame(roomId, options);
+        break;
+      case GameType.QUIZZER:
+        game = new QuizzerGame(roomId, options);
         break;
       case GameType.HM:
         game = new HerdMentality(roomId, options);
@@ -47,7 +51,7 @@ export const GameManager = {
       id: game.id,
       type: game.type,
       state: game.state,
-      round: (game as TriviaGame | HerdMentality | Chameleon).round,
+      round: (game as TriviaGame | HerdMentality | Chameleon | QuizzerGame).round,
       scores: game.scores,
     };
   },
@@ -60,8 +64,8 @@ export const GameManager = {
     const game = games.get(gameId);
     if (!game) return;
 
-    if (game.type === GameType.TRIVIA) {
-      const triviaGame = game as TriviaGame;
+    if (game.type === GameType.TRIVIA || game.type === GameType.QUIZZER) {
+      const triviaGame = game as TriviaGame | QuizzerGame;
       triviaGame.submitAnswer(playerId, answer as TriviaOptions);
     } else if (game.type === GameType.HM) {
       const herdMentalityGame = game as HerdMentality;
@@ -76,8 +80,8 @@ export const GameManager = {
     const game = games.get(gameId);
     if (!game) return;
 
-    if (game.type === GameType.TRIVIA) {
-      const triviaGame = game as TriviaGame & { advanceToState: (state: GameState) => void };
+    if (game.type === GameType.TRIVIA || game.type === GameType.QUIZZER) {
+      const triviaGame = game as (TriviaGame | QuizzerGame) & { advanceToState: (state: GameState) => void };
       triviaGame.advanceToState(state);
       return;
     }

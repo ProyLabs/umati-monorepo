@@ -10,7 +10,7 @@
  *  - 🔹 WSMessage: full message shape { event, payload }
  */
 
-import { ChameleonRound, Game, GameState, GameType, HerdMentalityOptions, HerdMentalityRound, Lobby, LobbyFull, Player, QuestionProfile, Ranking, RoomState, Scores, TriviaOptions, TriviaRound } from "./types";
+import { ChameleonRound, Game, GameState, GameType, HerdMentalityOptions, HerdMentalityRound, Lobby, LobbyFull, Player, QuestionProfile, QuizzerQuestionInput, Ranking, RoomState, Scores, TriviaOptions, TriviaRound } from "./types";
 
 export enum WSEvent {
   // --- Core lifecycle ---
@@ -154,7 +154,10 @@ export interface WSPayloads {
     roomId: string;
      options: {
     type: GameType;
-    config: Record<string, any> & { questionProfile?: QuestionProfile }; // e.g. { noOfRounds: 10, duration: 30 }
+    config: Record<string, any> & {
+      questionProfile?: QuestionProfile;
+      questions?: QuizzerQuestionInput[];
+    }; // e.g. { noOfRounds: 10, duration: 30 }
   };
   };
   [WSEvent.GAME_START]: {roomId: string};

@@ -23,7 +23,7 @@ export function GameResolverHost () {
     const HerdMentality = <HerdMentalityHostProvider><HerdMentalityaHost/></HerdMentalityHostProvider>
     const Chameleon = <ChameleonHostProvider><ChameleonHost/></ChameleonHostProvider>
 
-    if(game?.type === GameType.TRIVIA){
+    if(game?.type === GameType.TRIVIA || game?.type === GameType.QUIZZER){
         return TriviaGame;
     } else if(game?.type === GameType.HM){
         return HerdMentality;
@@ -45,7 +45,7 @@ export function GameResolverPlayer () {
     const Chameleon = <ChameleonPlayerProvider><ChameleonPlayer/></ChameleonPlayerProvider>
 
 
-    if(game?.type === GameType.TRIVIA){
+    if(game?.type === GameType.TRIVIA || game?.type === GameType.QUIZZER){
         return TriviaGame;
     } else if(game?.type === GameType.HM){
         return HerdMentality;

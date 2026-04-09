@@ -14,7 +14,7 @@ import UmatiLogo from "@/components/ui/logo";
 import { useTriviaHost } from "@/providers/games/trivia/trivia-host-provider";
 import { useLobbyHost } from "@/providers/lobby-host-provider";
 import { useTriviaPlayer } from "@/providers/games/trivia/trivia-player-provider";
-import { TriviaOptions } from "@umati/ws";
+import { GameType, TriviaOptions } from "@umati/ws";
 import { EndGameButton, ScoreGapHint } from "../shared";
 
 export const Question = ({ text }: { text: string }) => {
@@ -232,11 +232,13 @@ export const Timer = ({
 
 export const TriviaTitleScreen = () => {
   const { player, leaveLobby } = useLobbyPlayer();
+  const { gameType } = useTriviaPlayer();
+  const gameTitle = gameType === GameType.QUIZZER ? "Quizzer" : "Trivia";
   return (
     <div className="max-w-screen-2xl mx-auto w-full py-4 flex flex-col gap-8 px-4 items-center justify-center h-full">
       <div className="text-center">
         <p className="text-lg font-medium">Now Playing</p>
-        <h3 className="text-6xl font-bold text-center ">Trivia</h3>
+        <h3 className="text-6xl font-bold text-center ">{gameTitle}</h3>
         <p className="mt-6">Waiting for host to start the game...</p>
       </div>
       <div className="animate-bounce animation-duration-[5s] mt-10">
@@ -251,9 +253,10 @@ export const TriviaTitleScreen = () => {
 
 export const RoundHost = () => {
   const { lobby } = useLobbyHost();
-  const { round, state, counts, nextRound } = useTriviaHost();
+  const { round, state, counts, nextRound, gameType } = useTriviaHost();
 
   const letters: OptionLetter[] = ["A", "B", "C", "D"];
+  const gameTitle = gameType === GameType.QUIZZER ? "Quizzer" : "Trivia Go";
   return (
     <Fragment>
       <div className="fixed top-0 px-8 py-4 w-full">
@@ -263,23 +266,22 @@ export const RoundHost = () => {
               <span className="font-bold ">{lobby?.name}</span> Code:{" "}
               {lobby?.code}
             </p>
+            <p className="text-lg font-semibold">{gameTitle}</p>
             <p className="text-xl font-bold">
               Round {round?.number} of {round?.totalRounds}
             </p>
           </div>
-          <div className="flex items-center gap-">
-            <div className="flex items-center gap-">
-              {state === "ROUND_END" && (
-                <Fbutton
-                  className="max-w-40 mx-auto w-full"
-                  variant="secondary"
-                  onClick={nextRound}
-                >
-                  Next
-                </Fbutton>
-              )}
-              <EndGameButton />
-            </div>
+          <div className="flex items-center gap-2">
+            {state === "ROUND_END" && (
+              <Fbutton
+                className="max-w-40 mx-auto w-full"
+                variant="secondary"
+                onClick={nextRound}
+              >
+                Next
+              </Fbutton>
+            )}
+            <EndGameButton />
           </div>
         </div>
       </div>
