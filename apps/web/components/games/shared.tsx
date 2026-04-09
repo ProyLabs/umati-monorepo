@@ -136,7 +136,13 @@ type Player = {
   points: number;
 };
 
-export const Podium = ({ scores }: { scores: Scores }) => {
+export const Podium = ({
+  scores,
+  nextRound,
+}: {
+  scores: Scores;
+  nextRound: () => void;
+}) => {
   // Sort & slice top 3
   const topThree = rankScores(scores).slice(0, 3);
 
@@ -201,6 +207,13 @@ export const Podium = ({ scores }: { scores: Scores }) => {
           />
         ))}
       </motion.div>
+      <Fbutton
+        className="max-w-xs mx-auto w-full"
+        variant="secondary"
+        onClick={nextRound}
+      >
+        Next
+      </Fbutton>
     </div>
   );
 };

@@ -19,9 +19,8 @@ export const Games: Game[] = [
     title: "Quizzer",
     color: "orange",
     className: "from-orange-400 to-orange-600",
-    src: "https://img.icons8.com/?size=400&id=60229&format=png&color=000000",
+    src: "https://img.icons8.com/?size=100&id=rx6rZTa05YPn&format=png&color=000000",
     min: 1,
-    max: 60,
     instructions: `
   <ul>
     <li>Upload your own JSON question set before starting.</li>
@@ -39,7 +38,6 @@ export const Games: Game[] = [
     className: "from-[#FE566B] to-[var(--umati-red)]",
     src: "https://img.icons8.com/?size=400&id=OQQN8J666Pau&format=png&color=000000",
     min: 1,
-    max: 60,
     instructions: `
   <ul>
     <li>Make sure this screen is being shared on Zoom (or others) or a TV.</li>
@@ -83,21 +81,21 @@ export const Games: Game[] = [
   </ul>
 `,
   },
-  {
-    id: "jaroflies",
-    title: "Jar of Lies",
-    color: "purple",
-    className: "from-[#9856FE] to-[var(--umati-purple)]",
-    src: "https://img.icons8.com/?size=400&id=61211&format=png&color=000000",
-    min: 1,
-  },
+  // {
+  //   id: "jaroflies",
+  //   title: "Jar of Lies",
+  //   color: "purple",
+  //   className: "from-[#9856FE] to-[var(--umati-purple)]",
+  //   src: "https://img.icons8.com/?size=400&id=61211&format=png&color=000000",
+  //   min: 1,
+  // },
 
-  {
-    id: "drawit",
-    title: "Draw It!",
-    color: "sky",
-    className: "from-[#9856FE] to-[var(--umati-purple)]",
-    src: "https://img.icons8.com/?size=400&id=ziAWwQ4GdGVA&format=png&color=000000",
-    min: 2,
-  },
+  // {
+  //   id: "drawit",
+  //   title: "Draw It!",
+  //   color: "sky",
+  //   className: "from-[#9856FE] to-[var(--umati-purple)]",
+  //   src: "https://img.icons8.com/?size=400&id=ziAWwQ4GdGVA&format=png&color=000000",
+  //   min: 2,
+  // },
 ];
