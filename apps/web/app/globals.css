@@ -130,6 +130,15 @@
     cursor: var(--cursor-pointer) !important;
   }
 
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
   .rules ul {
     @apply text-2xl font-semibold list-decimal list-inside max-w-3xl mx-auto py-24 space-y-4
   }

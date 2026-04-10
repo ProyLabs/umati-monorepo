@@ -1,25 +1,15 @@
 "use client";
-import { LightbulbIcon } from "lucide-react";
-import React, { useEffect, useMemo, useRef, useState } from "react";
-import { AnimatePresence, motion, useAnimation } from "motion/react";
-import confetti from "canvas-confetti";
-import { cn, formatList, rankScores } from "../../lib/utils";
 import { useLobbyHost } from "@/providers/lobby-host-provider";
-import { Scores } from "@umati/ws";
 import { useLobbyPlayer } from "@/providers/lobby-player-provider";
+import { useAlert } from "@/providers/modal-provider";
+import { Scores } from "@umati/ws";
+import confetti from "canvas-confetti";
+import { LightbulbIcon } from "lucide-react";
+import { AnimatePresence, motion, useAnimation } from "motion/react";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { cn, formatList, rankScores } from "../../lib/utils";
 import { PlayerAvatar } from "../lobby/widgets";
-import { Fbutton, fbuttonVariants } from "../ui/fancy-button";
-import {
-  AlertDialog,
-  AlertDialogContent,
-  AlertDialogTitle,
-  AlertDialogDescription,
-  AlertDialogCancel,
-  AlertDialogAction,
-} from "@radix-ui/react-alert-dialog";
-import { AlertDialogHeader, AlertDialogFooter } from "../ui/alert-dialog";
-import { Lobby } from "@/lib/types/lobby-shared";
-import { buttonVariants } from "../ui/button";
+import { Fbutton } from "../ui/fancy-button";
 
 export const Leaderboard = ({
   scores,
@@ -286,19 +276,34 @@ export const Rankings = () => {
     return [...rankings].sort((a, b) => {
       if (b.gold !== a.gold) return b.gold - a.gold;
       if (b.silver !== a.silver) return b.silver - a.silver;
-      return b.bronze - a.bronze;
+      if (b.bronze !== a.bronze) return b.bronze - a.bronze;
+
+      return a.displayName.localeCompare(b.displayName);
     });
   }, [rankings]);
 
   return (
-    <div className="flex flex-col items-center w-full h-full max-h-140">
-      <h2 className="text-2xl font-bold text-left w-full mb-2">🏅 Rankings</h2>
+    <div className="relative flex h-full w-full flex-col overflow-clip rounded-[1.75rem] border border-white/12 bg-[linear-gradient(180deg,rgba(255,255,255,0.08),rgba(255,255,255,0.03))] p-4 shadow-[0_24px_80px_rgba(0,0,0,0.24)] lg:w-3/5 min-h-72">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,200,39,0.14),transparent_24%),radial-gradient(circle_at_top_right,rgba(77,199,255,0.14),transparent_30%),radial-gradient(circle_at_bottom,rgba(239,62,70,0.12),transparent_34%)]" />
+      <div className="relative z-10 mb-4 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+        <div className="space-y-2">
+          <div>
+            <h2 className="text-xl font-black tracking-tight text-white md:text-2xl">
+              Leaderboard
+            </h2>
+            <p className="text-sm leading-6 text-white/70 md:text-[15px]">
+              Track who is heating up, who is holding ground, and who needs a
+              comeback round.
+            </p>
+          </div>
+        </div>
+      </div>
 
       {rankings.length > 0 ? (
-        <div className="relative w-full max-w-5xl overflow-x-auto scrollbar-thin scrollbar-thumb-foreground/30 scrollbar-track-transparent">
-          <RankingHeader className="rounded-none" />
+        <div className="relative z-10 w-full overflow-x-auto scrollbar-hide">
+          <RankingHeader />
 
-          <div className="flex flex-col gap-2 pb-4">
+          <div className="flex flex-col gap-2 pb-1">
             <AnimatePresence>
               {sortedRankings.map((rankings, index) => (
                 <RankingRow
@@ -312,7 +317,16 @@ export const Rankings = () => {
           </div>
         </div>
       ) : (
-        <p className="m-auto">No Rankings yet</p>
+        <div className="relative z-10 m-auto flex min-h-56 w-full max-w-xl flex-col items-center justify-center rounded-[1.5rem] border border-dashed border-white/15 bg-black/15 px-6 text-center">
+          <div className="mb-3 inline-flex size-14 items-center justify-center rounded-2xl bg-white/10 text-2xl">
+            🎊
+          </div>
+          <p className="text-xl font-bold text-white">No rankings yet</p>
+          <p className="mt-2 max-w-sm text-sm leading-6 text-white/65">
+            Start a round and this board will light up with medals, movement,
+            and bragging rights.
+          </p>
+        </div>
       )}
     </div>
   );
@@ -320,10 +334,10 @@ export const Rankings = () => {
 
 export const RankingHeader = ({ className }: { className?: string }) => {
   return (
-    <div className="bg-white/10 backdrop-blur-sm rounded-2xl mb-2 sticky top-0">
+    <div className="sticky top-0 z-10 mb-2 rounded-md border border-white/12 bg-black/25 backdrop-blur-md">
       <div
         className={cn(
-          " grid grid-cols-[1fr_2fr_repeat(3,1fr)] gap-4 px-6 py-3  font-semibold text-lg text-center ",
+          "grid grid-cols-[0.8fr_2.2fr_repeat(3,0.9fr)] gap-3 px-4 py-3 text-center text-xs font-bold uppercase tracking-[0.18em] text-white/65 md:px-5",
           className,
         )}
       >
@@ -360,6 +374,8 @@ export const RankingRow = ({
   const bgColor = colors[position] ?? "white";
 
   const bg = variant === "single" ? "white" : bgColor;
+  const totalMedals = gold + silver + bronze;
+  const isPodium = position <= 3 && totalMedals > 0;
 
   return (
     <motion.div
@@ -369,18 +385,74 @@ export const RankingRow = ({
       exit={{ opacity: 0, y: -10 }}
       transition={{ duration: 0.3 }}
       className={cn(
-        `grid grid-cols-[1fr_2fr_repeat(3,1fr)] gap-4 px-6 py-3 rounded-xl text-center items-center shadow-sm text-black`,
+        "grid grid-cols-[0.8fr_2.2fr_repeat(3,0.9fr)] items-center gap-3 rounded-md border px-1 py-2 text-center shadow-sm md:px-5",
+        isPodium
+          ? "border-white/20 text-black"
+          : "border-white/10 bg-white/8 text-white backdrop-blur-sm",
         variant == "single" && "rounded-t-none opacity-10",
       )}
       style={{
-        backgroundColor: bg,
+        backgroundColor: isPodium ? bg : undefined,
       }}
     >
-      <span className="font-bold text-lg">{position}</span>
-      <span className="font-semibold text-lg">{name}</span>
-      <span className="font-medium text-yellow-700">{gold}</span>
-      <span className="font-medium text-gray-500">{silver}</span>
-      <span className="font-medium text-amber-700">{bronze}</span>
+      <div className="flex justify-center">
+        <span
+          className={cn(
+            "inline-flex size-7 items-center justify-center rounded-2xl text-sm font-black shadow-sm",
+            isPodium ? "bg-black/10 text-black" : "bg-white/10 text-white",
+          )}
+        >
+          {position}
+        </span>
+      </div>
+      <div className="min-w-0 text-left">
+        <p
+          className={cn(
+            "truncate text-base font-bold md:text-lg",
+            isPodium ? "text-black" : "text-white",
+          )}
+        >
+          {name}
+        </p>
+        {/* <p
+          className={cn(
+            "text-[11px] font-semibold uppercase tracking-[0.16em]",
+            isPodium ? "text-black/55" : "text-white/50",
+          )}
+        >
+          {position === 1
+            ? "Crowd favorite"
+            : position === 2
+              ? "On the chase"
+              : position === 3
+                ? "Still in it"
+                : "Party contender"}
+        </p> */}
+      </div>
+      <span
+        className={cn(
+          "text-base font-black",
+          isPodium ? "text-yellow-800" : "text-yellow-300",
+        )}
+      >
+        {gold}
+      </span>
+      <span
+        className={cn(
+          "text-base font-black",
+          isPodium ? "text-slate-500" : "text-slate-200",
+        )}
+      >
+        {silver}
+      </span>
+      <span
+        className={cn(
+          "text-base font-black",
+          isPodium ? "text-amber-800" : "text-amber-300",
+        )}
+      >
+        {bronze}
+      </span>
     </motion.div>
   );
 };
@@ -500,41 +572,23 @@ export const ScoreGapHint = ({ scores }: { scores: Scores }) => {
 };
 
 export const EndGameButton = () => {
-  const { loading, lobby, cancelGame } = useLobbyHost();
-  const [showEndDialog, setShowEndDialog] = useState(false);
+  const { lobby, cancelGame } = useLobbyHost();
+  const { showAlert } = useAlert();
+
   return (
-    <>
-      <Fbutton variant="secondary" onClick={() => setShowEndDialog(true)}>
-        End Game
-      </Fbutton>
-      <AlertDialog open={showEndDialog} onOpenChange={setShowEndDialog}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>End game now?</AlertDialogTitle>
-            <AlertDialogDescription>
-              The current game in {lobby?.name ?? "this lobby"} will end
-              immediately and everyone will return to the lobby.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel
-              onClick={() => setShowEndDialog(false)}
-              className={fbuttonVariants({ variant: "outline" })}
-            >
-              Keep playing
-            </AlertDialogCancel>
-            <AlertDialogAction
-              className={fbuttonVariants({ variant: "default" })}
-              onClick={() => {
-                cancelGame();
-                setShowEndDialog(false);
-              }}
-            >
-              End Game
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
-    </>
+    <Fbutton
+      variant="secondary"
+      onClick={() =>
+        showAlert({
+          title: "End game now?",
+          description: `The current game in ${lobby?.name ?? "this lobby"} will end immediately and everyone will return to the lobby.`,
+          confirmText: "End Game",
+          closeText: "Keep playing",
+          onConfirm: cancelGame,
+        })
+      }
+    >
+      End Game
+    </Fbutton>
   );
 };

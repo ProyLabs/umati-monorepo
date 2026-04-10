@@ -1,29 +1,28 @@
 "use client";
 
 import { useAuth } from "@/providers/auth-provider";
-import { RiGroup3Fill, RiGroup3Line, RiHeart3Line, RiMedalFill } from "@remixicon/react";
+import { RiGroup3Fill, RiHeart3Line } from "@remixicon/react";
+import { Games, Player, RoomState } from "@umati/ws";
 import { cva, VariantProps } from "class-variance-authority";
 import {
-  Maximize2Icon,
   MaximizeIcon,
   MinimizeIcon,
   UserRoundX,
-  Volume2,
-  VolumeX,
   WifiHighIcon,
   WifiIcon,
   WifiLowIcon,
 } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
-import { useTheme } from "next-themes";
 import Image from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { ReactNode, useEffect, useMemo, useRef, useState } from "react";
 import useClickOutside from "../../hooks/use-click-outside";
 import { useClipboard } from "../../hooks/use-clipboard";
 import { cn, getRandomAvatarUrl } from "../../lib/utils";
 import { useLobbyHost } from "../../providers/lobby-host-provider";
 import { useLobbyPlayer } from "../../providers/lobby-player-provider";
+import { useAlert } from "../../providers/modal-provider";
 import { useSettings } from "../../providers/settings-provider";
 import {
   Avatar,
@@ -32,16 +31,6 @@ import {
   AvatarImage,
 } from "../ui/avatar";
 import AvatarSelect from "../ui/avatar-select";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "../ui/alert-dialog";
 import { Button } from "../ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "../ui/card";
 import { Fbutton } from "../ui/fancy-button";
@@ -50,64 +39,41 @@ import { Label } from "../ui/label";
 import UmatiLogo, { UmatiFullLogo } from "../ui/logo";
 import { Separator } from "../ui/separator";
 import { QRCode } from "../ui/shadcn-io/qr-code";
-import { Slider } from "../ui/slider";
-import Link from "next/link";
-import { Game, Games, Player, RoomState } from "@umati/ws";
+import GameCarousel from "./game-carousel";
 
 export const CopyLinkButton = () => {
   const { joinUrl } = useLobbyHost();
   const { copied, copy } = useClipboard(2500);
   return (
-    <Fbutton
-      type="button"
-      variant="outline"
-      className="w-full max-w-2xs"
-      onClick={() => {
-        copy(joinUrl);
-      }}
-    >
-      {copied ? "Copied" : "Copy Link"}
-    </Fbutton>
+    <motion.div whileTap={{ scale: 0.95 }} transition={{ duration: 0.15 }}>
+      <Fbutton
+        type="button"
+        variant="outline"
+        size="sm"
+        className="w-full max-w-2xs"
+        onClick={() => {
+          copy(joinUrl);
+        }}
+      >
+        <motion.span
+          key={copied ? "copied" : "copy"}
+          initial={{ opacity: 0, y: -8 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 8 }}
+          transition={{ duration: 0.2 }}
+        >
+          {copied ? "Copied" : "Copy Link"}
+        </motion.span>
+      </Fbutton>
+    </motion.div>
   );
 };
 
 export const SettingsBar = () => {
-  const {
-    volume,
-    musicOn,
-    fullscreen,
-    toggleMusic,
-    toggleFullscreen,
-    setVolume,
-  } = useSettings();
-
-  const { theme, setTheme } = useTheme();
-  const [show, setShow] = useState(false);
-  const toggleShow = () => setShow((prev) => !prev);
+  const { fullscreen, toggleFullscreen } = useSettings();
 
   return (
     <div className="flex items-center gap-2 p-2 rounded-2xl bg-foreground/5 w-fit relative h-12">
-      <Button variant="ghost" size="icon" onClick={toggleShow}>
-        <Volume2 className="size-5" />
-      </Button>
-      {/* <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="ghost" size="icon">
-            <Sun className="size-[1.2rem] scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" />
-            <Moon className="absolute size-[1.2rem] scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0" />
-            <span className="sr-only">Toggle theme</span>
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="start">
-          <DropdownMenuLabel>Appearance</DropdownMenuLabel>
-          <DropdownMenuRadioGroup value={theme} onValueChange={setTheme}>
-            <DropdownMenuRadioItem value="light">Light</DropdownMenuRadioItem>
-            <DropdownMenuRadioItem value="dark">Dark</DropdownMenuRadioItem>
-            <DropdownMenuRadioItem value="system">System</DropdownMenuRadioItem>
-          </DropdownMenuRadioGroup>
-        </DropdownMenuContent>
-      </DropdownMenu> */}
-
       <Button
         variant="ghost"
         onClick={toggleFullscreen}
@@ -119,54 +85,34 @@ export const SettingsBar = () => {
           <MaximizeIcon className="size-5" />
         )}
       </Button>
-
-      <AnimatePresence>
-        {show && (
-          <motion.div
-            key="settings-panel"
-            initial={{ opacity: 0, y: 10, scale: 0.95 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 10, scale: 0.95 }}
-            transition={{ duration: 0.2, ease: "easeOut" }}
-            className="bg-foreground/5 w-60 min-h-20 border rounded-2xl absolute bottom-full mb-2 left-0 text-foreground p-3 flex flex-col gap-2 shadow-lg"
-          >
-            <Button
-              variant="ghost"
-              onClick={toggleMusic}
-              className="w-full justify-start !px-2"
-            >
-              {musicOn ? (
-                <Volume2 className="size-5" />
-              ) : (
-                <VolumeX className="size-5" />
-              )}
-              <span>{musicOn ? "Mute " : "Unmute "} Music</span>
-            </Button>
-
-            <div className="flex items-center gap-2 px-2">
-              {volume > 0 ? (
-                <Volume2 className="size-5 !aspect-square" />
-              ) : (
-                <VolumeX className="size-5 !aspect-square" />
-              )}
-              <Slider
-                value={[volume]}
-                onValueChange={(value) => setVolume(value[0])}
-                min={0}
-                max={100}
-                step={1}
-                className="w-full"
-              />
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </div>
   );
 };
 
 export const TryIceBreakers = () => {
   return <Fbutton variant="outline">Try Icebreakers</Fbutton>;
+};
+
+export const LobbySection = ({
+  title,
+  children,
+  className,
+}: {
+  title: string;
+  children: ReactNode;
+  className?: string;
+}) => {
+  return (
+    <div
+      className={cn(
+        "bg-foreground/5 w-full rounded-2xl p-4 flex flex-col",
+        className,
+      )}
+    >
+      <p className="text-2xl font-bold mb-4">{title}</p>
+      {children}
+    </div>
+  );
 };
 
 export const Latency = ({ ms }: { ms: number }) => {
@@ -187,22 +133,22 @@ export const Latency = ({ ms }: { ms: number }) => {
 export const BeforeWeBegin = ({dark}: {dark?: boolean}) => {
   const { startGame, cancelGame, game } = useLobbyHost();
 
-  const instructions = useMemo(() => Games.find(g => g.id === game?.type)?.instructions, [game]);
-  console.log("🚀 ~ BeforeWeBegin ~ instructions:", instructions)
+  const instructions = useMemo(
+    () => Games.find((g) => g.id === game?.type)?.instructions,
+    [game],
+  );
 
   return (
-    <div className={"max-w-screen-2xl mx-auto w-full py-4 flex flex-col gap-8 px-4 items-center justify-center h-full"}>
+    <div
+      className={
+        "max-w-screen-2xl mx-auto w-full py-4 flex flex-col gap-8 px-4 items-center justify-center h-full"
+      }
+    >
       <h3 className="text-5xl font-bold text-center">How to Play</h3>
-      {/* <ul className="text-3xl font-semibold list-decimal list-inside max-w-2xl mx-auto py-24 space-y-4">
-        <p>Some instructions...</p>
-        <li className="">
-          Ensure this screen is being shared on Zoom (or others) or a TV
-        </li>
-        <li className="">Questions will appear on this screen!</li>
-        <li className="">Answer using the device you've joined with!</li>
-        <li className="">The faster you answer, the more points you'll get!</li>
-      </ul> */}
-      <div className="rules" dangerouslySetInnerHTML={{__html: instructions!}}></div>
+      <div
+        className="rules"
+        dangerouslySetInnerHTML={{ __html: instructions! }}
+      ></div>
       <Fbutton
         className="max-w-xs mx-auto w-full"
         variant={dark ? "dark" : "secondary"}
@@ -212,7 +158,7 @@ export const BeforeWeBegin = ({dark}: {dark?: boolean}) => {
       </Fbutton>
       <Fbutton
         size="sm"
-        variant={dark ? "dark-outline":"outline"}
+        variant={dark ? "dark-outline" : "outline"}
         className="max-w-xs mx-auto w-full"
         onClick={cancelGame}
       >
@@ -223,21 +169,23 @@ export const BeforeWeBegin = ({dark}: {dark?: boolean}) => {
 };
 
 export const HostLobbyFooter = () => {
-  const { loading, uiState, closeLobby } = useLobbyHost();
+  const { closeLobby } = useLobbyHost();
   return (
     <div className="fixed bottom-0 px-4 md:px-8 py-4 w-screen">
       <div className="flex items-center justify-between w-full gap-3">
         <div className="flex-1 flex items-center justify-start gap-3 md:gap-4 min-w-0">
           <SettingsBar />
-          {/* <Latency ms={34} /> */}
-          {!loading && uiState === "LOBBY" && (
-            <Fbutton variant="default" className="w-full max-w-40 md:max-w-60" onClick={closeLobby}>
-              Close Lobby
-            </Fbutton>
-          )}
+          <Fbutton
+            size="sm"
+            variant="outline"
+            className="max-w-xs mx-auto w-full"
+            onClick={closeLobby}
+          >
+            Close Lobby
+          </Fbutton>
         </div>
         <div className="flex items-center justify-end gap-2 md:gap-4">
-          <UmatiFullLogo className="w-32 text-foreground hidden md:block" />
+          <UmatiFullLogo className="w-24 text-foreground hidden md:block" />
           <UmatiLogo className="w-8 text-foreground block md:hidden" />
         </div>
       </div>
@@ -246,9 +194,60 @@ export const HostLobbyFooter = () => {
 };
 
 export const LobbyTitle = () => {
-  const { lobby } = useLobbyHost();
+  const { lobby, joinUrl } = useLobbyHost();
   return (
-    <h1 className="text-4xl md:text-6xl text-center font-bold w-full md:w-4/5">{lobby?.name}</h1>
+    <section className="relative isolate w-full overflow-hidden rounded-[2rem] border border-white/12 bg-[linear-gradient(135deg,rgba(255,255,255,0.09),rgba(255,255,255,0.03))] px-5 py-5 md:px-6 md:py-6 shadow-[0_24px_80px_rgba(0,0,0,0.28)] backdrop-blur-xl">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,202,40,0.18),transparent_24%),radial-gradient(circle_at_top_right,rgba(77,199,255,0.16),transparent_28%),radial-gradient(circle_at_bottom,rgba(239,62,70,0.14),transparent_34%)]" />
+      <div className="absolute -left-12 top-0 h-36 w-36 rounded-full bg-[var(--umati-yellow)]/12 blur-3xl" />
+      <div className="absolute right-0 top-0 h-40 w-40 translate-x-1/4 -translate-y-1/4 rounded-full bg-[var(--umati-sky)]/12 blur-3xl" />
+
+      <div className="relative z-10 flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
+        <div className="max-w-3xl">
+          <div className="mb-3 inline-flex w-fit items-center gap-2 rounded-full border border-white/15 bg-black/20 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.22em] text-white/75">
+            <span className="inline-block size-2 rounded-full bg-[var(--umati-yellow)] shadow-[0_0_18px_var(--umati-yellow)]" />
+            Live Lobby
+          </div>
+          <h1 className="max-w-4xl text-4xl font-black tracking-tight text-white md:text-6xl">
+            {lobby?.name}
+          </h1>
+          <p className="mt-3 max-w-2xl text-sm leading-6 text-white/70 md:text-[15px]">
+            Your party room is live. Share the code, fill the room, and kick off
+            the next crowd favorite.
+          </p>
+        </div>
+
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-stretch">
+          <div className="rounded-[1.5rem] border border-white/12 bg-black/20 px-4 py-4 backdrop-blur-md">
+            <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-white/60">
+              Join by code
+            </p>
+            <p className="mt-2 text-4xl font-black tracking-[0.08em] text-white md:text-5xl">
+              {lobby?.code}
+            </p>
+            <p className="mt-2 text-sm font-semibold text-white/65">
+              Fastest way into the room
+            </p>
+          </div>
+
+          <div className="flex items-center gap-3 rounded-[1.5rem] border border-white/12 bg-white/8 px-4 py-4 backdrop-blur-md">
+            <div className="rounded-[1.25rem] border border-white/12 bg-white p-2 shadow-sm">
+              <QRCode
+                className="size-22 rounded-lg bg-white p-1"
+                data={joinUrl}
+              />
+            </div>
+            <div className="max-w-36">
+              <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-white/60">
+                Scan to join
+              </p>
+              <p className="mt-2 text-sm font-semibold text-white">
+                Let guests hop in with their phone camera.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
   );
 };
 
@@ -264,36 +263,21 @@ export const JoinLobbyCode = ({
     <div
       className={cn(
         "bg-foreground/5 w-full  rounded-2xl flex flex-col items-center p-4 h-full group relative",
-        className
+        className,
       )}
     >
       <p className="text-2xl font-bold mb-4 w-full">🔗 Join the party!</p>
 
-      {vertical && (
-        <div className="absolute top-4 right-4">
-          <Button
-            variant="ghost"
-            size="icon"
-            onClick={() => changeUiState("INIT")}
-          >
-            {" "}
-            <Maximize2Icon />
-          </Button>
-        </div>
-      )}
-      <div
-        data-vertical={vertical}
-        className="flex flex-col sm:flex-row gap-4 items-center w-full data-[vertical='true']:flex-col my-auto data-[vertical='true']:gap-8 md:mb-8"
-      >
+      <div className="flex flex-col gap-4 items-center w-full mb-8">
         <div className="flex flex-col items-center gap-2 flex-1 w-full">
-          <p className="text-lg font-semibold">Scan to join</p>
+          <p className="text-sm font-semibold">Scan to join</p>
           <QRCode
             className="size-36 md:size-48 rounded border bg-white p-4 shadow-xs"
             data={joinUrl}
           />
         </div>
 
-        <Separator orientation={vertical ? "horizontal" : "vertical"} />
+        <Separator orientation="horizontal" />
 
         <div className="flex flex-col gap-2 flex-1 items-center">
           <p className="text-lg font-semibold">Or Join by Code</p>
@@ -307,7 +291,7 @@ export const JoinLobbyCode = ({
 
 export const WaitingForPlayers = ({ className }: { className?: string }) => {
   const { players, lobby, uiState, kickPlayer } = useLobbyHost();
-  const [playerToKick, setPlayerToKick] = useState<Player | null>(null);
+  const { showAlert } = useAlert();
   const [contextMenu, setContextMenu] = useState<{
     player: Player;
     x: number;
@@ -317,78 +301,169 @@ export const WaitingForPlayers = ({ className }: { className?: string }) => {
 
   useClickOutside(contextMenuRef, () => setContextMenu(null));
 
+  const lobbyReady = players.length === lobby?.maxPlayers;
+  const waitingForMorePlayers = players.length < (lobby?.maxPlayers ?? 0) / 2;
+
   return (
     <>
-      <div
+      <motion.div
         className={cn(
-          "bg-foreground/5 w-full aspect-video rounded-2xl h-full p-4 flex flex-col flex-1 overflow-hidden",
+          "relative isolate flex h-full w-full flex-1 flex-col overflow-hidden rounded-[1.75rem] border border-white/12 bg-[linear-gradient(180deg,rgba(255,255,255,0.08),rgba(255,255,255,0.03))] p-4 shadow-[0_24px_80px_rgba(0,0,0,0.24)]",
           className,
         )}
+        initial={{ opacity: 0, y: 12 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, ease: [0.25, 1, 0.5, 1] }}
       >
-        <p className="font-bold text-2xl text-center mb-4">
-          {players.length} / {lobby?.maxPlayers} Players
-        </p>
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(77,199,255,0.14),transparent_26%),radial-gradient(circle_at_top_right,rgba(255,202,40,0.14),transparent_28%),radial-gradient(circle_at_bottom,rgba(106,59,255,0.14),transparent_34%)]" />
 
-        <div className="relative w-full h-fit overflow-y-auto rounded-xl flex flex-wrap gap-3 justify-center">
-          {players.slice(0, 24).map((player) => (
-            <div key={player.id} className="flex flex-col w-fit items-center">
-              <button
-                type="button"
-                className="rounded-full outline-hidden"
-                aria-label={`${player.displayName} actions`}
-                onContextMenu={(event) => {
-                  event.preventDefault();
-                  setContextMenu({
-                    player,
-                    x: event.clientX,
-                    y: event.clientY,
-                  });
-                }}
-              >
-                <Avatar
-                  className={cn(
-                    "ring-2 ring-background shadow-md hover:scale-110 transition-transform",
-                    {
-                      "size-16": uiState === RoomState.INIT,
-                      "size-12": uiState === RoomState.LOBBY,
-                    },
-                  )}
-                >
-                  <AvatarImage src={player.avatar} alt={player.displayName} />
-                  <AvatarFallback>{player.displayName?.[0]}</AvatarFallback>
-                </Avatar>
-              </button>
-              <p
-                className={cn("text-center font-semibold", {
-                  "text-sm mt-1": uiState === RoomState.INIT,
-                  "text-xs mt-0.5": uiState === RoomState.LOBBY,
-                })}
-              >
-                {player.displayName}
+        <motion.div
+          className="relative z-10 mb-4 flex flex-col gap-3 md:flex-row md:items-end md:justify-between"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.2, duration: 0.4 }}
+        >
+          <div className="space-y-2">
+            <div>
+              <h3 className="text-lg font-black tracking-tight text-white md:text-xl">
+                Players Ready
+              </h3>
+              <p className="text-sm leading-6 text-white/70 md:text-[15px]">
+                Round up the crew, watch the room fill, and keep the energy
+                high.
               </p>
             </div>
-          ))}
-          {players.length > 24 && (
-            <AvatarGroupCount
-              className={cn(
-                "ring-2 ring-background shadow-md hover:scale-110 transition-transform",
-                {
-                  "size-16": uiState === RoomState.INIT,
-                  "size-12": uiState === RoomState.LOBBY,
-                },
-              )}
-            >
-              +{Math.max(players.length - 24, 0)}
-            </AvatarGroupCount>
-          )}
+          </div>
+
+          <motion.div
+            className="flex items-center gap-3 self-start rounded-[1.25rem] border border-white/12 bg-white/6 px-3 py-2 md:self-auto"
+            animate={
+              lobbyReady ? { boxShadow: "0 0 20px rgba(255,202,40,0.3)" } : {}
+            }
+            transition={{
+              duration: 0.6,
+              repeat: lobbyReady ? Infinity : 0,
+              repeatType: "reverse",
+            }}
+          >
+            <div className="leading-tight">
+              <motion.p
+                className="text-lg font-black text-white flex-1 whitespace-nowrap"
+                key={players.length}
+                initial={{ scale: 1.1 }}
+                animate={{ scale: 1 }}
+                transition={{ duration: 0.2, ease: [0.25, 1, 0.5, 1] }}
+              >
+                {players.length} / {lobby?.maxPlayers}
+              </motion.p>
+            </div>
+          </motion.div>
+        </motion.div>
+
+        <div className="relative z-10 flex-1 overflow-hidden rounded-[1.5rem] border border-white/10 bg-black/15 p-4">
+          <div className="relative flex h-full w-full flex-wrap content-start justify-center gap-3 overflow-y-auto rounded-xl scrollbar-hide">
+            <AnimatePresence mode="popLayout">
+              {players.slice(0, 24).map((player, idx) => (
+                <motion.div
+                  key={player.id}
+                  className="flex flex-col w-fit items-center"
+                  initial={{ opacity: 0, scale: 0.8 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.8 }}
+                  transition={{
+                    duration: 0.3,
+                    delay: Math.min(idx * 0.08, 0.6),
+                    ease: [0.25, 1, 0.5, 1],
+                  }}
+                >
+                  <motion.button
+                    type="button"
+                    className="rounded-full outline-hidden"
+                    aria-label={`${player.displayName} actions`}
+                    whileHover={{ scale: 1.08 }}
+                    whileTap={{ scale: 0.95 }}
+                    transition={{ duration: 0.2, ease: [0.25, 1, 0.5, 1] }}
+                    onContextMenu={(event) => {
+                      event.preventDefault();
+                      setContextMenu({
+                        player,
+                        x: event.clientX,
+                        y: event.clientY,
+                      });
+                    }}
+                  >
+                    <Avatar
+                      className={cn("ring-2 ring-background shadow-md", {
+                        "size-16": uiState === RoomState.INIT,
+                        "size-12": uiState === RoomState.LOBBY,
+                      })}
+                    >
+                      <AvatarImage
+                        src={player.avatar}
+                        alt={player.displayName}
+                      />
+                      <AvatarFallback>{player.displayName?.[0]}</AvatarFallback>
+                    </Avatar>
+                  </motion.button>
+                  <motion.p
+                    className={cn("text-center font-semibold", {
+                      "mt-1 text-sm": uiState === RoomState.INIT,
+                      "mt-0.5 text-xs": uiState === RoomState.LOBBY,
+                    })}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{
+                      delay: Math.min(idx * 0.08 + 0.15, 0.75),
+                      duration: 0.2,
+                    }}
+                  >
+                    {player.displayName}
+                  </motion.p>
+                </motion.div>
+              ))}
+            </AnimatePresence>
+            {players.length > 24 && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{
+                  duration: 0.3,
+                  delay: Math.min(24 * 0.08, 0.6),
+                  ease: [0.25, 1, 0.5, 1],
+                }}
+              >
+                <AvatarGroupCount
+                  className={cn("ring-2 ring-background shadow-md", {
+                    "size-16": uiState === RoomState.INIT,
+                    "size-12": uiState === RoomState.LOBBY,
+                  })}
+                >
+                  +{Math.max(players.length - 24, 0)}
+                </AvatarGroupCount>
+              </motion.div>
+            )}
+          </div>
         </div>
-        {players.length < lobby?.maxPlayers! / 2 && (
-          <p className="m-auto animate-pulse">Waiting for players...</p>
+        {waitingForMorePlayers && (
+          <motion.p
+            className="relative z-10 mt-4 text-center font-semibold text-white/75"
+            animate={{ opacity: [0.5, 1, 0.5] }}
+            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+          >
+            Waiting for players to roll in...
+          </motion.p>
         )}
-        {players.length === lobby?.maxPlayers! && uiState === RoomState.INIT && (
-          <p className="m-auto">Everyone is here 🥳</p>
+        {lobbyReady && uiState === RoomState.INIT && (
+          <motion.p
+            className="relative z-10 mt-4 text-center font-semibold text-white"
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.4, ease: [0.25, 1, 0.5, 1] }}
+          >
+            Everyone is here. Let the chaos begin.
+          </motion.p>
         )}
-      </div>
+      </motion.div>
       {contextMenu && (
         <div
           ref={contextMenuRef}
@@ -399,8 +474,23 @@ export const WaitingForPlayers = ({ className }: { className?: string }) => {
             type="button"
             className="flex w-full items-center gap-2 rounded-sm px-2 py-1.5 text-sm text-destructive transition hover:bg-destructive/10"
             onClick={() => {
-              setPlayerToKick(contextMenu.player);
+              const playerToKick = contextMenu.player;
               setContextMenu(null);
+
+              showAlert({
+                title: "Kick player?",
+                description: playerToKick
+                  ? `${playerToKick.displayName} will be removed from the lobby immediately.`
+                  : "This player will be removed from the lobby immediately.",
+                confirmText: "Kick player",
+                closeText: "Cancel",
+                onConfirm: () => {
+                  kickPlayer(
+                    playerToKick.id,
+                    "The host removed you from the lobby.",
+                  );
+                },
+              });
             }}
           >
             <UserRoundX className="size-4" />
@@ -408,44 +498,12 @@ export const WaitingForPlayers = ({ className }: { className?: string }) => {
           </button>
         </div>
       )}
-      <AlertDialog
-        open={!!playerToKick}
-        onOpenChange={(open) => {
-          if (!open) setPlayerToKick(null);
-        }}
-      >
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Kick player?</AlertDialogTitle>
-            <AlertDialogDescription>
-              {playerToKick
-                ? `${playerToKick.displayName} will be removed from the lobby immediately.`
-                : "This player will be removed from the lobby immediately."}
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel onClick={() => setPlayerToKick(null)}>
-              Cancel
-            </AlertDialogCancel>
-            <AlertDialogAction
-              className="bg-[#FE566B] text-white hover:bg-[#e64c61]"
-              onClick={() => {
-                if (!playerToKick) return;
-                kickPlayer(playerToKick.id, "The host removed you from the lobby.");
-                setPlayerToKick(null);
-              }}
-            >
-              Kick player
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
-      </AlertDialog>
     </>
   );
 };
 
 const gameCardVariants = cva(
-  "border border-foreground/20 rounded-3xl p-4 bg-gradient-to-b flex flex-col shadow-xl w-64 h-full  transition-all duration-300 ease-in-out relative overflow-clip cursor-pointer hover:brightness-90 active:brightness-110",
+  "group border border-white/20 rounded-[2rem] p-5 bg-gradient-to-b flex flex-col shadow-xl size-48 transition-all duration-300 ease-out relative overflow-hidden cursor-pointer text-white hover:-translate-y-1 hover:shadow-2xl active:scale-[0.99]",
   {
     variants: {
       variant: {
@@ -456,9 +514,10 @@ const gameCardVariants = cva(
         purple: "from-[#9856FE] to-[var(--umati-purple)] ",
         lime: "from-lime-500 to-green-600",
         orange: "from-orange-400 to-orange-600",
+        yellow: "from-yellow-400 to-yellow-600 text-black",
       },
     },
-  }
+  },
 );
 
 export function GameCard({
@@ -468,31 +527,114 @@ export function GameCard({
   ...props
 }: React.ComponentProps<"div"> &
   VariantProps<typeof gameCardVariants> & {
-    game: typeof Games[0]
+    game: (typeof Games)[0];
   }) {
-  return (
-    <div className={cn(gameCardVariants({ variant, className }))} {...props}>
-      <div className="flex flex-col">
-        <h2 className="text-lg font-bold ">{game.title}</h2>
-        <p className="text-sm">{game?.description}</p>
-      </div>
-      {
-        <Image
-          src={game?.src!}
-          alt="Game Image"
-          width={80}
-          height={80}
-          className="ml-auto"
-        />
-      }
+  const usesDarkText = variant === "aqua" || variant === "yellow";
 
-      <div className="bg-black/30 rounded-md flex items-center justify-center p-1 gap-1 absolute bottom-4 left-4">
-        <RiGroup3Fill size={16} className="" />
-        <span className="mr-1 font-semibold text-xs">
-          {game?.min} - {game?.max ?? 60}
+  return (
+    <motion.div
+      className={cn(gameCardVariants({ variant, className }))}
+      whileHover={{ y: -4, boxShadow: "0 24px 48px rgba(0,0,0,0.32)" }}
+      whileTap={{ scale: 0.98 }}
+      transition={{ duration: 0.3, ease: [0.25, 1, 0.5, 1] }}
+      {...props}
+    >
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.3),transparent_35%),radial-gradient(circle_at_bottom_left,rgba(0,0,0,0.18),transparent_30%)]" />
+      <motion.div
+        className="absolute inset-x-5 top-4 flex items-center justify-between gap-3 z-10"
+        initial={{ opacity: 0.8 }}
+        whileHover={{ opacity: 1 }}
+        transition={{ duration: 0.2 }}
+      >
+        <span
+          className={cn(
+            "rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] backdrop-blur-sm",
+            usesDarkText
+              ? "border border-black/15 bg-black/10 text-black"
+              : "border border-white/25 bg-white/15 text-white",
+          )}
+        >
+          {game.playable ? "Ready to play" : "Coming soon"}
         </span>
+      </motion.div>
+
+      <div className="relative z-10 mt-11 flex h-full flex-col">
+        <div className="mb-4 flex items-start justify-between gap-4">
+          <div className="max-w-[11rem]">
+            <h2 className="text-2xl font-black leading-tight tracking-tight">
+              {game.title}
+            </h2>
+            <p
+              className={cn(
+                "mt-2 text-sm leading-5",
+                usesDarkText ? "text-black/75" : "text-white/80",
+              )}
+            >
+              {game?.description ??
+                "Fast-paced party game built for shared screens and loud rooms."}
+            </p>
+          </div>
+
+          {game?.src && (
+            <motion.div
+              className="relative shrink-0"
+              whileHover={{ scale: 1.05 }}
+              transition={{ duration: 0.2 }}
+            >
+              <motion.div
+                className="absolute inset-0 scale-110 rounded-full bg-white/25 blur-2xl"
+                initial={{ opacity: 0.6 }}
+                whileHover={{ opacity: 0.9 }}
+                transition={{ duration: 0.3 }}
+              />
+              <div className="relative flex size-22 items-center justify-center rounded-[1.75rem] border border-white/20 bg-white/12 backdrop-blur-md shadow-lg">
+                <Image
+                  src={game.src}
+                  alt={game.title}
+                  width={96}
+                  height={96}
+                  className="size-16 object-contain drop-shadow-[0_8px_16px_rgba(0,0,0,0.28)]"
+                />
+              </div>
+            </motion.div>
+          )}
+        </div>
+
+        <div className="mt-auto flex items-end justify-between gap-3">
+          <div
+            className={cn(
+              "rounded-2xl px-3 py-2 backdrop-blur-sm",
+              usesDarkText
+                ? "border border-black/15 bg-black/10 text-black"
+                : "border border-white/15 bg-black/20 text-white",
+            )}
+          >
+            <div className="flex items-center gap-2 text-sm font-semibold">
+              <RiGroup3Fill size={16} />
+              <span>{game?.min}+ players</span>
+            </div>
+          </div>
+
+          {game.playable && (
+            <motion.div
+              className="text-right"
+              initial={{ opacity: 0.7 }}
+              whileHover={{ opacity: 1 }}
+              transition={{ duration: 0.2 }}
+            >
+              <p
+                className={cn(
+                  "text-sm font-semibold",
+                  usesDarkText ? "text-black/85" : "text-white/90",
+                )}
+              >
+                Tap to configure
+              </p>
+            </motion.div>
+          )}
+        </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
 
@@ -860,5 +1002,46 @@ export const DesktopOnly = () => {
         </Link>
       </div>
     </div>
+  );
+};
+
+
+export const GameShelf = ({ className }: { className?: string }) => {
+  return (
+    <section
+      className={cn(
+        "relative isolate h-full w-full overflow-clip overflow-x-visible rounded-[2rem] border border-white/12 bg-[linear-gradient(135deg,rgba(255,255,255,0.09),rgba(255,255,255,0.03))] p-4 md:p-5 shadow-[0_24px_80px_rgba(0,0,0,0.28)] backdrop-blur-xl",
+        className,
+      )}
+    >
+      <div className="h-full w-full absolute inset-0 overflow-clip rounded-[2rem] ">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,202,40,0.16),transparent_28%),radial-gradient(circle_at_top_right,rgba(77,199,255,0.16),transparent_32%),radial-gradient(circle_at_bottom,rgba(106,59,255,0.16),transparent_34%)]" />
+        <div className="absolute -left-10 top-8 h-28 w-28 rounded-full bg-[var(--umati-yellow)]/12 blur-3xl" />
+        <div className="absolute right-0 top-0 h-36 w-36 translate-x-1/4 -translate-y-1/4 rounded-full bg-[var(--umati-sky)]/12 blur-3xl" />
+      </div>
+      <div className="relative z-10 flex flex-col gap-4">
+        <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+          <div className="space-y-2">
+            <div className="space-y-1">
+              <h2 className="text-2xl font-black tracking-tight text-white md:text-3xl">
+                Game Shelf
+              </h2>
+              <p className="max-w-2xl text-sm leading-6 text-white/70 md:text-[15px]">
+                Queue up the next crowd-pleaser and keep the room moving.
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2 self-start rounded-2xl border border-white/12 bg-white/6 px-3 py-2 text-xs font-semibold text-white/75 md:self-auto">
+            <span className="inline-flex size-8 items-center justify-center rounded-xl bg-white/10 text-base">
+              🎉
+            </span>
+            <span>Pick a game to start the party</span>
+          </div>
+        </div>
+
+        <GameCarousel />
+      </div>
+    </section>
   );
 };

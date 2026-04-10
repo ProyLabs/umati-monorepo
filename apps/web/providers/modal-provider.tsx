@@ -9,6 +9,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { fbuttonVariants } from "@/components/ui/fancy-button";
 
 type ModalConfig = {
   type?: "default" | "success";
@@ -75,39 +76,61 @@ export const ModalProvider = ({ children }: { children: React.ReactNode }) => {
 
 export const useModal = () => useContext(ModalContext);
 
-type AlertDialogOptions = {
+type AlertOptions = {
   title: string;
   description?: string;
-  actionLabel?: string;
-  cancelLabel?: string;
-  onAction?: () => void | Promise<void>;
+  confirmText?: string;
+  closeText?: string;
+  onConfirm?: () => void | Promise<void>;
+  onClose?: () => void;
 };
 
-type AlertDialogContextType = {
-  alertDialog: (options: AlertDialogOptions) => void;
+type AlertDialogEntry = AlertOptions & { id: number };
+
+type AlertContextType = {
+  showAlert: (options: AlertOptions) => number;
+  closeAlert: () => void;
 };
 
-const AlertDialogContext = createContext<AlertDialogContextType | null>(null);
+const AlertDialogContext = createContext<AlertContextType | null>(null);
 
 export function AlertDialogProvider({ children }: { children: React.ReactNode }) {
-  const [dialogs, setDialogs] = useState<
-    Array<AlertDialogOptions & { id: number }>
-  >([]);
+  const [dialogs, setDialogs] = useState<AlertDialogEntry[]>([]);
 
-  const alertDialog = useCallback((options: AlertDialogOptions) => {
-    setDialogs((prev) => [...prev, { ...options, id: Date.now() }]);
+  const closeDialogById = useCallback((id: number) => {
+    setDialogs((prev) => prev.filter((dialog) => dialog.id !== id));
   }, []);
 
-  const closeDialog = (id: number) => {
-    setDialogs((prev) => prev.filter((d) => d.id !== id));
-  };
+  const showAlert = useCallback((options: AlertOptions) => {
+    const id = Date.now() + Math.floor(Math.random() * 1000);
+    setDialogs((prev) => [...prev, { ...options, id }]);
+    return id;
+  }, []);
+
+  const closeAlert = useCallback(() => {
+    setDialogs((prev) => prev.slice(0, -1));
+  }, []);
+
+  const handleClose = useCallback(
+    (dialog: AlertDialogEntry) => {
+      dialog.onClose?.();
+      closeDialogById(dialog.id);
+    },
+    [closeDialogById],
+  );
 
   return (
-    <AlertDialogContext.Provider value={{ alertDialog }}>
+    <AlertDialogContext.Provider value={{ showAlert, closeAlert }}>
       {children}
 
       {dialogs.map((dialog) => (
-        <AlertDialog open key={dialog.id}>
+        <AlertDialog
+          open
+          key={dialog.id}
+          onOpenChange={(open) => {
+            if (!open) handleClose(dialog);
+          }}
+        >
           <AlertDialogContent>
             <AlertDialogHeader>
               <AlertDialogTitle>{dialog.title}</AlertDialogTitle>
@@ -119,17 +142,21 @@ export function AlertDialogProvider({ children }: { children: React.ReactNode })
             </AlertDialogHeader>
 
             <AlertDialogFooter>
-              <AlertDialogCancel onClick={() => closeDialog(dialog.id)}>
-                {dialog.cancelLabel ?? "Cancel"}
+              <AlertDialogCancel
+                className={fbuttonVariants({ variant: "outline" })}
+                onClick={() => handleClose(dialog)}
+              >
+                {dialog.closeText ?? "Cancel"}
               </AlertDialogCancel>
 
               <AlertDialogAction
+                className={fbuttonVariants({ variant: "default" })}
                 onClick={async () => {
-                  await dialog.onAction?.();
-                  closeDialog(dialog.id);
+                  await dialog.onConfirm?.();
+                  closeDialogById(dialog.id);
                 }}
               >
-                {dialog.actionLabel ?? "OK"}
+                {dialog.confirmText ?? "OK"}
               </AlertDialogAction>
             </AlertDialogFooter>
           </AlertDialogContent>
@@ -139,11 +166,31 @@ export function AlertDialogProvider({ children }: { children: React.ReactNode })
   );
 }
 
-export function useAlertDialog() {
+export function useAlert() {
   const ctx = useContext(AlertDialogContext);
   if (!ctx) {
-    throw new Error("useAlertDialog must be used within <AlertDialogProvider>");
+    throw new Error("useAlert must be used within <AlertDialogProvider>");
   }
-  return ctx.alertDialog;
+  return ctx;
 }
 
+export function useAlertDialog() {
+  const { showAlert } = useAlert();
+  return useCallback(
+    (options: {
+      title: string;
+      description?: string;
+      actionLabel?: string;
+      cancelLabel?: string;
+      onAction?: () => void | Promise<void>;
+    }) =>
+      showAlert({
+        title: options.title,
+        description: options.description,
+        confirmText: options.actionLabel,
+        closeText: options.cancelLabel,
+        onConfirm: options.onAction,
+      }),
+    [showAlert],
+  );
+}

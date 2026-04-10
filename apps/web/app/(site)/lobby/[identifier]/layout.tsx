@@ -48,27 +48,8 @@ export default function LobbyLayout({
           <HostLobbyFooter />
           <PlayerReactionLayer />
           <PlayerJoinAnimationLayer />
-          {isMobile && isPortrait && (
-            <div className="absolute inset-0 z-[60] bg-black/90 backdrop-blur-md flex flex-col items-center justify-center text-center px-6 text-white">
-              <div className="rounded-full border border-white/20 bg-white/10 p-5 mb-6">
-                <div className="relative">
-                  <Smartphone className="size-10" />
-                  <RotateCw className="size-5 absolute -right-3 -top-3" />
-                </div>
-              </div>
-              <h1 className="text-3xl font-bold mb-3">Rotate Your Screen</h1>
-              <p className="text-base max-w-sm mx-auto mb-8 text-white/80">
-                Hosting works on mobile in landscape mode. Turn your phone sideways to continue using the host dashboard.
-              </p>
-              <Link href="/">
-                <Fbutton variant="secondary" className="min-w-44">
-                  Go Back
-                </Fbutton>
-              </Link>
-            </div>
-          )}
         </section>
-        <BubbleBackground className="absolute inset-0 flex items-center justify-center rounded-xl !z-0" />
+        <Particles className="absolute inset-0 flex items-center justify-center rounded-xl !z-0" />
       </LobbyHostProvider>
     );
   }

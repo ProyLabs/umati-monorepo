@@ -103,6 +103,7 @@ export const GameType = {
   HM: "herdmentality",
   CHAMELEON: "chameleon",
   JL: "jaroflies",
+  FF: "friendfacts",
 } as const;
 
 export type GameType = (typeof GameType)[keyof typeof GameType];

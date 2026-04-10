@@ -266,11 +266,13 @@ export const RoundHost = () => {
               <span className="font-bold ">{lobby?.name}</span> Code:{" "}
               {lobby?.code}
             </p>
-            <p className="text-lg font-semibold">{gameTitle}</p>
             <p className="text-xl font-bold">
               Round {round?.number} of {round?.totalRounds}
             </p>
           </div>
+
+          <p className="text-lg font-semibold">{gameTitle}</p>
+
           <div className="flex items-center gap-2">
             {state === "ROUND_END" && (
               <Fbutton

@@ -10,16 +10,25 @@ type Game = {
   min?: number;
   max?: number;
   instructions?: string;
+  playable?: boolean;
 };
 
 export const Games: Game[] = [
-  // {id: "drawit", title: 'Draw It!', color: 'purple', className: 'from-[#9856FE] to-[var(--umati-purple)]', src: 'https://img.icons8.com/?size=400&id=13370&format=png&color=000000' },
+  {
+    id: "drawit",
+    title: "Draw It!",
+    color: "blue",
+    className: "from-[var(--umati-blue)] to-[#446BF5]",
+    src: "https://img.icons8.com/?size=400&id=13370&format=png&color=000000",
+    min: 3,
+    playable: false,
+  },
   {
     id: "quizzer",
     title: "Quizzer",
     color: "orange",
     className: "from-orange-400 to-orange-600",
-    src: "https://img.icons8.com/?size=100&id=rx6rZTa05YPn&format=png&color=000000",
+    src: "https://img.icons8.com/?size=100&id=rx6rZTa05YPn&format=png&color=FFFFFF",
     min: 1,
     instructions: `
   <ul>
@@ -30,6 +39,7 @@ export const Games: Game[] = [
     <li>Supports both selection questions and true/false.</li>
   </ul>
 `,
+playable: true,
   },
   {
     id: "trivia",
@@ -46,6 +56,7 @@ export const Games: Game[] = [
     <li>The faster you answer, the more points you'll get.</li>
   </ul>
 `,
+playable: true,
   },
   {
     id: "herdmentality",
@@ -62,6 +73,7 @@ export const Games: Game[] = [
     <li>Your goal is to match the majority answer!</li>
     <li>If you're with the herd, you score points. If you're the odd one out, you don’t!</li>
   </ul>`,
+  playable: true,
   },
   {
     id: "chameleon",
@@ -80,22 +92,23 @@ export const Games: Game[] = [
     <li>The Chameleon wins if they blend in or guess the secret word!</li>
   </ul>
 `,
+playable: true,
   },
-  // {
-  //   id: "jaroflies",
-  //   title: "Jar of Lies",
-  //   color: "purple",
-  //   className: "from-[#9856FE] to-[var(--umati-purple)]",
-  //   src: "https://img.icons8.com/?size=400&id=61211&format=png&color=000000",
-  //   min: 1,
-  // },
+  {
+    id: "jaroflies",
+    title: "Jar of Lies",
+    color: "purple",
+    className: "from-[#9856FE] to-[var(--umati-purple)]",
+    src: "https://img.icons8.com/?size=400&id=61211&format=png&color=000000",
+    min: 1,
+  },
 
-  // {
-  //   id: "drawit",
-  //   title: "Draw It!",
-  //   color: "sky",
-  //   className: "from-[#9856FE] to-[var(--umati-purple)]",
-  //   src: "https://img.icons8.com/?size=400&id=ziAWwQ4GdGVA&format=png&color=000000",
-  //   min: 2,
-  // },
+  {
+    id: "friendfacts",
+    title: "Friend Facts",
+    color: "sky",
+    className: "from-[var(--umati-sky)] to-[#3A6EE4]",
+    src: "https://img.icons8.com/?size=100&id=46204&format=png&color=000000",
+    min: 3,
+  },
 ];

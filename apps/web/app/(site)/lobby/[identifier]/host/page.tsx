@@ -15,11 +15,9 @@ export default function LobbyPage() {
         return <Loading />;
     }
 
-    if(uiState === 'INIT'){
-        return <HostWaitingLobby />
-    } else if(uiState === 'LOBBY'){
-        return <HostLobby />
-    } else if (uiState === 'PLAYING'){
+    if (uiState === "INIT" || uiState === "LOBBY") {
+      return <HostLobby />;
+    } else if (uiState === "PLAYING") {
       return <GameResolverHost />;
     }
 
