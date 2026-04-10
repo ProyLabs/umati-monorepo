@@ -3,6 +3,7 @@ import { GameType, WSEvent, WSPayloads } from "@umati/ws";
 import { RoomManager } from "../lib/room-manager";
 import { logInfo } from "../utils/logger";
 import { GameManager } from "../lib/game-manager";
+import { FriendFactsGame } from "../lib/games/friend-facts";
 
 /** When host setup a new game */
 export async function handleInitGame(
@@ -95,12 +96,37 @@ export function handleCancelGame(ws: WebSocket, payload: WSPayloads[WSEvent.GAME
 
 
 /** When a player answers */
-export async function handleGameAnswer(ws: WebSocket, payload: WSPayloads[WSEvent.TRIVIA_ROUND_ANSWER| WSEvent.HM_ROUND_ANSWER|WSEvent.CH_ROUND_VOTE] ) {
-    const {roomId, playerId, answer} = payload;
+export async function handleGameAnswer(
+  ws: WebSocket,
+  payload: WSPayloads[
+    | WSEvent.TRIVIA_ROUND_ANSWER
+    | WSEvent.HM_ROUND_ANSWER
+    | WSEvent.CH_ROUND_VOTE
+    | WSEvent.FF_ROUND_ANSWER
+  ],
+) {
+    const roomId = payload.roomId;
+    const playerId = payload.playerId;
+    const answer =
+      "answerPlayerId" in payload ? payload.answerPlayerId : payload.answer;
     const room = RoomManager.get(roomId);
     if(!room) return;
     if(!room.game) return;
     GameManager.submitAnswer(room.game.id, playerId, answer);
+}
+
+export async function handleFriendFactsSetupSubmit(
+  ws: WebSocket,
+  payload: WSPayloads[WSEvent.FF_SETUP_SUBMIT],
+) {
+  const { roomId, playerId, facts } = payload;
+  const room = RoomManager.get(roomId);
+  if (!room?.game) return;
+
+  const game = GameManager.get(room.game.id);
+  if (!game || game.type !== GameType.FF) return;
+
+  (game as FriendFactsGame).submitFacts(playerId, facts);
 }
 
 export async function handleGameStateChange(ws: WebSocket, payload: WSPayloads[WSEvent.GAME_STATE_CHANGE]|WSPayloads[WSEvent.CH_ROUND_STATE_CHANGE]) {

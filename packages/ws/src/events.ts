@@ -10,7 +10,7 @@
  *  - 🔹 WSMessage: full message shape { event, payload }
  */
 
-import { ChameleonRound, Game, GameState, GameType, HerdMentalityOptions, HerdMentalityRound, Lobby, LobbyFull, Player, QuestionProfile, QuizzerQuestionInput, Ranking, RoomState, Scores, TriviaOptions, TriviaRound } from "./types";
+import { ChameleonRound, FriendFactsFact, FriendFactsFactInput, FriendFactsRound, FriendFactsSetupState, Game, GameState, GameType, HerdMentalityOptions, HerdMentalityRound, Lobby, LobbyFull, Player, QuestionProfile, QuizzerQuestionInput, Ranking, RoomState, Scores, TriviaOptions, TriviaRound } from "./types";
 
 export enum WSEvent {
   // --- Core lifecycle ---
@@ -70,6 +70,14 @@ export enum WSEvent {
   HM_ROUND_ANSWER="GAME:HM:ROUND:ANSWER",
   HM_ROUND_ANSWERED="GAME:HM:ROUND:ANSWERED",
   HM_ROUND_END="GAME:HM:ROUND:END",
+
+  //Friend Facts
+  FF_SETUP_UPDATE="GAME:FF:SETUP:UPDATE",
+  FF_SETUP_SUBMIT="GAME:FF:SETUP:SUBMIT",
+  FF_ROUND_START="GAME:FF:ROUND:START",
+  FF_ROUND_ANSWER="GAME:FF:ROUND:ANSWER",
+  FF_ROUND_ANSWERED="GAME:FF:ROUND:ANSWERED",
+  FF_ROUND_END="GAME:FF:ROUND:END",
 
   //Chameleon
   CH_ROUND_START="GAME:CH:ROUND:START",
@@ -157,6 +165,7 @@ export interface WSPayloads {
     config: Record<string, any> & {
       questionProfile?: QuestionProfile;
       questions?: QuizzerQuestionInput[];
+      noOfRounds?: number;
     }; // e.g. { noOfRounds: 10, duration: 30 }
   };
   };
@@ -183,6 +192,14 @@ export interface WSPayloads {
   [WSEvent.HM_ROUND_ANSWER]: {roomId: string; playerId: string; answer: HerdMentalityOptions};
   [WSEvent.HM_ROUND_ANSWERED]: { answer: HerdMentalityOptions| null};
   [WSEvent.HM_ROUND_END]: {state: GameState, round: HerdMentalityRound, scores: Scores, counts: Record<HerdMentalityOptions, number>}
+
+  //Friend Facts actions
+  [WSEvent.FF_SETUP_UPDATE]: { state: GameState; setup: FriendFactsSetupState };
+  [WSEvent.FF_SETUP_SUBMIT]: { roomId: string; playerId: string; facts: FriendFactsFactInput[] };
+  [WSEvent.FF_ROUND_START]: { state: GameState; round: FriendFactsRound };
+  [WSEvent.FF_ROUND_ANSWER]: { roomId: string; playerId: string; answerPlayerId: string };
+  [WSEvent.FF_ROUND_ANSWERED]: { answerPlayerId: string | null };
+  [WSEvent.FF_ROUND_END]: { state: GameState; round: FriendFactsRound; scores: Scores; counts: Record<string, number> };
 
   [WSEvent.CH_ROUND_START]: {state: GameState, round: ChameleonRound}
   [WSEvent.CH_ROUND_STATE_CHANGE]: {roomId: string; state: GameState,}

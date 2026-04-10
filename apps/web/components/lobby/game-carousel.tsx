@@ -24,8 +24,8 @@ const GAME_ORDER = [
   "herdmentality",
   "chameleon",
   "quizzer",
-  "drawit",
   "friendfacts",
+  "drawit",
   "jaroflies",
 ] as const;
 

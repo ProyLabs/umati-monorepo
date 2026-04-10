@@ -308,11 +308,6 @@ export class TriviaGame extends BaseGame {
       }))
       .sort((a, b) => b.score - a.score);
 
-    const top3 = sorted.slice(0, 3);
-    while (top3.length < 3) {
-      top3.push({ id: "", displayName: "", score: 0 });
-    }
-
-    RoomManager.submitGameResult(this.roomId, top3);
+    RoomManager.submitGameResult(this.roomId, sorted);
   }
 }

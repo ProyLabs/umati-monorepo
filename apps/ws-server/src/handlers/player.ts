@@ -5,6 +5,7 @@ import { logInfo } from "../utils/logger";
 import { GameManager } from "../lib/game-manager";
 import { HerdMentality } from "../lib/games/herd-mentality";
 import { Chameleon } from "../lib/games/chameleon";
+import { FriendFactsGame } from "../lib/games/friend-facts";
 
 /** When a player connects to a room */
 export async function handlePlayerConnect(
@@ -48,6 +49,8 @@ export async function handlePlayerConnect(
     setTimeout(() => {
       if (game.type === GameType.CHAMELEON) {
         (game as Chameleon).sendStateToSocket(ws, { playerId, isHost: false });
+      } else if (game.type === GameType.FF) {
+        (game as FriendFactsGame).sendStateToSocket({ isHost: false, playerId });
       } else {
         ws.send(
           JSON.stringify({
@@ -69,6 +72,17 @@ export async function handlePlayerConnect(
           payload: {answer: myAnswer},
         })
       );
+        }
+      }
+      if (game.type === GameType.FF) {
+        const myAnswer = (game as FriendFactsGame).myAnswer(playerId);
+        if (myAnswer) {
+          ws.send(
+            JSON.stringify({
+              event: WSEvent.FF_ROUND_ANSWERED,
+              payload: { answerPlayerId: myAnswer },
+            }),
+          );
         }
       }
 

@@ -229,11 +229,16 @@ export const RoomManager = {
     const room = rooms.get(roomId);
     if (!room) return null;
 
-    for (const player of result) addNewRankings(room.rankings, player);
+    for (const player of result) {
+      if (!player.id) continue;
+      addNewRankings(room.rankings, player);
+      const ranking = room.rankings.find((r) => r.id === player.id);
+      if (ranking) ranking.score += player.score;
+    }
 
-    if (result[0]) room.rankings.find((r) => r.id === result[0]!.id)!.gold++;
-    if (result[1]) room.rankings.find((r) => r.id === result[1]!.id)!.silver++;
-    if (result[2]) room.rankings.find((r) => r.id === result[2]!.id)!.bronze++;
+    if (result[0]?.id) room.rankings.find((r) => r.id === result[0]!.id)!.gold++;
+    if (result[1]?.id) room.rankings.find((r) => r.id === result[1]!.id)!.silver++;
+    if (result[2]?.id) room.rankings.find((r) => r.id === result[2]!.id)!.bronze++;
 
     RoomManager.broadcast(roomId, WSEvent.ROOM_STATE, RoomManager.toLobbyState(roomId));
   },
@@ -242,5 +247,5 @@ export const RoomManager = {
 const addNewRankings = (rankings: Ranking[], player: { id: string; displayName: string }) => {
   const exists = rankings.find((r) => r.id === player.id);
   if (exists) return;
-  rankings.push({ id: player.id, displayName: player.displayName, gold: 0, silver: 0, bronze: 0 });
+  rankings.push({ id: player.id, displayName: player.displayName, score: 0, gold: 0, silver: 0, bronze: 0 });
 };

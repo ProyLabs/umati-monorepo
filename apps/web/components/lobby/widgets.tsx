@@ -25,6 +25,13 @@ import { useLobbyPlayer } from "../../providers/lobby-player-provider";
 import { useAlert } from "../../providers/modal-provider";
 import { useSettings } from "../../providers/settings-provider";
 import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "../ui/dialog";
+import {
   Avatar,
   AvatarFallback,
   AvatarGroupCount,
@@ -133,6 +140,10 @@ export const Latency = ({ ms }: { ms: number }) => {
 export const BeforeWeBegin = ({dark}: {dark?: boolean}) => {
   const { startGame, cancelGame, game } = useLobbyHost();
   const [stepIndex, setStepIndex] = useState(0);
+  const activeGame = useMemo(
+    () => Games.find((entry) => entry.id === game?.type),
+    [game?.type],
+  );
 
   const instructionFlow = useMemo(() => {
     switch (game?.type) {
@@ -239,6 +250,49 @@ export const BeforeWeBegin = ({dark}: {dark?: boolean}) => {
             },
           ],
         };
+      case GameType.FF:
+        return {
+          eyebrow: "Friend Facts",
+          title: "Guess who the fact belongs to",
+          tone: "neutral",
+          example: {
+            kind: "card",
+            value: "Loves pineapple on pizza",
+            label: "Fact prompt",
+          },
+          steps: [
+            {
+              label: "Collect facts",
+              role: "Players",
+              body: "Each player submits at least one fact about themselves.",
+            },
+            {
+              label: "Build the round",
+              role: "Game",
+              body: "The game randomly picks facts from the submitted pool.",
+            },
+            {
+              label: "Show one fact",
+              role: "Host",
+              body: "One fact appears on the main screen per round.",
+            },
+            {
+              label: "Guess the owner",
+              role: "Players",
+              body: "Everyone else guesses which player the fact belongs to.",
+            },
+            {
+              label: "Owner sits out",
+              role: "Rule",
+              body: "The fact owner does not answer that round.",
+            },
+            {
+              label: "Score it",
+              role: "Scoring",
+              body: "Correct guesses earn time-based points, and the fact owner gets the top correct score.",
+            },
+          ],
+        };
       case GameType.CHAMELEON:
         return {
           eyebrow: "Chameleon",
@@ -334,7 +388,7 @@ export const BeforeWeBegin = ({dark}: {dark?: boolean}) => {
           How to Play
         </p>
         <h3 className="mt-3 text-5xl font-black tracking-tight text-white md:text-6xl">
-          {game?.title}
+          {activeGame?.title}
         </h3>
       </div>
 
@@ -515,20 +569,11 @@ export const BeforeWeBegin = ({dark}: {dark?: boolean}) => {
 };
 
 export const HostLobbyFooter = () => {
-  const { closeLobby } = useLobbyHost();
   return (
     <div className="fixed bottom-0 px-4 md:px-8 py-4 w-screen">
       <div className="flex items-center justify-between w-full gap-3">
         <div className="flex-1 flex items-center justify-start gap-3 md:gap-4 min-w-0">
           <SettingsBar />
-          <Fbutton
-            size="sm"
-            variant="outline"
-            className="max-w-xs mx-auto w-full"
-            onClick={closeLobby}
-          >
-            Close Lobby
-          </Fbutton>
         </div>
         <div className="flex items-center justify-end gap-2 md:gap-4">
           <UmatiFullLogo className="w-24 text-foreground hidden md:block" />
@@ -540,52 +585,115 @@ export const HostLobbyFooter = () => {
 };
 
 export const LobbyTitle = () => {
-  const { lobby, joinUrl } = useLobbyHost();
+  const { lobby, joinUrl, closeLobby } = useLobbyHost();
+  const [scanExpanded, setScanExpanded] = useState(false);
   return (
-    <section className="relative isolate w-full overflow-hidden rounded-[2rem]">
-      <div className="relative z-10 flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
-        <div className="max-w-3xl">
-          <h1 className="max-w-4xl text-4xl font-black tracking-tight text-white md:text-6xl">
-            {lobby?.name}
-          </h1>
-          <p className="mt-3 max-w-2xl text-sm leading-6 text-white/70 md:text-[15px]">
-            Your party room is live. Share the code, fill the room, and kick off
-            the next crowd favorite.
-          </p>
-        </div>
-
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-stretch">
-          <div className="rounded-[1.5rem] border border-white/12 bg-black/20 px-4 py-4 backdrop-blur-md">
-            <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-white/60">
-              Join by code
+    <>
+      <section className="relative isolate w-full overflow-hidden">
+        <div className="relative z-10 flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
+          <div className="max-w-3xl">
+            <h1 className="max-w-4xl text-4xl font-black tracking-tight text-white md:text-6xl">
+              {lobby?.name}
+            </h1>
+            <p className="mt-3 max-w-2xl text-sm leading-6 text-white/70 md:text-[15px]">
+              Your party room is live. Share the code, fill the room, and kick
+              off the next crowd favorite.
             </p>
-            <p className="mt-2 text-4xl font-black tracking-[0.08em] text-white md:text-5xl">
-              {lobby?.code}
-            </p>
-            <p className="mt-2 text-sm font-semibold text-white/65">
-              Fastest way into the room
-            </p>
+            <div className="mt-4 flex items-center gap-3">
+              <Fbutton
+                size="sm"
+                variant="outline"
+                className="w-full sm:w-auto"
+                onClick={closeLobby}
+              >
+                Close Lobby
+              </Fbutton>
+            </div>
           </div>
 
-          <div className="flex items-center gap-3 rounded-[1.5rem] border border-white/12 bg-white/8 px-4 py-4 backdrop-blur-md">
-            <div className="rounded-[1.25rem] border border-white/12 bg-white p-2 shadow-sm">
-              <QRCode
-                className="size-22 rounded-lg bg-white p-1"
-                data={joinUrl}
-              />
-            </div>
-            <div className="max-w-36">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-stretch">
+            <div className="rounded-[1.5rem] border border-white/12 bg-black/20 px-4 py-4 backdrop-blur-md">
               <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-white/60">
-                Scan to join
+                Join by code
               </p>
-              <p className="mt-2 text-sm font-semibold text-white">
-                Let guests hop in with their phone camera.
+              <p className="mt-2 text-4xl font-black tracking-[0.08em] text-white md:text-5xl">
+                {lobby?.code}
               </p>
+              <p className="mt-2 text-sm font-semibold text-white/65">
+                Fastest way into the room
+              </p>
+            </div>
+
+            <div className="relative flex items-center gap-3 rounded-[1.5rem] border border-white/12 bg-white/8 px-4 py-4 backdrop-blur-md">
+              <motion.button
+                type="button"
+                whileHover={{ scale: 1.03 }}
+                whileTap={{ scale: 0.97 }}
+                className="absolute right-3 top-3 inline-flex items-center justify-center rounded-xl border border-white/12 bg-black/20 p-2 text-white/75 transition hover:bg-white/10 hover:text-white"
+                onClick={() => setScanExpanded(true)}
+                aria-label="Expand scan to join"
+              >
+                <MaximizeIcon className="size-4" />
+              </motion.button>
+              <div className="rounded-[1.25rem] border border-white/12 bg-white p-2 shadow-sm">
+                <QRCode
+                  className="size-22 rounded-lg bg-white p-1"
+                  data={joinUrl}
+                />
+              </div>
+              <div className="max-w-36 pr-8">
+                <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-white/60">
+                  Scan to join
+                </p>
+                <p className="mt-2 text-sm font-semibold text-white">
+                  Let guests hop in with their phone camera.
+                </p>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </section>
+      </section>
+
+      <Dialog open={scanExpanded} onOpenChange={setScanExpanded}>
+        <DialogContent className="max-w-2xl overflow-hidden border-white/12 bg-[linear-gradient(180deg,rgba(14,25,53,0.98),rgba(10,18,38,0.98))] p-0 text-white shadow-[0_32px_120px_rgba(0,0,0,0.5)] sm:max-w-2xl">
+          <div className="relative overflow-hidden rounded-[inherit] p-6 md:p-8">
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(77,199,255,0.18),transparent_28%),radial-gradient(circle_at_bottom_left,rgba(255,255,255,0.08),transparent_36%)]" />
+            <DialogHeader className="relative z-10 border-b border-white/10 pb-5">
+              <DialogTitle className="text-2xl font-black tracking-tight text-white md:text-3xl">
+                Scan To Join
+              </DialogTitle>
+              <DialogDescription className="max-w-xl text-sm leading-6 text-white/68">
+                Open your camera, scan the code, or share the room code below
+                for a faster join flow.
+              </DialogDescription>
+            </DialogHeader>
+
+            <div className="relative z-10 mt-6 flex flex-col items-center gap-6 text-center">
+              <div className="rounded-[2rem] border border-white/12 bg-white p-4 shadow-[0_20px_60px_rgba(0,0,0,0.18)]">
+                <QRCode
+                  className="size-64 rounded-[1.25rem] bg-white p-3 md:size-80"
+                  data={joinUrl}
+                />
+              </div>
+              <div>
+                <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-white/60">
+                  Join by code
+                </p>
+                <p className="mt-2 text-5xl font-black tracking-[0.12em] text-white md:text-6xl">
+                  {lobby?.code}
+                </p>
+                <p className="mt-3 text-sm font-semibold text-white/68">
+                  Best for big screens, shared links, and quick room entry.
+                </p>
+              </div>
+              <div className="w-full max-w-xs">
+                <CopyLinkButton />
+              </div>
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </>
   );
 };
 
@@ -782,25 +890,48 @@ export const WaitingForPlayers = ({ className }: { className?: string }) => {
             )}
           </div>
         </div>
-        {waitingForMorePlayers && (
-          <motion.p
-            className="relative z-10 mt-4 text-center font-semibold text-white/75"
-            animate={{ opacity: [0.5, 1, 0.5] }}
-            transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-          >
-            Waiting for players to roll in...
-          </motion.p>
-        )}
-        {lobbyReady && uiState === RoomState.INIT && (
-          <motion.p
-            className="relative z-10 mt-4 text-center font-semibold text-white"
-            initial={{ opacity: 0, y: 8 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, ease: [0.25, 1, 0.5, 1] }}
-          >
-            Everyone is here. Let the chaos begin.
-          </motion.p>
-        )}
+        <div className="relative z-10 mt-4 flex flex-col gap-2">
+          {waitingForMorePlayers ? (
+            <motion.div
+              className="rounded-[1.25rem] border border-white/12 bg-white/6 px-4 py-3 text-center"
+              animate={{ opacity: [0.5, 1, 0.5] }}
+              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+            >
+              <p className="font-semibold text-white/75">
+                Waiting for{" "}
+                {Math.max((lobby?.maxPlayers ?? 0) - players.length, 0)} more{" "}
+                {Math.max((lobby?.maxPlayers ?? 0) - players.length, 0) === 1
+                  ? "player"
+                  : "players"}
+                ...
+              </p>
+            </motion.div>
+          ) : lobbyReady && uiState === RoomState.INIT ? (
+            <motion.div
+              className="rounded-[1.25rem] border border-[var(--umati-yellow)]/30 bg-[var(--umati-yellow)]/10 px-4 py-3 text-center"
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4, ease: [0.25, 1, 0.5, 1] }}
+            >
+              <p className="font-semibold text-white">
+                ✓ Game ready! Everyone is here.
+              </p>
+              <p className="mt-1 text-xs text-white/75">
+                Start the game from the instructions screen
+              </p>
+            </motion.div>
+          ) : (
+            <motion.p
+              className="text-center text-sm font-semibold text-white/70"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.3 }}
+            >
+              {players.length} player{players.length === 1 ? "" : "s"} in the
+              room
+            </motion.p>
+          )}
+        </div>
       </motion.div>
       {contextMenu && (
         <div
@@ -862,11 +993,12 @@ export function GameCard({
   className,
   variant,
   game,
-  ...props
-}: React.ComponentProps<"div"> &
-  VariantProps<typeof gameCardVariants> & {
-    game: (typeof Games)[0];
-  }) {
+  onClick,
+}: VariantProps<typeof gameCardVariants> & {
+  className?: string;
+  game: (typeof Games)[0];
+  onClick?: () => void;
+}) {
   const usesDarkText = variant === "aqua" || variant === "yellow";
 
   return (
@@ -875,7 +1007,7 @@ export function GameCard({
       whileHover={{ y: -4, boxShadow: "0 24px 48px rgba(0,0,0,0.32)" }}
       whileTap={{ scale: 0.98 }}
       transition={{ duration: 0.3, ease: [0.25, 1, 0.5, 1] }}
-      {...props}
+      onClick={onClick}
     >
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.3),transparent_35%),radial-gradient(circle_at_bottom_left,rgba(0,0,0,0.18),transparent_30%)]" />
       <motion.div
@@ -979,23 +1111,28 @@ export function GameCard({
 export const PlayerAvatar = ({
   displayName,
   avatar,
-  className
+  className,
+  showName = true,
 }: {
   displayName: string;
   avatar: string;
   className?: string;
+  showName?: boolean;
 }) => {
   return (
     <motion.div className="flex flex-col items-center">
       <Avatar
         className={cn(
-          "size-30 ring-2 ring-foreground shadow-md hover:scale-110 transition-transform mb-2 relative", className
+          "size-30 ring-2 ring-foreground shadow-md hover:scale-110 transition-transform mb-2 relative",
+          className,
         )}
       >
         <AvatarImage src={avatar} alt={displayName} />
         <AvatarFallback>{displayName?.[0]}</AvatarFallback>
       </Avatar>
-      <p className="text-center text-2xl font-semibold">{displayName}</p>
+      {showName && (
+        <p className="text-center text-2xl font-semibold">{displayName}</p>
+      )}
     </motion.div>
   );
 };

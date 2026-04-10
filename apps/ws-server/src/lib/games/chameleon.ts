@@ -406,10 +406,8 @@ export class Chameleon extends BaseGame {
   private finishGame() {
     this.state = GameState.RANKING;
     const sorted = this.scores.sort((a, b) => b.score - a.score);
-    const top3 = sorted.slice(0, 3);
-    while (top3.length < 3) top3.push({ id: "", displayName: "", score: 0 });
 
-    RoomManager.submitGameResult(this.roomId, top3);
+    RoomManager.submitGameResult(this.roomId, sorted);
     this.emitState();
     this.schedulePhaseTransition(4000, () => this.endGame());
   }

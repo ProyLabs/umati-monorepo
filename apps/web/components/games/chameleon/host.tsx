@@ -25,10 +25,9 @@ export default function ChameleonHost() {
   else if(state === GameState.LEADERBOARD){ 
     return <Leaderboard scores={scores} nextRound={() => {}} />;
   } else if(state === GameState.RANKING){
-    return <Podium scores={scores}  />
+    return <Podium scores={scores} nextRound={() => {}} />
   }
 
   return ''
 }
-
 

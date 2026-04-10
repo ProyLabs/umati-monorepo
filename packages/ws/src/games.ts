@@ -110,5 +110,6 @@ playable: true,
     className: "from-[var(--umati-sky)] to-[#3A6EE4]",
     src: "https://img.icons8.com/?size=100&id=46204&format=png&color=000000",
     min: 3,
+    playable: true,
   },
 ];

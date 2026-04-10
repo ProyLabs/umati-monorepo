@@ -27,6 +27,7 @@ export interface LobbyFull extends Lobby {
 export interface Ranking {
   id: string;
   displayName: string;
+  score: number;
   gold: number;
   silver: number;
   bronze: number;
@@ -210,6 +211,45 @@ export const HerdMentalityOptions = {
 } as const;
 
 export type HerdMentalityOptions = (typeof HerdMentalityOptions)[keyof typeof HerdMentalityOptions];
+
+export interface FriendFactsFact {
+  id: string;
+  text: string;
+}
+
+export interface FriendFactsFactInput {
+  text: string;
+}
+
+export interface FriendFactsPlayerChoice {
+  id: string;
+  displayName: string;
+}
+
+export interface FriendFactsRound {
+  number: number;
+  totalRounds: number;
+  fact: string;
+  choices: FriendFactsPlayerChoice[];
+  duration: number;
+  startedAt: number;
+  ownerId: string | null;
+  answerPlayerId: string | null;
+  isFactOwner?: boolean;
+}
+
+export interface FriendFactsSetupState {
+  requiredRounds: number;
+  factsPerPlayer: Record<string, number>;
+  readyPlayerIds: string[];
+  submittedFacts?: FriendFactsFact[];
+}
+
+export interface FriendFactsPlayerAnswer {
+  playerId: string;
+  guessedPlayerId: string;
+  timeTaken: number;
+}
 
 export const ChameleonRoundRole = {
   HOST: "HOST",

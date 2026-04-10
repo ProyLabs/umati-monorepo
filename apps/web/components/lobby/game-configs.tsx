@@ -52,6 +52,8 @@ function GameConfig({ game, action }: GameConfigProps) {
             return <ChameleonGameConfig action={action} />
           case GameType.QUIZZER:
             return <QuizzerGameConfig action={action} />;
+          case GameType.FF:
+            return <FriendFactsGameConfig action={action} />;
           default:
             return null;
         }
@@ -564,6 +566,39 @@ const QuizzerGameConfig = ({ action }: { action: GameConfigAction }) => {
             ? error
             : `Validation passed. ${questionCount} questions are ready for game time.`}
         </div>
+      </div>
+    </div>
+  );
+};
+
+const FriendFactsGameConfig = ({ action }: { action: GameConfigAction }) => {
+  const { closeModal } = useModal();
+  const [noOfRounds, setNoOfRounds] = useState(5);
+
+  return (
+    <div className="grid gap-6">
+      <div className="grid gap-2">
+        <Label>Rounds</Label>
+        <ButtonOptions
+          value={noOfRounds}
+          options={[3, 5, 8, 10]}
+          onChange={(value) => setNoOfRounds(value as number)}
+        />
+      </div>
+      <div className="grid gap-2">
+        <Fbutton
+          type="button"
+          variant="secondary"
+          className="w-full"
+          onClick={async () => {
+            await action({ noOfRounds });
+          }}
+        >
+          Start Setup
+        </Fbutton>
+        <Fbutton variant="outline" className="w-full" onClick={closeModal}>
+          Cancel
+        </Fbutton>
       </div>
     </div>
   );

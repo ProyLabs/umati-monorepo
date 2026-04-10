@@ -4,12 +4,19 @@ import { useLobbyPlayer } from "@/providers/lobby-player-provider";
 import { useAlert } from "@/providers/modal-provider";
 import { Scores } from "@umati/ws";
 import confetti from "canvas-confetti";
-import { LightbulbIcon } from "lucide-react";
+import { LightbulbIcon, Maximize2Icon } from "lucide-react";
 import { AnimatePresence, motion, useAnimation } from "motion/react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { cn, formatList, rankScores } from "../../lib/utils";
 import { PlayerAvatar } from "../lobby/widgets";
 import { Fbutton } from "../ui/fancy-button";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "../ui/dialog";
 
 export const Leaderboard = ({
   scores,
@@ -295,10 +302,11 @@ export const PodiumItem = ({
 
 export const Rankings = () => {
   const { rankings } = useLobbyHost();
+  const [expanded, setExpanded] = useState(false);
 
-  // Sort by gold > silver > bronze
   const sortedRankings = useMemo(() => {
     return [...rankings].sort((a, b) => {
+      if (b.score !== a.score) return b.score - a.score;
       if (b.gold !== a.gold) return b.gold - a.gold;
       if (b.silver !== a.silver) return b.silver - a.silver;
       if (b.bronze !== a.bronze) return b.bronze - a.bronze;
@@ -308,87 +316,173 @@ export const Rankings = () => {
   }, [rankings]);
 
   return (
-    <div className="relative flex h-full w-full flex-col overflow-clip rounded-[1.75rem] border border-white/12 bg-[linear-gradient(180deg,rgba(255,255,255,0.08),rgba(255,255,255,0.03))] p-4 shadow-[0_24px_80px_rgba(0,0,0,0.24)] lg:w-3/5 min-h-72">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,200,39,0.14),transparent_24%),radial-gradient(circle_at_top_right,rgba(77,199,255,0.14),transparent_30%),radial-gradient(circle_at_bottom,rgba(239,62,70,0.12),transparent_34%)]" />
-      <div className="relative z-10 mb-4 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
-        <div className="space-y-2">
-          <div>
-            <h2 className="text-xl font-black tracking-tight text-white md:text-2xl">
-              Leaderboard
-            </h2>
-            <p className="text-sm leading-6 text-white/70 md:text-[15px]">
-              Track who is heating up, who is holding ground, and who needs a
-              comeback round.
-            </p>
+    <>
+      <div className="relative flex h-full w-full flex-col overflow-clip rounded-[1.75rem] border border-white/12 bg-[linear-gradient(180deg,rgba(255,255,255,0.08),rgba(255,255,255,0.03))] p-4 shadow-[0_24px_80px_rgba(0,0,0,0.24)] lg:w-3/5 min-h-72">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,200,39,0.14),transparent_24%),radial-gradient(circle_at_top_right,rgba(77,199,255,0.14),transparent_30%),radial-gradient(circle_at_bottom,rgba(239,62,70,0.12),transparent_34%)]" />
+        <div className="relative z-10 mb-4 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
+          <div className="space-y-2">
+            <div>
+              <h2 className="text-xl font-black tracking-tight text-white md:text-2xl">
+                Leaderboard
+              </h2>
+              <p className="text-sm leading-6 text-white/70 md:text-[15px]">
+                Track who is heating up, who is holding ground, and who needs a
+                comeback round.
+              </p>
+            </div>
           </div>
+          <motion.button
+            type="button"
+            whileHover={{ scale: 1.03 }}
+            whileTap={{ scale: 0.97 }}
+            className="inline-flex self-start items-center justify-center rounded-2xl border border-white/12 bg-black/20 p-2.5 text-white/80 transition hover:bg-white/10 hover:text-white md:self-auto"
+            onClick={() => setExpanded(true)}
+            aria-label="Expand leaderboard"
+          >
+            <Maximize2Icon className="size-4" />
+          </motion.button>
         </div>
+
+        {rankings.length > 0 ? (
+          <div className="relative z-10 w-full overflow-x-auto scrollbar-hide">
+            <RankingHeader />
+
+            <div className="flex flex-col gap-2 pb-1">
+              <AnimatePresence>
+                {sortedRankings.map((rankings, index) => (
+                  <RankingRow
+                    key={rankings.id}
+                    position={index + 1}
+                    name={rankings.displayName}
+                    {...rankings}
+                  />
+                ))}
+              </AnimatePresence>
+            </div>
+          </div>
+        ) : (
+          <div className="relative z-10 m-auto flex min-h-56 w-full max-w-xl flex-col items-center justify-center rounded-[1.5rem] border border-dashed border-white/15 bg-black/15 px-6 text-center">
+            <div className="mb-3 inline-flex size-14 items-center justify-center rounded-2xl bg-white/10 text-2xl">
+              🎊
+            </div>
+            <p className="text-xl font-bold text-white">No rankings yet</p>
+            <p className="mt-2 max-w-sm text-sm leading-6 text-white/65">
+              Start a game and watch cumulative scores build across rounds and
+              games. Medal finishes still count, but total points decide the
+              order.
+            </p>
+            <div className="mt-4 flex gap-3 justify-center text-sm font-medium text-white/75">
+              <span className="inline-flex items-center gap-1">
+                ⭐ <span>Total Score</span>
+              </span>
+              <span className="inline-flex items-center gap-1">
+                🥇 <span>1st Place</span>
+              </span>
+              <span className="inline-flex items-center gap-1">
+                🥈🥉 <span>Podium Tally</span>
+              </span>
+            </div>
+          </div>
+        )}
       </div>
 
-      {rankings.length > 0 ? (
-        <div className="relative z-10 w-full overflow-x-auto scrollbar-hide">
-          <RankingHeader />
+      <Dialog open={expanded} onOpenChange={setExpanded}>
+        <DialogContent className="max-h-[88vh] max-w-5xl overflow-hidden border-white/12 bg-[linear-gradient(180deg,rgba(14,25,53,0.98),rgba(10,18,38,0.98))] p-0 text-white shadow-[0_32px_120px_rgba(0,0,0,0.5)] sm:max-w-5xl">
+          <div className="relative overflow-hidden rounded-[inherit] p-6 md:p-8">
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,200,39,0.16),transparent_24%),radial-gradient(circle_at_top_right,rgba(77,199,255,0.16),transparent_30%),radial-gradient(circle_at_bottom,rgba(239,62,70,0.12),transparent_36%)]" />
+            <DialogHeader className="relative z-10 border-b border-white/10 pb-5">
+              <DialogTitle className="text-2xl font-black tracking-tight text-white md:text-3xl">
+                Full Leaderboard
+              </DialogTitle>
+              <DialogDescription className="max-w-2xl text-sm leading-6 text-white/68">
+                Rankings now use cumulative game score as the primary order,
+                with podium finishes kept as tie-break context.
+              </DialogDescription>
+            </DialogHeader>
 
-          <div className="flex flex-col gap-2 pb-1">
-            <AnimatePresence>
-              {sortedRankings.map((rankings, index) => (
-                <RankingRow
-                  key={rankings.id}
-                  position={index + 1}
-                  name={rankings.displayName}
-                  {...rankings}
-                />
-              ))}
-            </AnimatePresence>
+            <div className="relative z-10 mt-6 max-h-[60vh] overflow-y-auto pr-1">
+              {sortedRankings.length > 0 ? (
+                <>
+                  <RankingHeader className="grid-cols-[0.8fr_2.4fr_1.2fr_repeat(3,0.9fr)]" />
+                  <div className="flex flex-col gap-2 pb-1">
+                    {sortedRankings.map((ranking, index) => (
+                      <RankingRow
+                        key={`expanded-${ranking.id}`}
+                        position={index + 1}
+                        name={ranking.displayName}
+                        gold={ranking.gold}
+                        silver={ranking.silver}
+                        bronze={ranking.bronze}
+                        score={ranking.score}
+                        className="grid-cols-[0.8fr_2.4fr_1.2fr_repeat(3,0.9fr)]"
+                      />
+                    ))}
+                  </div>
+                </>
+              ) : null}
+            </div>
           </div>
-        </div>
-      ) : (
-        <div className="relative z-10 m-auto flex min-h-56 w-full max-w-xl flex-col items-center justify-center rounded-[1.5rem] border border-dashed border-white/15 bg-black/15 px-6 text-center">
-          <div className="mb-3 inline-flex size-14 items-center justify-center rounded-2xl bg-white/10 text-2xl">
-            🎊
-          </div>
-          <p className="text-xl font-bold text-white">No rankings yet</p>
-          <p className="mt-2 max-w-sm text-sm leading-6 text-white/65">
-            Start a round and this board will light up with medals, movement,
-            and bragging rights.
-          </p>
-        </div>
+        </DialogContent>
+      </Dialog>
+    </>
+  );
+};
+
+export const RankingHeader = ({ className }: { className?: string }) => {
+  const [showTooltip, setShowTooltip] = useState(false);
+  
+  return (
+    <div className="sticky top-0 z-10 mb-2 rounded-md border border-white/12 bg-black/25 backdrop-blur-md group">
+      <div
+        className={cn(
+          "grid grid-cols-[0.8fr_2.2fr_1fr_repeat(3,0.8fr)] gap-3 px-4 py-3 text-center text-xs font-bold uppercase tracking-[0.18em] text-white/65 md:px-5 cursor-help transition-colors hover:text-white/85",
+          className,
+        )}
+        onMouseEnter={() => setShowTooltip(true)}
+        onMouseLeave={() => setShowTooltip(false)}
+        title="Rankings are ordered by total score first, then gold, silver, and bronze finishes"
+      >
+        <span>#</span>
+        <span>Player</span>
+        <span>Pts</span>
+        <span className="relative">🥇</span>
+        <span className="relative">🥈</span>
+        <span className="relative">🥉</span>
+      </div>
+
+      {showTooltip && (
+        <motion.div
+          initial={{ opacity: 0, y: -8 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -8 }}
+          transition={{ duration: 0.2 }}
+          className="absolute top-full mt-2 left-1/2 -translate-x-1/2 bg-black/95 border border-white/20 rounded-lg px-3 py-2 text-xs text-white/90 whitespace-nowrap z-50 backdrop-blur-sm shadow-lg"
+        >
+          Sorted by total points, then podium finishes
+        </motion.div>
       )}
     </div>
   );
 };
 
-export const RankingHeader = ({ className }: { className?: string }) => {
-  return (
-    <div className="sticky top-0 z-10 mb-2 rounded-md border border-white/12 bg-black/25 backdrop-blur-md">
-      <div
-        className={cn(
-          "grid grid-cols-[0.8fr_2.2fr_repeat(3,0.9fr)] gap-3 px-4 py-3 text-center text-xs font-bold uppercase tracking-[0.18em] text-white/65 md:px-5",
-          className,
-        )}
-      >
-        <span>#</span>
-        <span>Player</span>
-        <span>🥇</span>
-        <span>🥈</span>
-        <span>🥉</span>
-      </div>
-    </div>
-  );
-};
 export const RankingRow = ({
   position,
   name,
+  score,
   gold,
   silver,
   bronze,
   variant = "default",
+  className,
 }: {
   position: number;
   name: string;
+  score: number;
   gold: number;
   silver: number;
   bronze: number;
   variant?: "default" | "single";
+  className?: string;
 }) => {
   const colors: Record<number, string> = {
     1: "#FFC827", // gold
@@ -410,11 +504,12 @@ export const RankingRow = ({
       exit={{ opacity: 0, y: -10 }}
       transition={{ duration: 0.3 }}
       className={cn(
-        "grid grid-cols-[0.8fr_2.2fr_repeat(3,0.9fr)] items-center gap-3 rounded-md border px-1 py-2 text-center shadow-sm md:px-5",
+        "grid grid-cols-[0.8fr_2.2fr_1fr_repeat(3,0.8fr)] items-center gap-3 rounded-md border px-1 py-2 text-center shadow-sm md:px-5",
         isPodium
           ? "border-white/20 text-black"
           : "border-white/10 bg-white/8 text-white backdrop-blur-sm",
         variant == "single" && "rounded-t-none opacity-10",
+        className,
       )}
       style={{
         backgroundColor: isPodium ? bg : undefined,
@@ -439,21 +534,15 @@ export const RankingRow = ({
         >
           {name}
         </p>
-        {/* <p
-          className={cn(
-            "text-[11px] font-semibold uppercase tracking-[0.16em]",
-            isPodium ? "text-black/55" : "text-white/50",
-          )}
-        >
-          {position === 1
-            ? "Crowd favorite"
-            : position === 2
-              ? "On the chase"
-              : position === 3
-                ? "Still in it"
-                : "Party contender"}
-        </p> */}
       </div>
+      <span
+        className={cn(
+          "text-base font-black",
+          isPodium ? "text-black" : "text-white",
+        )}
+      >
+        {score}
+      </span>
       <span
         className={cn(
           "text-base font-black",
