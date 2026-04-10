@@ -203,29 +203,65 @@ export const Timer = ({
   }, []); // run only once
 
   const progress = Math.max((seconds / duration) * 100, 0);
+  const urgency =
+    seconds <= 5 ? "critical" : seconds <= 10 ? "warning" : "steady";
 
   return (
-    <div className="w-full max-w-3xl relative flex items-center justify-center h-16">
-      {/* Left bar */}
-      <div className="h-4 w-full rounded-l-full bg-white/10 relative overflow-clip flex items-center justify-end -mr-1">
+    <div className="relative mx-auto flex w-full max-w-4xl flex-col gap-3 ">
+      <div className="relative z-10 flex items-center justify-between gap-4">
         <div
-          className="absolute h-full bg-white inset-y-0 origin-[right_center_0px] rounded-l-full transition-all duration-1000 ease-linear"
-          style={{ width: `${progress}%` }}
-        />
+          className={cn(
+            "relative z-10 flex min-w-26 items-center justify-center rounded-[1.5rem] border px-4 py-3 text-center shadow-lg mx-auto",
+            urgency === "critical" &&
+              "border-red-300/40 bg-red-500/20 text-red-50",
+            urgency === "warning" &&
+              "border-yellow-300/40 bg-yellow-400/20 text-yellow-50",
+            urgency === "steady" && "border-white/15 bg-black/20 text-white",
+          )}
+        >
+          <div className="flex items-end gap-1">
+            <p className="text-4xl font-black leading-none">{seconds ?? 0}</p>
+            <span className="pb-1 text-xs font-bold uppercase tracking-[0.18em] opacity-70">
+              sec
+            </span>
+          </div>
+        </div>
       </div>
 
-      {/* Center display */}
-      <div className="rounded-full size-16 aspect-square border-6 border-white flex items-center justify-center z-10">
-        <p className="text-4xl font-bold">{seconds ?? 0}</p>
+      <div className="relative z-10">
+        <div className="h-4 overflow-hidden rounded-full border border-white/10 bg-black/20">
+          <div
+            className={cn(
+              "h-full rounded-full transition-all duration-1000 ease-linear",
+              urgency === "critical" &&
+                "bg-[linear-gradient(90deg,#ef4444,#fb7185)]",
+              urgency === "warning" &&
+                "bg-[linear-gradient(90deg,#f59e0b,#facc15)]",
+              urgency === "steady" &&
+                "bg-[linear-gradient(90deg,var(--umati-aqua),var(--umati-sky),var(--umati-purple))]",
+            )}
+            style={{ width: `${progress}%` }}
+          />
+        </div>
       </div>
 
-      {/* Right bar */}
-      <div className="h-4 w-full rounded-r-full bg-white/10 relative overflow-clip -ml-1">
-        <div
-          className="absolute h-full bg-white inset-y-0 origin-left rounded-r-full transition-all duration-1000 ease-linear"
-          style={{ width: `${progress}%` }}
-        />
-      </div>
+      <div className="pointer-events-none absolute inset-y-4 left-1/2 z-0 hidden w-px -translate-x-1/2 bg-white/8 md:block" />
+      <div
+        className={cn(
+          "pointer-events-none absolute right-6 top-4 size-18 rounded-full blur-3xl",
+          urgency === "critical" && "bg-red-400/20",
+          urgency === "warning" && "bg-yellow-300/20",
+          urgency === "steady" && "bg-[var(--umati-sky)]/16",
+        )}
+      />
+      <div
+        className={cn(
+          "pointer-events-none absolute bottom-2 left-6 size-20 rounded-full blur-3xl",
+          urgency === "critical" && "bg-red-500/16",
+          urgency === "warning" && "bg-[var(--umati-yellow)]/16",
+          urgency === "steady" && "bg-[var(--umati-aqua)]/16",
+        )}
+      />
     </div>
   );
 };
@@ -261,7 +297,7 @@ export const RoundHost = () => {
     <Fragment>
       <div className="fixed top-0 px-8 py-4 w-full">
         <div className="flex items-center justify-between w-full">
-          <div className="">
+          <div className="flex-1">
             <p className="text-xl font-medium">
               <span className="font-bold ">{lobby?.name}</span> Code:{" "}
               {lobby?.code}
@@ -271,9 +307,9 @@ export const RoundHost = () => {
             </p>
           </div>
 
-          <p className="text-lg font-semibold">{gameTitle}</p>
+          <p className="text-lg font-semibold flex-1">{gameTitle}</p>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 ">
             {state === "ROUND_END" && (
               <Fbutton
                 className="max-w-40 mx-auto w-full"

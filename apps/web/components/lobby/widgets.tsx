@@ -2,7 +2,7 @@
 
 import { useAuth } from "@/providers/auth-provider";
 import { RiGroup3Fill, RiHeart3Line } from "@remixicon/react";
-import { Games, Player, RoomState } from "@umati/ws";
+import { GameType, Games, Player, RoomState } from "@umati/ws";
 import { cva, VariantProps } from "class-variance-authority";
 import {
   MaximizeIcon,
@@ -132,38 +132,384 @@ export const Latency = ({ ms }: { ms: number }) => {
 
 export const BeforeWeBegin = ({dark}: {dark?: boolean}) => {
   const { startGame, cancelGame, game } = useLobbyHost();
+  const [stepIndex, setStepIndex] = useState(0);
 
-  const instructions = useMemo(
-    () => Games.find((g) => g.id === game?.type)?.instructions,
-    [game],
-  );
+  const instructionFlow = useMemo(() => {
+    switch (game?.type) {
+      case GameType.TRIVIA:
+        return {
+          eyebrow: "Trivia Go",
+          title: "Race the clock",
+          tone: "red",
+          example: { kind: "card", value: "A", label: "Answer choice" },
+          steps: [
+            {
+              label: "Show question",
+              role: "Host",
+              body: "Put this screen on the TV or share it on the call.",
+            },
+            {
+              label: "Read choices",
+              role: "Players",
+              body: "Players look at the question and answer choices on the main screen.",
+            },
+            {
+              label: "Pick fast",
+              role: "Players",
+              body: "Everyone locks in an answer from their phone before time runs out.",
+            },
+            {
+              label: "Reveal",
+              role: "Host",
+              body: "The correct answer and vote counts appear after the timer ends.",
+            },
+            {
+              label: "Score",
+              role: "Scoring",
+              body: "Correct answers score more when they come in quickly.",
+            },
+          ],
+        };
+      case GameType.HM:
+        return {
+          eyebrow: "Herd Mentality",
+          title: "Think like everyone else",
+          tone: "aqua",
+          darkText: true,
+          example: { kind: "card", value: "A", label: "Top herd pick" },
+          steps: [
+            {
+              label: "Prompt drops",
+              role: "Host",
+              body: "The room sees one prompt on this screen.",
+            },
+            {
+              label: "Pick an answer",
+              role: "Players",
+              body: "Everyone chooses the answer they think most people will pick.",
+            },
+            {
+              label: "Lock in",
+              role: "Players",
+              body: "Answers are submitted privately from each phone.",
+            },
+            {
+              label: "Reveal votes",
+              role: "Host",
+              body: "The host screen shows which option got the most people behind it.",
+            },
+            {
+              label: "Join the herd",
+              role: "Scoring",
+              body: "Majority answers score. Odd ones out don’t.",
+            },
+          ],
+        };
+      case GameType.QUIZZER:
+        return {
+          eyebrow: "Quizzer",
+          title: "Load your own quiz",
+          tone: "orange",
+          example: { kind: "code", value: "B", label: "Answer choice" },
+          steps: [
+            {
+              label: "Upload pack",
+              role: "Host",
+              body: "Bring a valid question JSON before the round starts.",
+            },
+            {
+              label: "Use your set",
+              role: "Game",
+              body: "Quizzer runs only the questions you uploaded.",
+            },
+            {
+              label: "Show question",
+              role: "Host",
+              body: "Questions appear on this shared screen one by one.",
+            },
+            {
+              label: "Players answer",
+              role: "Players",
+              body: "Everyone responds from their own device.",
+            },
+            {
+              label: "Supported types",
+              role: "Format",
+              body: "Use `selection` or `true_false` questions.",
+            },
+          ],
+        };
+      case GameType.CHAMELEON:
+        return {
+          eyebrow: "Chameleon",
+          title: "Spot the fake",
+          tone: "lime",
+          example: { kind: "code", value: "D2", label: "Word card code" },
+          steps: [
+            {
+              label: "Category appears",
+              role: "Host",
+              body: "The shared screen reveals the category and the secret word.",
+            },
+            {
+              label: "One player is blind",
+              role: "Secret",
+              body: "The Chameleon does not know the secret word.",
+            },
+            {
+              label: "Check your card",
+              role: "Players",
+              body: "Players use their card code, like D2, to find the secret word.",
+            },
+            {
+              label: "Give clues",
+              role: "Players",
+              body: "Each player submits a one-word clue from their phone.",
+            },
+            {
+              label: "Blend in",
+              role: "Chameleon",
+              body: "The Chameleon tries to sound believable without knowing the word.",
+            },
+            {
+              label: "Discuss",
+              role: "Room",
+              body: "The group compares clues and decides who feels suspicious.",
+            },
+            {
+              label: "Vote",
+              role: "Room",
+              body: "Vote for who you think the Chameleon is.",
+            },
+          ],
+        };
+      default:
+        return {
+          eyebrow: game?.type ?? "Game",
+          title: "Get the room ready",
+          tone: "neutral",
+          example: { kind: "code", value: "A1", label: "Example pick" },
+          steps: [
+            {
+              label: "Share screen",
+              role: "Host",
+              body: "Put the game where everyone can see it.",
+            },
+            {
+              label: "Join in",
+              role: "Players",
+              body: "Players use their own devices.",
+            },
+            {
+              label: "Start",
+              role: "Host",
+              body: "Launch when the room is ready.",
+            },
+          ],
+        };
+    }
+  }, [game]);
+
+  useEffect(() => {
+    setStepIndex(0);
+  }, [game?.type]);
+
+  const usesDarkText = instructionFlow?.darkText;
+  const activeStep = instructionFlow.steps[stepIndex];
+  const toneClass =
+    instructionFlow.tone === "red"
+      ? "bg-[var(--umati-red)] text-white"
+      : instructionFlow.tone === "aqua"
+        ? "bg-[var(--umati-aqua)] text-black"
+        : instructionFlow.tone === "orange"
+          ? "bg-orange-500 text-white"
+          : instructionFlow.tone === "lime"
+            ? "bg-lime-500 text-black"
+            : "bg-white/10 text-white";
 
   return (
-    <div
-      className={
-        "max-w-screen-2xl mx-auto w-full py-4 flex flex-col gap-8 px-4 items-center justify-center h-full"
-      }
-    >
-      <h3 className="text-5xl font-bold text-center">How to Play</h3>
-      <div
-        className="rules"
-        dangerouslySetInnerHTML={{ __html: instructions! }}
-      ></div>
-      <Fbutton
-        className="max-w-xs mx-auto w-full"
-        variant={dark ? "dark" : "secondary"}
-        onClick={startGame}
-      >
-        Let's Play
-      </Fbutton>
-      <Fbutton
-        size="sm"
-        variant={dark ? "dark-outline" : "outline"}
-        className="max-w-xs mx-auto w-full"
-        onClick={cancelGame}
-      >
-        Back to Lobby
-      </Fbutton>
+    <div className="mx-auto flex h-full w-full max-w-screen-2xl flex-col items-center justify-center gap-6 px-4 py-4">
+      <div className="text-center">
+        <p className="text-[11px] font-bold uppercase tracking-[0.24em] text-white/60">
+          How to Play
+        </p>
+        <h3 className="mt-3 text-5xl font-black tracking-tight text-white md:text-6xl">
+          {game?.title}
+        </h3>
+      </div>
+
+      <div className="w-full max-w-5xl rounded-[2rem] border border-white/12 bg-black/20 p-4 backdrop-blur-xl md:p-5">
+        <div className="grid gap-4 lg:grid-cols-[280px_minmax(0,1fr)]">
+          <div className="rounded-[1.5rem] border border-white/10 bg-white/5 p-3">
+            <div className="mb-3 flex items-center justify-between">
+              <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-white/55">
+                Steps
+              </p>
+              <p className="text-sm font-semibold text-white/65">
+                {stepIndex + 1}/{instructionFlow.steps.length}
+              </p>
+            </div>
+
+            <div className="grid gap-2">
+              {instructionFlow.steps.map((step, index) => (
+                <button
+                  key={step.label}
+                  type="button"
+                  onClick={() => setStepIndex(index)}
+                  className={cn(
+                    "rounded-[1.25rem] border px-3 py-3 text-left transition",
+                    stepIndex === index
+                      ? "border-white/25 bg-white/14"
+                      : "border-white/8 bg-white/4 hover:bg-white/8",
+                  )}
+                >
+                  <div className="flex items-center gap-3">
+                    <div
+                      className={cn(
+                        "flex size-8 items-center justify-center rounded-full text-sm font-black",
+                        stepIndex === index
+                          ? toneClass
+                          : "bg-white/10 text-white",
+                      )}
+                    >
+                      {index + 1}
+                    </div>
+                    <div className="min-w-0">
+                      <p className="truncate text-sm font-bold text-white">
+                        {step.label}
+                      </p>
+                      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/45">
+                        {step.role}
+                      </p>
+                    </div>
+                  </div>
+                </button>
+              ))}
+            </div>
+
+            <div className="mt-3 grid grid-cols-2 gap-2">
+              <Fbutton
+                type="button"
+                variant="outline"
+                className="w-full"
+                disabled={stepIndex === 0}
+                onClick={() => setStepIndex((index) => Math.max(index - 1, 0))}
+              >
+                Previous
+              </Fbutton>
+              <Fbutton
+                type="button"
+                variant="outline"
+                className="w-full"
+                disabled={stepIndex === instructionFlow.steps.length - 1}
+                onClick={() =>
+                  setStepIndex((index) =>
+                    Math.min(index + 1, instructionFlow.steps.length - 1),
+                  )
+                }
+              >
+                Next
+              </Fbutton>
+            </div>
+          </div>
+
+          <div className="grid gap-4">
+            <div className="rounded-[1.5rem] border border-white/10 bg-white p-5 text-black">
+              <div className="mb-4 flex items-center justify-between gap-3">
+                <div>
+                  <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-black/45">
+                    {instructionFlow.eyebrow}
+                  </p>
+                  <h4 className="mt-2 text-3xl font-black tracking-tight">
+                    {instructionFlow.title}
+                  </h4>
+                </div>
+                <div
+                  className={cn(
+                    "rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-[0.18em]",
+                    toneClass,
+                  )}
+                >
+                  {activeStep.role}
+                </div>
+              </div>
+
+              <div className="rounded-[1.5rem] border border-black/10 bg-black/3 p-5">
+                <p className="text-sm font-bold uppercase tracking-[0.18em] text-black/45">
+                  Current step
+                </p>
+                <p className="mt-3 text-3xl font-black tracking-tight">
+                  {activeStep.label}
+                </p>
+                <p className="mt-4 text-lg leading-8 text-black/72">
+                  {activeStep.body}
+                </p>
+              </div>
+            </div>
+
+            <div className="grid gap-3 md:grid-cols-3">
+              <div className="rounded-[1.5rem] border border-white/10 bg-white/5 p-4">
+                <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-white/45">
+                  Host
+                </p>
+                <p className="mt-2 text-sm font-semibold text-white">
+                  Shared screen
+                </p>
+              </div>
+              <div className="rounded-[1.5rem] border border-white/10 bg-white/5 p-4">
+                <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-white/45">
+                  Players
+                </p>
+                <p className="mt-2 text-sm font-semibold text-white">
+                  Phones in lobby
+                </p>
+              </div>
+              <div className="rounded-[1.5rem] border border-white/10 bg-white/5 p-4">
+                <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-white/45">
+                  Example
+                </p>
+                <div className="mt-2 flex items-center gap-3">
+                  {instructionFlow.example.kind === "card" ? (
+                    <div
+                      className={cn(
+                        "rounded-2xl px-3 py-2 text-sm font-black",
+                        toneClass,
+                      )}
+                    >
+                      {instructionFlow.example.value}
+                    </div>
+                  ) : (
+                    <div className="rounded-xl border border-white/12 bg-black/20 px-3 py-2 text-base font-black text-white">
+                      {instructionFlow.example.value}
+                    </div>
+                  )}
+                  <p className="text-sm font-semibold text-white">
+                    {instructionFlow.example.label}
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="flex w-full max-w-md flex-col gap-2">
+        <Fbutton
+          className="w-full"
+          variant={dark ? "dark" : "secondary"}
+          onClick={startGame}
+        >
+          Let's Play
+        </Fbutton>
+        <Fbutton
+          size="sm"
+          variant={dark ? "dark-outline" : "outline"}
+          className="w-full"
+          onClick={cancelGame}
+        >
+          Back to Lobby
+        </Fbutton>
+      </div>
     </div>
   );
 };
@@ -196,17 +542,9 @@ export const HostLobbyFooter = () => {
 export const LobbyTitle = () => {
   const { lobby, joinUrl } = useLobbyHost();
   return (
-    <section className="relative isolate w-full overflow-hidden rounded-[2rem] border border-white/12 bg-[linear-gradient(135deg,rgba(255,255,255,0.09),rgba(255,255,255,0.03))] px-5 py-5 md:px-6 md:py-6 shadow-[0_24px_80px_rgba(0,0,0,0.28)] backdrop-blur-xl">
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,202,40,0.18),transparent_24%),radial-gradient(circle_at_top_right,rgba(77,199,255,0.16),transparent_28%),radial-gradient(circle_at_bottom,rgba(239,62,70,0.14),transparent_34%)]" />
-      <div className="absolute -left-12 top-0 h-36 w-36 rounded-full bg-[var(--umati-yellow)]/12 blur-3xl" />
-      <div className="absolute right-0 top-0 h-40 w-40 translate-x-1/4 -translate-y-1/4 rounded-full bg-[var(--umati-sky)]/12 blur-3xl" />
-
+    <section className="relative isolate w-full overflow-hidden rounded-[2rem]">
       <div className="relative z-10 flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
         <div className="max-w-3xl">
-          <div className="mb-3 inline-flex w-fit items-center gap-2 rounded-full border border-white/15 bg-black/20 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.22em] text-white/75">
-            <span className="inline-block size-2 rounded-full bg-[var(--umati-yellow)] shadow-[0_0_18px_var(--umati-yellow)]" />
-            Live Lobby
-          </div>
           <h1 className="max-w-4xl text-4xl font-black tracking-tight text-white md:text-6xl">
             {lobby?.name}
           </h1>
@@ -628,7 +966,7 @@ export function GameCard({
                   usesDarkText ? "text-black/85" : "text-white/90",
                 )}
               >
-                Tap to configure
+                Tap to play
               </p>
             </motion.div>
           )}
@@ -752,6 +1090,7 @@ export const PlayerLeaveButton = () => {
 
 export const Reactions = () => {
   const [showTray, setShowTray] = useState(false);
+  const [isRateLimited, setIsRateLimited] = useState(false);
   const trayRef = useRef<HTMLDivElement>(null);
   const emojis = ["❤️", "💔", "😭", "😂", "👍", "👎"];
   const { sendReaction } = useLobbyPlayer();
@@ -759,37 +1098,57 @@ export const Reactions = () => {
   useClickOutside(trayRef, () => setShowTray(false));
 
   const handleSendReaction = (emoji: string) => {
+    if (isRateLimited) return;
     sendReaction(emoji);
+    setIsRateLimited(true);
+    window.setTimeout(() => setIsRateLimited(false), 800);
   };
 
   return (
-    <div className="" ref={trayRef}>
-      <Fbutton variant="outline" onClick={() => setShowTray(!showTray)}>
+    <div className="relative" ref={trayRef}>
+      <Fbutton
+        variant={showTray ? "secondary" : "outline"}
+        className="min-w-12"
+        onClick={() => setShowTray(!showTray)}
+      >
         <RiHeart3Line />
       </Fbutton>
 
-      {/* AnimatePresence allows smooth mounting/unmounting */}
       <AnimatePresence>
         {showTray && (
           <motion.div
             key="tray"
-            initial={{ opacity: 0, y: 20, scale: 0.95 }}
+            initial={{ opacity: 0, y: 12, scale: 0.96 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 10, scale: 0.95 }}
-            transition={{ type: "spring", stiffness: 200, damping: 18 }}
-            className="bg-foreground/5 select-none rounded-2xl p-4 grid grid-flow-col auto-cols-auto gap-4 items-center absolute bottom-[calc(100%+8px)] w-full inset-x-0 max-w-md mx-auto shadow-lg backdrop-blur-sm"
+            exit={{ opacity: 0, y: 8, scale: 0.96 }}
+            transition={{ type: "spring", stiffness: 260, damping: 20 }}
+            className="absolute bottom-[calc(100%+10px)] right-0 z-40 w-max max-w-[calc(100vw-2rem)] rounded-[1.5rem] border border-white/12 bg-[linear-gradient(180deg,rgba(255,255,255,0.12),rgba(255,255,255,0.05))] p-3 shadow-[0_24px_60px_rgba(0,0,0,0.26)] backdrop-blur-xl"
           >
-            {emojis.map((emoji, index) => (
-              <motion.button
-                key={index}
-                whileTap={{ scale: 1.3 }}
-                transition={{ type: "spring", stiffness: 300, damping: 10 }}
-                className="text-center text-4xl"
-                onClick={() => handleSendReaction(emoji)}
-              >
-                {emoji}
-              </motion.button>
-            ))}
+            <div className="mb-2 flex items-center justify-between gap-4 px-1">
+              <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-white/55">
+                React
+              </p>
+              <p className="text-[11px] font-semibold uppercase tracking-[0.18em] text-white/45">
+                Tap fast, not spam
+              </p>
+            </div>
+
+            <div className="grid grid-cols-3 gap-2 sm:grid-cols-6">
+              {emojis.map((emoji) => (
+                <motion.button
+                  key={emoji}
+                  type="button"
+                  whileHover={{ y: -2, scale: 1.04 }}
+                  whileTap={{ scale: 0.94 }}
+                  transition={{ type: "spring", stiffness: 320, damping: 18 }}
+                  className="flex size-14 items-center justify-center rounded-2xl border border-white/10 bg-white/8 text-3xl shadow-sm disabled:opacity-45"
+                  disabled={isRateLimited}
+                  onClick={() => handleSendReaction(emoji)}
+                >
+                  {emoji}
+                </motion.button>
+              ))}
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

@@ -15,7 +15,7 @@ import { RoomManager } from "../room-manager";
 import { BaseGame } from "./base";
 
 type QuizzerOptions = {
-  noOfRounds: number;
+  noOfRounds?: number;
   duration?: number;
   questions?: QuizzerQuestionInput[];
 };
@@ -37,11 +37,7 @@ export class QuizzerGame extends BaseGame {
     if (!this.data.length) {
       throw new Error("Quizzer requires at least one valid question.");
     }
-    this.noOfRounds = Math.min(
-      options.noOfRounds,
-      this.data.length,
-      QuizzerGame.maxNumberOfRounds,
-    );
+    this.noOfRounds = Math.min(this.data.length, QuizzerGame.maxNumberOfRounds);
     this.data = this.data.slice(0, this.noOfRounds);
     this.initPlayerScores();
   }

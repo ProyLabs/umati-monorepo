@@ -17,7 +17,7 @@ interface TriviaHostContextType {
 const TriviaHostContext = createContext<TriviaHostContextType | null>(null);
 
 export const TriviaHostProvider = ({ children }: { children: React.ReactNode }) => {
-  const { wsClient, lobby } = useLobbyHost();
+  const { wsClient, lobby, cancelGame } = useLobbyHost();
 
   const [gameId, setGameId] = useState<string | null>(lobby?.game?.id ?? null);
   const [gameType, setGameType] = useState<string | null>(lobby?.game?.type ?? null);
@@ -65,6 +65,11 @@ export const TriviaHostProvider = ({ children }: { children: React.ReactNode }) 
   };
 
   const nextRound = () => {
+    if (state === GameState.RANKING) {
+      cancelGame();
+      return;
+    }
+
     if (!wsClient || !lobby) return;
     const nextState =
       state === GameState.ROUND_END

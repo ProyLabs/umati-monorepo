@@ -17,7 +17,7 @@ interface HerdMentalityHostContextType {
 const HerdMentalityHostContext = createContext<HerdMentalityHostContextType | null>(null);
 
 export const HerdMentalityHostProvider = ({ children }: { children: React.ReactNode }) => {
-  const { wsClient, lobby } = useLobbyHost();
+  const { wsClient, lobby, cancelGame } = useLobbyHost();
 
   const [gameId, setGameId] = useState<string | null>(lobby?.game?.id ?? null);
   const [gameType, setGameType] = useState<string | null>(lobby?.game?.type ?? null);
@@ -65,6 +65,11 @@ export const HerdMentalityHostProvider = ({ children }: { children: React.ReactN
   };
 
   const nextRound = () => {
+    if (state === GameState.RANKING) {
+      cancelGame();
+      return;
+    }
+
     if (!wsClient || !lobby) return;
     const nextState =
       state === GameState.ROUND_END

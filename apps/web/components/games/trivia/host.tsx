@@ -13,7 +13,7 @@ export default function TriviaHost() {
   } else if (state === "LEADERBOARD") {
     return <Leaderboard scores={scores} nextRound={nextRound} />;
   } else if (state === "RANKING") {
-    return <Podium scores={scores} />;
+    return <Podium scores={scores} nextRound={nextRound} />;
   }
 
   return "";
