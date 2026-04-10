@@ -14,6 +14,7 @@ import React, {
 import { Fbutton } from "../ui/fancy-button";
 import GameConfig from "./game-configs";
 import { GameCard } from "./widgets";
+import { GameType } from "@umati/ws";
 
 type GameCarouselProps = {
   games?: Array<(typeof Games)[0]>;
@@ -83,6 +84,9 @@ const GameCarousel: React.FC<GameCarouselProps> = ({ games = Games }) => {
 
                 openModal({
                   title: `Configure ${game.title}`,
+                  titleClass: cn(
+                    game.id === GameType.HM ? "text-black" : "text-white",
+                  ),
                   body: (
                     <GameConfig
                       game={game}
@@ -93,9 +97,10 @@ const GameCarousel: React.FC<GameCarouselProps> = ({ games = Games }) => {
                     />
                   ),
                   containerClass: cn(
-                    "bg-gradient-to-b",
+                    "bg-gradient-to-b h-fit",
                     game.className,
-                    game.id === "quizzer" && "sm:max-w-6xl",
+                    game.id === GameType.QUIZZER &&
+                      "sm:max-w-6xl max-h-[85vh] h-full",
                   ),
                 });
               }}

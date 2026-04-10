@@ -14,6 +14,7 @@ import { fbuttonVariants } from "@/components/ui/fancy-button";
 type ModalConfig = {
   type?: "default" | "success";
   title?: string;
+  titleClass?: string;
   description?: string;
   body?: React.ReactNode;
   actionText?: string;
@@ -83,6 +84,7 @@ type AlertOptions = {
   closeText?: string;
   onConfirm?: () => void | Promise<void>;
   onClose?: () => void;
+  titleClass?: string;
 };
 
 type AlertDialogEntry = AlertOptions & { id: number };

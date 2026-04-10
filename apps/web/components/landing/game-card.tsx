@@ -16,6 +16,7 @@ const gameCardVariants = cva(
         lime: "from-lime-500 to-green-600",
         orange: "from-orange-400 to-orange-600",
         yellow: "from-yellow-400 to-yellow-600 text-black",
+        pink: "from-pink-400 to-pink-600 text-black",
       },
       size: {
         default: "w-50 h-66.67 md:w-75 md:h-100",

@@ -387,7 +387,7 @@ export const Rankings = () => {
       </div>
 
       <Dialog open={expanded} onOpenChange={setExpanded}>
-        <DialogContent className="max-h-[88vh] max-w-5xl overflow-hidden border-white/12 bg-[linear-gradient(180deg,rgba(14,25,53,0.98),rgba(10,18,38,0.98))] p-0 text-white shadow-[0_32px_120px_rgba(0,0,0,0.5)] sm:max-w-5xl">
+        <DialogContent className="max-h-[80vh] max-w-5xl overflow-hidden border-white/12 bg-[linear-gradient(180deg,rgba(14,25,53,0.98),rgba(10,18,38,0.98))] p-0 text-white shadow-[0_32px_120px_rgba(0,0,0,0.5)] sm:max-w-5xl">
           <div className="relative overflow-hidden rounded-[inherit] p-6 md:p-8">
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,200,39,0.16),transparent_24%),radial-gradient(circle_at_top_right,rgba(77,199,255,0.16),transparent_30%),radial-gradient(circle_at_bottom,rgba(239,62,70,0.12),transparent_36%)]" />
             <DialogHeader className="relative z-10 border-b border-white/10 pb-5">

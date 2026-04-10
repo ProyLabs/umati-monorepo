@@ -25,7 +25,6 @@ import { useClipboard } from "../../hooks/use-clipboard";
 import { cn, getRandomAvatarUrl } from "../../lib/utils";
 import { useLobbyHost } from "../../providers/lobby-host-provider";
 import { useLobbyPlayer } from "../../providers/lobby-player-provider";
-import { useAlert } from "../../providers/modal-provider";
 import { useSettings } from "../../providers/settings-provider";
 import {
   Dialog,
@@ -317,10 +316,7 @@ const LobbyPollControl = () => {
   const [open, setOpen] = useState(false);
   const [showComposer, setShowComposer] = useState(false);
 
-  const closePollModal = (shouldClosePoll = false) => {
-    if (shouldClosePoll && poll?.status === "active") {
-      endPoll();
-    }
+  const closePollModal = () => {
     setOpen(false);
   };
 
@@ -350,14 +346,14 @@ const LobbyPollControl = () => {
         open={open}
         onOpenChange={(nextOpen) => {
           if (!nextOpen) {
-            closePollModal(true);
+            closePollModal();
             return;
           }
           setOpen(nextOpen);
         }}
       >
-        <DialogContent className="max-w-5xl overflow-hidden border-white/12 bg-[linear-gradient(180deg,rgba(14,25,53,0.98),rgba(10,18,38,0.98))] p-0 text-white shadow-[0_32px_120px_rgba(0,0,0,0.5)] xl:max-w-6xl">
-          <div className="relative overflow-hidden rounded-[inherit] p-6 md:p-8">
+        <DialogContent className="max-h-[80vh] max-w-5xl overflow-hidden border-white/12 bg-[linear-gradient(180deg,rgba(14,25,53,0.98),rgba(10,18,38,0.98))] p-0 text-white shadow-[0_32px_120px_rgba(0,0,0,0.5)] xl:max-w-6xl">
+          <div className="relative min-h-0 overflow-y-auto rounded-[inherit] p-6 md:p-8">
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(94,234,212,0.14),transparent_28%),radial-gradient(circle_at_bottom_left,rgba(245,158,11,0.12),transparent_34%)]" />
             <DialogHeader className="relative z-10 border-b border-white/10 pb-5">
               <DialogTitle className="text-2xl font-black tracking-tight text-white md:text-3xl">
@@ -366,7 +362,7 @@ const LobbyPollControl = () => {
               <DialogDescription className="max-w-2xl text-sm leading-6 text-white/68">
                 {showComposer
                   ? "Ask one room question, collect votes in real time, and keep the crowd aligned before the next game starts."
-                  : "Results update live as players vote. Close the poll when you are ready to move on."}
+                  : "Results update live as players vote."}
               </DialogDescription>
             </DialogHeader>
 
@@ -396,7 +392,7 @@ const LobbyPollControl = () => {
                     </div>
                     <div className="flex items-center gap-2">
                       <span className="rounded-full border border-white/12 bg-black/25 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.18em] text-white/70">
-                        {poll.status === "active" ? "Live" : "Closed"}
+                        Live
                       </span>
                     </div>
                   </div>
@@ -404,31 +400,22 @@ const LobbyPollControl = () => {
                   <PollResultsChart poll={poll} />
 
                   <div className="flex flex-wrap items-center justify-end gap-3">
-                    {poll.status === "active" ? (
-                      <Fbutton
-                        variant="outline"
-                        onClick={() => closePollModal(true)}
-                      >
-                        Close Poll
-                      </Fbutton>
-                    ) : null}
                     <Fbutton
-                      variant={
-                        poll.status === "active" ? "secondary" : "default"
-                      }
+                      variant="outline"
+                      onClick={() => {
+                        endPoll();
+                        closePollModal();
+                      }}
+                    >
+                      Close Poll
+                    </Fbutton>
+                    <Fbutton
+                      variant="secondary"
                       onClick={() => setShowComposer(true)}
                     >
                       <PlusIcon className="size-4" />
                       Start Another Poll
                     </Fbutton>
-                    {poll.status !== "active" ? (
-                      <Fbutton
-                        variant="outline"
-                        onClick={() => closePollModal(false)}
-                      >
-                        Dismiss
-                      </Fbutton>
-                    ) : null}
                   </div>
                 </div>
               )}
@@ -1149,8 +1136,8 @@ export const LobbyTitle = () => {
       </section>
 
       <Dialog open={scanExpanded} onOpenChange={setScanExpanded}>
-        <DialogContent className="max-w-2xl overflow-hidden border-white/12 bg-[linear-gradient(180deg,rgba(14,25,53,0.98),rgba(10,18,38,0.98))] p-0 text-white shadow-[0_32px_120px_rgba(0,0,0,0.5)] sm:max-w-2xl">
-          <div className="relative overflow-hidden rounded-[inherit] p-6 md:p-8">
+        <DialogContent className="max-h-[80vh] max-w-2xl overflow-hidden border-white/12 bg-[linear-gradient(180deg,rgba(14,25,53,0.98),rgba(10,18,38,0.98))] p-0 text-white shadow-[0_32px_120px_rgba(0,0,0,0.5)] sm:max-w-2xl">
+          <div className="relative min-h-0 overflow-y-auto rounded-[inherit] p-6 md:p-8">
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(77,199,255,0.18),transparent_28%),radial-gradient(circle_at_bottom_left,rgba(255,255,255,0.08),transparent_36%)]" />
             <DialogHeader className="relative z-10 border-b border-white/10 pb-5">
               <DialogTitle className="text-2xl font-black tracking-tight text-white md:text-3xl">
@@ -1231,15 +1218,7 @@ export const JoinLobbyCode = ({
 
 export const WaitingForPlayers = ({ className }: { className?: string }) => {
   const { players, lobby, uiState, kickPlayer } = useLobbyHost();
-  const { showAlert } = useAlert();
-  const [contextMenu, setContextMenu] = useState<{
-    player: Player;
-    x: number;
-    y: number;
-  } | null>(null);
-  const contextMenuRef = useRef<HTMLDivElement>(null);
-
-  useClickOutside(contextMenuRef, () => setContextMenu(null));
+  const [selectedPlayer, setSelectedPlayer] = useState<Player | null>(null);
 
   const lobbyReady = players.length === lobby?.maxPlayers;
   const waitingForMorePlayers = players.length < (lobby?.maxPlayers ?? 0) / 2;
@@ -1318,25 +1297,15 @@ export const WaitingForPlayers = ({ className }: { className?: string }) => {
                 >
                   <motion.button
                     type="button"
-                    className="rounded-full outline-hidden"
-                    aria-label={`${player.displayName} actions`}
+                    className="group/player relative rounded-full outline-hidden"
+                    aria-label={`Manage ${player.displayName}`}
                     whileHover={{ scale: 1.08 }}
                     whileTap={{ scale: 0.95 }}
                     transition={{ duration: 0.2, ease: [0.25, 1, 0.5, 1] }}
-                    onContextMenu={(event) => {
-                      event.preventDefault();
-                      setContextMenu({
-                        player,
-                        x: event.clientX,
-                        y: event.clientY,
-                      });
-                    }}
+                    onClick={() => setSelectedPlayer(player)}
                   >
                     <Avatar
-                      className={cn("ring-2 ring-background shadow-md", {
-                        "size-16": uiState === RoomState.INIT,
-                        "size-12": uiState === RoomState.LOBBY,
-                      })}
+                      className={cn("ring-2 ring-foreground shadow-md size-10")}
                     >
                       <AvatarImage
                         src={player.avatar}
@@ -1344,6 +1313,9 @@ export const WaitingForPlayers = ({ className }: { className?: string }) => {
                       />
                       <AvatarFallback>{player.displayName?.[0]}</AvatarFallback>
                     </Avatar>
+                    <span className="pointer-events-none absolute -right-1 -bottom-1 inline-flex size-7 items-center justify-center rounded-full border border-white/15 bg-black/70 text-white opacity-0 shadow-lg backdrop-blur-sm transition group-hover/player:opacity-100 group-focus-visible/player:opacity-100">
+                      <UserRoundX className="size-3.5" />
+                    </span>
                   </motion.button>
                   <motion.p
                     className={cn("text-center font-semibold", {
@@ -1427,40 +1399,78 @@ export const WaitingForPlayers = ({ className }: { className?: string }) => {
           )}
         </div>
       </motion.div>
-      {contextMenu && (
-        <div
-          ref={contextMenuRef}
-          className="fixed z-50 min-w-40 rounded-md border bg-popover p-1 text-popover-foreground shadow-md"
-          style={{ top: contextMenu.y, left: contextMenu.x }}
-        >
-          <button
-            type="button"
-            className="flex w-full items-center gap-2 rounded-sm px-2 py-1.5 text-sm text-destructive transition hover:bg-destructive/10"
-            onClick={() => {
-              const playerToKick = contextMenu.player;
-              setContextMenu(null);
+      <Dialog
+        open={!!selectedPlayer}
+        onOpenChange={(open) => {
+          if (!open) setSelectedPlayer(null);
+        }}
+      >
+        <DialogContent className="h-fit max-w-sm! sm:max-w-sm overflow-hidden border-white/12 0 p-0 text-white shadow-[0_32px_120px_rgba(0,0,0,0.5)] bg-[linear-gradient(135deg,rgba(255,255,255,0.09),rgba(255,255,255,0.03))]">
+          <div className="h-full w-full absolute inset-0 ">
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,202,40,0.16),transparent_28%),radial-gradient(circle_at_top_right,rgba(77,199,255,0.16),transparent_32%),radial-gradient(circle_at_bottom,rgba(106,59,255,0.16),transparent_34%)]" />
+            <div className="absolute -left-10 top-8 h-28 w-28 rounded-full bg-[var(--umati-yellow)]/12 blur-3xl" />
+            <div className="absolute right-0 top-0 h-36 w-36 translate-x-1/4 -translate-y-1/4 rounded-full bg-[var(--umati-sky)]/12 blur-3xl" />
+          </div>
+          {selectedPlayer ? (
+            <div className="relative overflow-hidden rounded-[inherit] p-6">
+              <DialogHeader className="relative z-10 border-b border-white/10 pb-5">
+                <DialogTitle className="text-2xl font-black tracking-tight text-white">
+                  Manage Player
+                </DialogTitle>
+                <DialogDescription className="text-sm leading-6 text-white/68">
+                  Remove this player from the lobby if needed.
+                </DialogDescription>
+              </DialogHeader>
 
-              showAlert({
-                title: "Kick player?",
-                description: playerToKick
-                  ? `${playerToKick.displayName} will be removed from the lobby immediately.`
-                  : "This player will be removed from the lobby immediately.",
-                confirmText: "Kick player",
-                closeText: "Cancel",
-                onConfirm: () => {
-                  kickPlayer(
-                    playerToKick.id,
-                    "The host removed you from the lobby.",
-                  );
-                },
-              });
-            }}
-          >
-            <UserRoundX className="size-4" />
-            Kick player
-          </button>
-        </div>
-      )}
+              <div className="relative z-10 mt-5 space-y-5">
+                <div className="flex items-center gap-4 rounded-[1.5rem] border border-white/10 bg-white/6 p-4">
+                  <Avatar className="size-16 ring-2 ring-white/15 shadow-md">
+                    <AvatarImage
+                      src={selectedPlayer.avatar}
+                      alt={selectedPlayer.displayName}
+                    />
+                    <AvatarFallback>
+                      {selectedPlayer.displayName?.[0]}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="min-w-0">
+                    <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-white/50">
+                      Player
+                    </p>
+                    <p className="mt-1 truncate text-lg font-black text-white">
+                      {selectedPlayer.displayName}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="grid gap-3">
+                  <Fbutton
+                    variant="red"
+                    className="w-full"
+                    onClick={() => {
+                      kickPlayer(
+                        selectedPlayer.id,
+                        "The host removed you from the lobby.",
+                      );
+                      setSelectedPlayer(null);
+                    }}
+                  >
+                    <UserRoundX className="size-4" />
+                    Kick Player
+                  </Fbutton>
+                  <Fbutton
+                    variant="outline"
+                    className="w-full"
+                    onClick={() => setSelectedPlayer(null)}
+                  >
+                    Cancel
+                  </Fbutton>
+                </div>
+              </div>
+            </div>
+          ) : null}
+        </DialogContent>
+      </Dialog>
     </>
   );
 };

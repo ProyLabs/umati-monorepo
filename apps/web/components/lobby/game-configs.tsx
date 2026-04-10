@@ -39,8 +39,15 @@ function GameConfig({ game, action }: GameConfigProps) {
 
   return (
     <div className="grid gap-5">
-      <div className="relative overflow-hidden rounded-[2rem] border border-white/15 bg-black/10 p-5 backdrop-blur-md">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.28),transparent_32%),radial-gradient(circle_at_bottom_left,rgba(0,0,0,0.18),transparent_35%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.28),transparent_32%),radial-gradient(circle_at_bottom_left,rgba(0,0,0,0.18),transparent_35%)]" />
+      <div
+        className={cn(
+          "relative overflow-hidden rounded-2xl border  p-5 backdrop-blur-md",
+          usesDarkText
+            ? "bg-black/5 border-black/5"
+            : "bg-white/10 border-white/15",
+        )}
+      >
         <div className="relative z-10 flex flex-col gap-5 md:flex-row md:items-start md:justify-between">
           <div className="flex items-start gap-4">
             {game.src ? (
@@ -57,17 +64,10 @@ function GameConfig({ game, action }: GameConfigProps) {
             ) : null}
 
             <div className="space-y-3">
+              <h2 className="text-3xl font-black tracking-tight">
+                {game.title}
+              </h2>
               <div className="flex flex-wrap items-center gap-2">
-                <span
-                  className={cn(
-                    "rounded-full border px-3 py-1 text-[11px] font-bold uppercase tracking-[0.18em]",
-                    usesDarkText
-                      ? "border-black/15 bg-black/10 text-black/75"
-                      : "border-white/20 bg-white/10 text-white/85",
-                  )}
-                >
-                  {game.playable ? "Ready" : "Coming soon"}
-                </span>
                 {game.min ? (
                   <span
                     className={cn(
@@ -81,40 +81,19 @@ function GameConfig({ game, action }: GameConfigProps) {
                   </span>
                 ) : null}
               </div>
-
-              <div>
-                <h2 className="text-3xl font-black tracking-tight">
-                  {game.title}
-                </h2>
-                <p
-                  className={cn(
-                    "mt-2 max-w-xl text-sm leading-6",
-                    usesDarkText ? "text-black/70" : "text-white/80",
-                  )}
-                >
-                  {game.description ??
-                    "Set the rules, then launch the room when everyone is ready."}
-                </p>
-              </div>
             </div>
-          </div>
-
-          <div className="grid min-w-[12rem] grid-cols-2 gap-2 self-stretch md:self-auto">
-            <ConfigStatCard
-              label="Mode"
-              value={game.title}
-              usesDarkText={usesDarkText}
-            />
-            <ConfigStatCard
-              label="Lobby"
-              value={game.playable ? "Live" : "Soon"}
-              usesDarkText={usesDarkText}
-            />
           </div>
         </div>
       </div>
 
-      <div className="rounded-[1.8rem] border border-white/12 bg-white/10 p-5 backdrop-blur-md">
+      <div
+      // className={cn(
+      //   "rounded-2xl border p-5 backdrop-blur-md h-full",
+      //   usesDarkText
+      //     ? "bg-black/10 border-black/12"
+      //     : "bg-white/10 border-white/12",
+      // )}
+      >
         {(() => {
           switch (game.id) {
             case GameType.TRIVIA:
@@ -124,9 +103,9 @@ function GameConfig({ game, action }: GameConfigProps) {
             case GameType.OOO:
               return <OddOneOutGameConfig />;
             case GameType.HM:
-              return <HMGameConfig action={action} />
+              return <HMGameConfig action={action} />;
             case GameType.CHAMELEON:
-              return <ChameleonGameConfig action={action} />
+              return <ChameleonGameConfig action={action} />;
             case GameType.QUIZZER:
               return <QuizzerGameConfig action={action} />;
             case GameType.FF:
@@ -320,7 +299,7 @@ const HMGameConfig = ({action}: { action: GameConfigAction}) => {
       <div className="grid gap-2">
         <Fbutton
           type="submit"
-          variant="secondary"
+          variant="dark"
           className="w-full"
           onClick={async () => {
             await action({

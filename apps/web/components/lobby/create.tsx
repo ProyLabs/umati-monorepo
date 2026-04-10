@@ -19,9 +19,18 @@ import ButtonOptions from "../ui/button-options";
 import { Fbutton } from "../ui/fancy-button";
 import { cn } from "@/lib/utils";
 
+const maxLobbyPlayers = Number(process.env.NEXT_PUBLIC_MAX_LOBBY_PLAYERS ?? 60);
+const lobbySizeOptions = Array.from(
+  new Set(
+    [10, 20, 40, maxLobbyPlayers].filter(
+      (value) => value >= 2 && value <= maxLobbyPlayers,
+    ),
+  ),
+).sort((left, right) => left - right);
+
 export default function CreateLobby() {
   const [lobbyName, setLobbyName] = useState("");
-  const [maxPlayers, setMaxPlayers] = useState(20);
+  const [maxPlayers, setMaxPlayers] = useState(Math.min(20, maxLobbyPlayers));
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [pageLoader, setPageLoader] = useState(false);
@@ -163,7 +172,7 @@ export default function CreateLobby() {
               variant="outline"
               value={maxPlayers}
               onChange={(value) => setMaxPlayers(Number(value))}
-              options={[10, 20, 40, 60]}
+              options={lobbySizeOptions}
             />
           </div>
 

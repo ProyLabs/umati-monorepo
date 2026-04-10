@@ -21,5 +21,6 @@ export const env = zennv({
 
     // App-specific
     PORT: z.string().optional(), // Render WS service port
+    NEXT_PUBLIC_MAX_LOBBY_PLAYERS: z.coerce.number().int().min(2).default(60),
   }),
 });

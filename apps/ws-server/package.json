@@ -5,7 +5,14 @@
   "scripts": {
     "dev": "tsx --watch src/index.ts",
     "start": "ts-node src/index.ts",
-    "build": "tsc -p tsconfig.json"
+    "build": "tsc -p tsconfig.json",
+    "loadtest:ws": "k6 run load-tests/ws-server.js",
+    "loadtest:lobby-capacity": "k6 run load-tests/lobby-capacity.js",
+    "loadtest:lobby-capacity:sweep": "node load-tests/lobby-capacity-sweep.mjs",
+    "loadtest:capacity-sustained": "k6 run load-tests/capacity-sustained.js",
+    "loadtest:concurrent-lobbies": "k6 run load-tests/concurrent-lobbies.js",
+    "loadtest:connection-churn": "k6 run load-tests/connection-churn.js",
+    "loadtest:all": "echo 'Run load tests in sequence' && echo '1. Capacity sweep' && pnpm run loadtest:lobby-capacity:sweep && echo '2. Sustained capacity' && pnpm run loadtest:capacity-sustained && echo '3. Concurrent lobbies' && pnpm run loadtest:concurrent-lobbies && echo '4. Connection churn' && pnpm run loadtest:connection-churn"
   },
   "dependencies": {
     "@umati/prisma": "workspace:*",

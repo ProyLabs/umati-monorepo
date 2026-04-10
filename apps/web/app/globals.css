@@ -68,7 +68,7 @@
   --umati-blue: #3749f3;
   --umati-aqua: #64e0c2;
 
-  --cursor-pointer: url(/cursor.png), pointer;
+  --cursor-pointer: url(/cursor-dark.svg) 4 4, pointer;
 
   /* ===== Core Theme (Dark) ===== */
   --background: var(--umati-black);
@@ -114,6 +114,24 @@
   --sidebar-accent-foreground: oklch(0.985 0 0);
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
+}
+
+
+html,
+body {
+  cursor: url("/cursor-dark.svg") 4 4, auto;
+}
+
+button,
+a,
+[role="button"],
+input[type="submit"],
+input[type="button"],
+input[type="reset"],
+label[for],
+select,
+summary {
+  cursor: url("/cursor-dark.svg") 4 4, pointer;
 }
 
 @layer base {

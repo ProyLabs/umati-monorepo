@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { prisma } from "@umati/prisma";
 import { customAlphabet } from "nanoid";
+import { env } from "@/lib/env";
 
 interface CreateLobbyBody {
   name: string;
@@ -19,6 +20,7 @@ const nanoidNumbers = customAlphabet(numbers, 6);
 
 export async function POST(req: Request) {
   try {
+    const maxLobbyPlayers = env.NEXT_PUBLIC_MAX_LOBBY_PLAYERS;
     const body = (await req.json()) as CreateLobbyBody;
     const {
       name,
@@ -52,9 +54,9 @@ export async function POST(req: Request) {
     }
 
     const maxAllowed = maxPlayers ?? 8;
-    if (maxAllowed < 2 || maxAllowed > 60) {
+    if (maxAllowed < 2 || maxAllowed > maxLobbyPlayers) {
       return NextResponse.json(
-        { error: "maxPlayers must be between 2 and 60." },
+        { error: `maxPlayers must be between 2 and ${maxLobbyPlayers}.` },
         { status: 400 },
       );
     }

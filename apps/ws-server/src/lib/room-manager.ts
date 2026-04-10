@@ -321,14 +321,12 @@ export const RoomManager = {
     const room = rooms.get(roomId);
     if (!room?.poll) return null;
 
-    room.poll = {
-      ...room.poll,
-      status: "closed",
-    };
+    room.poll = null;
+    room.pollVotes = {};
 
     RoomManager.broadcastPollState(roomId);
     RoomManager.broadcast(roomId, WSEvent.ROOM_STATE, RoomManager.toLobbyState(roomId));
-    return room.poll;
+    return null;
   },
 
   submitGameResult(roomId: string, result: Scores) {
