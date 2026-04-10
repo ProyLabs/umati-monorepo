@@ -10,7 +10,7 @@
  *  - 🔹 WSMessage: full message shape { event, payload }
  */
 
-import { ChameleonRound, FriendFactsFact, FriendFactsFactInput, FriendFactsRound, FriendFactsSetupState, Game, GameState, GameType, HerdMentalityOptions, HerdMentalityRound, Lobby, LobbyFull, Player, QuestionProfile, QuizzerQuestionInput, Ranking, RoomState, Scores, TriviaOptions, TriviaRound } from "./types";
+import { ChameleonRound, FriendFactsFact, FriendFactsFactInput, FriendFactsRound, FriendFactsSetupState, Game, GameState, GameType, HerdMentalityOptions, HerdMentalityRound, Lobby, LobbyFull, LobbyPoll, Player, QuestionProfile, QuizzerQuestionInput, Ranking, RoomState, Scores, TriviaOptions, TriviaRound } from "./types";
 
 export enum WSEvent {
   // --- Core lifecycle ---
@@ -30,6 +30,10 @@ export enum WSEvent {
   ROOM_CLOSED = "ROOM:closed",
   ROOM_CLOSED_ME = "ROOM:closed-me",
   ROOM_REACTION = "ROOM:reaction",
+  POLL_STATE = "ROOM:POLL:STATE",
+  POLL_START = "ROOM:POLL:START",
+  POLL_VOTE = "ROOM:POLL:VOTE",
+  POLL_END = "ROOM:POLL:END",
 
   // --- Player lifecycle ---
   PLAYER_CONNECT = "PLAYER:CONNECT",
@@ -156,6 +160,19 @@ export interface WSPayloads {
     playerId: string;
     emoji: string;
   };
+  [WSEvent.POLL_STATE]: { poll: LobbyPoll | null };
+  [WSEvent.POLL_START]: {
+    roomId: string;
+    question: string;
+    options: string[];
+    allowMultiple: boolean;
+  };
+  [WSEvent.POLL_VOTE]: {
+    roomId: string;
+    playerId: string;
+    optionIds: string[];
+  };
+  [WSEvent.POLL_END]: { roomId: string };
 
   // --- Game lifecycle ---
   [WSEvent.GAME_INIT]: {

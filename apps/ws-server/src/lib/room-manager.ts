@@ -1,5 +1,6 @@
+import { randomUUID } from "node:crypto";
 import type { WebSocket } from "ws";
-import { GameLobbyMeta, Lobby, Player, Ranking, Room, RoomState, Scores, WSEvent, WSPayloads } from "@umati/ws";
+import { GameLobbyMeta, Lobby, LobbyPoll, Player, Ranking, Room, RoomState, Scores, WSEvent, WSPayloads } from "@umati/ws";
 import { GameManager } from "./game-manager";
 
 const rooms = new Map<string, Room>();
@@ -25,6 +26,8 @@ export const RoomManager = {
       playerSockets: new Map(),
       rankings: [],
       game: null,
+      poll: null,
+      pollVotes: {},
     };
 
     rooms.set(lobby.id, room);
@@ -106,6 +109,11 @@ export const RoomManager = {
       room.players = room.players.filter((p) => p.id !== playerId);
     }
     room.playerSockets.delete(playerId);
+    delete room.pollVotes[playerId];
+
+    if (room.poll) {
+      RoomManager.broadcastPollState(roomId);
+    }
   },
 
   // 🛠️ FIX: Safe broadcast with cleanup
@@ -197,7 +205,41 @@ export const RoomManager = {
         room.players.some((p) => p.id === r.id)
       ),
       game: room.game,
+      poll: RoomManager.toPollState(roomId),
     };
+  },
+
+  toPollState(roomId: string, playerId?: string): LobbyPoll | null {
+    const room = rooms.get(roomId);
+    if (!room?.poll) return null;
+
+    const options = room.poll.options.map((option) => ({
+      ...option,
+      votes: Object.values(room.pollVotes).filter((votes) => votes.includes(option.id)).length,
+    }));
+
+    return {
+      ...room.poll,
+      options,
+      totalVoters: Object.keys(room.pollVotes).length,
+      totalPlayers: room.players.length,
+      myVotes: playerId ? room.pollVotes[playerId] ?? [] : undefined,
+    };
+  },
+
+  broadcastPollState(roomId: string) {
+    const room = rooms.get(roomId);
+    if (!room) return;
+
+    RoomManager.toHost(roomId, WSEvent.POLL_STATE, {
+      poll: RoomManager.toPollState(roomId),
+    });
+
+    for (const player of room.players) {
+      RoomManager.toPlayer(roomId, player.id, WSEvent.POLL_STATE, {
+        poll: RoomManager.toPollState(roomId, player.id),
+      });
+    }
   },
 
   getAllRooms() {
@@ -223,6 +265,70 @@ export const RoomManager = {
       room.state = "LOBBY";
     }
     RoomManager.broadcast(roomId, WSEvent.ROOM_STATE, RoomManager.toLobbyState(roomId));
+  },
+
+  startPoll(roomId: string, question: string, options: string[], allowMultiple: boolean) {
+    const room = rooms.get(roomId);
+    if (!room) return null;
+
+    const sanitizedQuestion = question.trim();
+    const sanitizedOptions = options
+      .map((option) => option.trim())
+      .filter(Boolean)
+      .slice(0, 8)
+      .map((text) => ({
+        id: randomUUID(),
+        text,
+        votes: 0,
+      }));
+
+    if (!sanitizedQuestion || sanitizedOptions.length < 2) {
+      return null;
+    }
+
+    room.poll = {
+      id: randomUUID(),
+      question: sanitizedQuestion,
+      allowMultiple,
+      status: "active",
+      options: sanitizedOptions,
+      totalVoters: 0,
+      totalPlayers: room.players.length,
+    };
+    room.pollVotes = {};
+
+    RoomManager.broadcastPollState(roomId);
+    RoomManager.broadcast(roomId, WSEvent.ROOM_STATE, RoomManager.toLobbyState(roomId));
+    return room.poll;
+  },
+
+  votePoll(roomId: string, playerId: string, optionIds: string[]) {
+    const room = rooms.get(roomId);
+    if (!room?.poll || room.poll.status !== "active") return null;
+
+    const validOptionIds = new Set(room.poll.options.map((option) => option.id));
+    const uniqueOptionIds = Array.from(new Set(optionIds)).filter((optionId) => validOptionIds.has(optionId));
+    const nextVotes = room.poll.allowMultiple ? uniqueOptionIds : uniqueOptionIds.slice(0, 1);
+
+    if (nextVotes.length === 0) return null;
+
+    room.pollVotes[playerId] = nextVotes;
+    RoomManager.broadcastPollState(roomId);
+    return RoomManager.toPollState(roomId, playerId);
+  },
+
+  endPoll(roomId: string) {
+    const room = rooms.get(roomId);
+    if (!room?.poll) return null;
+
+    room.poll = {
+      ...room.poll,
+      status: "closed",
+    };
+
+    RoomManager.broadcastPollState(roomId);
+    RoomManager.broadcast(roomId, WSEvent.ROOM_STATE, RoomManager.toLobbyState(roomId));
+    return room.poll;
   },
 
   submitGameResult(roomId: string, result: Scores) {

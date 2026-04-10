@@ -1,7 +1,7 @@
 import { WSEvent, WSMessage, WSPayloads } from "@umati/ws";
 import type { WebSocket } from "ws";
-import { handlePlayerConnect, handlePlayerJoin, handlePlayerKicked, handlePlayerLeft, handlePlayerReaction } from "../handlers/player";
-import { handleRoomClose, handleRoomInit, handleRoomStateChange } from "../handlers/room";
+import { handlePlayerConnect, handlePlayerJoin, handlePlayerKicked, handlePlayerLeft, handlePlayerReaction, handlePollVote } from "../handlers/player";
+import { handlePollEnd, handlePollStart, handleRoomClose, handleRoomInit, handleRoomStateChange } from "../handlers/room";
 import { logInfo } from "../utils/logger";
 import { handleCancelGame, handleFriendFactsSetupSubmit, handleGameAnswer, handleGameStateChange, handleInitGame, handleStartGame } from "../handlers/game";
 
@@ -23,6 +23,18 @@ export async function handleMessage(ws: WebSocket, msg: WSMessage, sid: string) 
       break;
     case WSEvent.ROOM_CLOSED_ME:
       await handleRoomClose(ws, msg.payload as WSPayloads[WSEvent.ROOM_CLOSED_ME], sid);
+      break;
+
+    case WSEvent.POLL_START:
+      await handlePollStart(ws, msg.payload as WSPayloads[WSEvent.POLL_START]);
+      break;
+
+    case WSEvent.POLL_VOTE:
+      await handlePollVote(ws, msg.payload as WSPayloads[WSEvent.POLL_VOTE]);
+      break;
+
+    case WSEvent.POLL_END:
+      await handlePollEnd(ws, msg.payload as WSPayloads[WSEvent.POLL_END]);
       break;
 
     

@@ -5,7 +5,9 @@ import {
   QuizzerQuestionType,
   type QuizzerQuestionInput,
 } from "@umati/ws";
+import { cn } from "@/lib/utils";
 import { useMemo, useState, type ChangeEvent } from "react";
+import Image from "next/image";
 import { useModal } from "../../providers/modal-provider";
 import ButtonOptions from "../ui/button-options";
 import { Fbutton } from "../ui/fancy-button";
@@ -33,36 +35,143 @@ type GameConfigProps = {
 };
 
 function GameConfig({ game, action }: GameConfigProps) {
-  return (
-    <div>
-      <h2 className="text-2xl font-bold text-sart">{game.title}</h2>
-      <p className="mb-8">Select the game configurations</p>
+  const usesDarkText = game.color === "aqua" || game.color === "yellow";
 
-      {(() => {
-        switch (game.id) {
-          case GameType.TRIVIA:
-            return <TriviaGameConfig action={action} />;
-          case GameType.DRAWIT:
-            return <DrawItGameConfig />;
-          case GameType.OOO:
-            return <OddOneOutGameConfig />;
-          case GameType.HM:
-            return <HMGameConfig action={action} />
-          case GameType.CHAMELEON:
-            return <ChameleonGameConfig action={action} />
-          case GameType.QUIZZER:
-            return <QuizzerGameConfig action={action} />;
-          case GameType.FF:
-            return <FriendFactsGameConfig action={action} />;
-          default:
-            return null;
-        }
-      })()}
+  return (
+    <div className="grid gap-5">
+      <div className="relative overflow-hidden rounded-[2rem] border border-white/15 bg-black/10 p-5 backdrop-blur-md">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(255,255,255,0.28),transparent_32%),radial-gradient(circle_at_bottom_left,rgba(0,0,0,0.18),transparent_35%)]" />
+        <div className="relative z-10 flex flex-col gap-5 md:flex-row md:items-start md:justify-between">
+          <div className="flex items-start gap-4">
+            {game.src ? (
+              <div className="relative flex size-20 shrink-0 items-center justify-center rounded-[1.6rem] border border-white/20 bg-white/15 shadow-lg backdrop-blur-md">
+                <div className="absolute inset-0 rounded-[1.6rem] bg-white/10" />
+                <Image
+                  src={game.src}
+                  alt={game.title}
+                  width={88}
+                  height={88}
+                  className="relative z-10 size-14 object-contain drop-shadow-[0_10px_18px_rgba(0,0,0,0.22)]"
+                />
+              </div>
+            ) : null}
+
+            <div className="space-y-3">
+              <div className="flex flex-wrap items-center gap-2">
+                <span
+                  className={cn(
+                    "rounded-full border px-3 py-1 text-[11px] font-bold uppercase tracking-[0.18em]",
+                    usesDarkText
+                      ? "border-black/15 bg-black/10 text-black/75"
+                      : "border-white/20 bg-white/10 text-white/85",
+                  )}
+                >
+                  {game.playable ? "Ready" : "Coming soon"}
+                </span>
+                {game.min ? (
+                  <span
+                    className={cn(
+                      "rounded-full border px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.14em]",
+                      usesDarkText
+                        ? "border-black/10 bg-white/35 text-black/70"
+                        : "border-white/15 bg-black/20 text-white/80",
+                    )}
+                  >
+                    {game.min}+ players
+                  </span>
+                ) : null}
+              </div>
+
+              <div>
+                <h2 className="text-3xl font-black tracking-tight">
+                  {game.title}
+                </h2>
+                <p
+                  className={cn(
+                    "mt-2 max-w-xl text-sm leading-6",
+                    usesDarkText ? "text-black/70" : "text-white/80",
+                  )}
+                >
+                  {game.description ??
+                    "Set the rules, then launch the room when everyone is ready."}
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <div className="grid min-w-[12rem] grid-cols-2 gap-2 self-stretch md:self-auto">
+            <ConfigStatCard
+              label="Mode"
+              value={game.title}
+              usesDarkText={usesDarkText}
+            />
+            <ConfigStatCard
+              label="Lobby"
+              value={game.playable ? "Live" : "Soon"}
+              usesDarkText={usesDarkText}
+            />
+          </div>
+        </div>
+      </div>
+
+      <div className="rounded-[1.8rem] border border-white/12 bg-white/10 p-5 backdrop-blur-md">
+        {(() => {
+          switch (game.id) {
+            case GameType.TRIVIA:
+              return <TriviaGameConfig action={action} />;
+            case GameType.DRAWIT:
+              return <DrawItGameConfig />;
+            case GameType.OOO:
+              return <OddOneOutGameConfig />;
+            case GameType.HM:
+              return <HMGameConfig action={action} />
+            case GameType.CHAMELEON:
+              return <ChameleonGameConfig action={action} />
+            case GameType.QUIZZER:
+              return <QuizzerGameConfig action={action} />;
+            case GameType.FF:
+              return <FriendFactsGameConfig action={action} />;
+            default:
+              return null;
+          }
+        })()}
+      </div>
     </div>
   );
 }
 
 export default GameConfig;
+
+function ConfigStatCard({
+  label,
+  value,
+  usesDarkText,
+}: {
+  label: string;
+  value: string;
+  usesDarkText: boolean;
+}) {
+  return (
+    <div
+      className={cn(
+        "rounded-2xl border px-3 py-3",
+        usesDarkText
+          ? "border-black/10 bg-white/30"
+          : "border-white/15 bg-black/15",
+      )}
+    >
+      <p
+        className={cn(
+          "text-[11px] font-bold uppercase tracking-[0.16em]",
+          usesDarkText ? "text-black/55" : "text-white/55",
+        )}
+      >
+        {label}
+      </p>
+      <p className="mt-1 text-base font-black leading-tight">{value}</p>
+    </div>
+  );
+}
 
 const TriviaGameConfig = ({action}: { action: GameConfigAction}) => {
   const { closeModal } = useModal();

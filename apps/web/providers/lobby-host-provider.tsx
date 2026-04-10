@@ -6,6 +6,7 @@ import {
   GameType,
   getWsUrl,
   Lobby,
+  LobbyPoll,
   Player,
   Ranking,
   RoomState,
@@ -40,6 +41,7 @@ interface LobbyHostContextType {
   joinUrl: string;
   rankings: Ranking[];
   game: GameLobbyMeta | null;
+  poll: LobbyPoll | null;
 
   wsClient: WSClient | null;
 
@@ -50,6 +52,12 @@ interface LobbyHostContextType {
   startGame: () => void;
   cancelGame: () => void;
   setupGame: (gameId: GameType, options: any) => void;
+  startPoll: (
+    question: string,
+    options: string[],
+    allowMultiple: boolean,
+  ) => void;
+  endPoll: () => void;
 }
 
 const LobbyHostContext = createContext<LobbyHostContextType | undefined>(
@@ -71,6 +79,7 @@ export function LobbyHostProvider({ children }: { children: ReactNode }) {
   const [uiState, setUiState] = useState<RoomState>("INIT");
   const [rankings, setRankings] = useState<Ranking[]>([]);
   const [game, setGame] = useState<GameLobbyMeta | null>(null);
+  const [poll, setPoll] = useState<LobbyPoll | null>(null);
   const [reconnecting, setReconnecting] = useState(false); // 👈 new
 
   const wsRef = useRef<WSClient | null>(null);
@@ -100,9 +109,20 @@ export function LobbyHostProvider({ children }: { children: ReactNode }) {
           setUiState(data.state);
           setRankings(data.rankings ?? []);
           setGame(data.game ?? null);
+          setPoll(data.poll ?? null);
           setLoading(false);
           break;
         }
+
+        case WSEvent.POLL_STATE:
+          setPoll(payload.poll ?? null);
+          break;
+
+        case WSEvent.ERROR:
+          toast.error(payload.message ?? "Something went wrong", {
+            position: "bottom-right",
+          });
+          break;
 
         case WSEvent.PLAYER_JOIN:
           toast.success(`${payload?.displayName} joined the lobby`, {
@@ -186,6 +206,8 @@ export function LobbyHostProvider({ children }: { children: ReactNode }) {
       WSEvent.PLAYER_LEAVE,
       WSEvent.PLAYER_REACTION,
       WSEvent.PLAYER_KICKED,
+      WSEvent.POLL_STATE,
+      WSEvent.ERROR,
     ];
     for (const ev of events)
       ws.on(ev as keyof WSPayloads, (payload) => handleMessage(ev, payload));
@@ -266,6 +288,22 @@ export function LobbyHostProvider({ children }: { children: ReactNode }) {
     [identifier, send]
   );
 
+  const startPoll = useCallback(
+    (question: string, options: string[], allowMultiple: boolean) =>
+      send(WSEvent.POLL_START, {
+        roomId: identifier,
+        question,
+        options,
+        allowMultiple,
+      }),
+    [identifier, send],
+  );
+
+  const endPoll = useCallback(
+    () => send(WSEvent.POLL_END, { roomId: identifier }),
+    [identifier, send],
+  );
+
   /* ------------------------------------------------------------------------ */
   /* 💾 Context Value                                                        */
   /* ------------------------------------------------------------------------ */
@@ -280,6 +318,7 @@ export function LobbyHostProvider({ children }: { children: ReactNode }) {
       joinUrl,
       rankings,
       game,
+      poll,
       wsClient: wsRef.current,
       changeUiState,
       sendAnnouncement,
@@ -288,6 +327,8 @@ export function LobbyHostProvider({ children }: { children: ReactNode }) {
       startGame,
       setupGame,
       cancelGame,
+      startPoll,
+      endPoll,
     }),
     [
       lobby,
@@ -299,6 +340,7 @@ export function LobbyHostProvider({ children }: { children: ReactNode }) {
       joinUrl,
       rankings,
       game,
+      poll,
       changeUiState,
       sendAnnouncement,
       kickPlayer,
@@ -306,7 +348,9 @@ export function LobbyHostProvider({ children }: { children: ReactNode }) {
       startGame,
       setupGame,
       cancelGame,
-    ]
+      startPoll,
+      endPoll,
+    ],
   );
 
   return (

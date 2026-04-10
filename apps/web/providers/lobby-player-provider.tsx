@@ -15,6 +15,7 @@ import { toast } from "sonner";
 import { useAuth } from "@/providers/auth-provider";
 import {
   Lobby,
+  LobbyPoll,
   Player,
   RoomState,
   WSEvent,
@@ -35,6 +36,7 @@ interface LobbyPlayerContextType {
   player: Player | null;
   uiState: RoomState;
   game: GameLobbyMeta | null;
+  poll: LobbyPoll | null;
   loading: boolean;
   reconnecting: boolean;
   isInLobby: boolean;
@@ -45,6 +47,7 @@ interface LobbyPlayerContextType {
   leaveLobby: () => Promise<void>;
   sendReaction: (emoji: string) => void;
   sendAnswer: (index: TriviaOptions) => void;
+  votePoll: (optionIds: string[]) => void;
 }
 
 const LobbyPlayerContext = createContext<LobbyPlayerContextType | undefined>(
@@ -64,6 +67,7 @@ export function LobbyPlayerProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
   const [uiState, setUiState] = useState<RoomState>("INIT");
   const [game, setGame] = useState<GameLobbyMeta | null>(null);
+  const [poll, setPoll] = useState<LobbyPoll | null>(null);
   const [reconnecting, setReconnecting] = useState(false);
 
   const wsRef = useRef<WSClient | null>(null);
@@ -100,6 +104,7 @@ export function LobbyPlayerProvider({ children }: { children: ReactNode }) {
             title: "Oops!",
             description: payload.message,
           });
+          break;
 
         case WSEvent.OPEN:
           console.log(`✅ Player ${user?.id} WS connected`);
@@ -116,9 +121,14 @@ export function LobbyPlayerProvider({ children }: { children: ReactNode }) {
           setPlayers(data!.players);
           setUiState(data!.state);
           setGame(data!.game ?? null);
+          setPoll(data!.poll ?? null);
           setLoading(false);
           break;
         }
+
+        case WSEvent.POLL_STATE:
+          setPoll(payload.poll ?? null);
+          break;
 
         case WSEvent.ROOM_CLOSED:
           toast.info(payload.reason ?? "Lobby closed");
@@ -176,7 +186,8 @@ export function LobbyPlayerProvider({ children }: { children: ReactNode }) {
       WSEvent.ROOM_CLOSED,
       WSEvent.PLAYER_KICKED_ME,
       WSEvent.ERROR,
-      WSEvent.NOT_FOUND
+      WSEvent.NOT_FOUND,
+      WSEvent.POLL_STATE,
     ];
     for (const ev of events)
       ws.on(ev as WSEvent & keyof WSPayloads, (payload) =>
@@ -254,6 +265,18 @@ export function LobbyPlayerProvider({ children }: { children: ReactNode }) {
     [identifier, player, send]
   );
 
+  const votePoll = useCallback(
+    (optionIds: string[]) => {
+      if (!player) return;
+      send(WSEvent.POLL_VOTE, {
+        roomId: identifier,
+        playerId: player.id,
+        optionIds,
+      });
+    },
+    [identifier, player, send],
+  );
+
   /* ------------------------------------------------------------------------ */
   /* 💾 Context Value                                                         */
   /* ------------------------------------------------------------------------ */
@@ -264,6 +287,7 @@ export function LobbyPlayerProvider({ children }: { children: ReactNode }) {
       player,
       uiState,
       game,
+      poll,
       loading,
       reconnecting,
       isInLobby,
@@ -272,6 +296,7 @@ export function LobbyPlayerProvider({ children }: { children: ReactNode }) {
       leaveLobby,
       sendReaction,
       sendAnswer,
+      votePoll,
     }),
     [
       lobby,
@@ -279,6 +304,7 @@ export function LobbyPlayerProvider({ children }: { children: ReactNode }) {
       player,
       uiState,
       game,
+      poll,
       loading,
       reconnecting,
       isInLobby,
@@ -286,7 +312,8 @@ export function LobbyPlayerProvider({ children }: { children: ReactNode }) {
       leaveLobby,
       sendReaction,
       sendAnswer,
-    ]
+      votePoll,
+    ],
   );
 
   return (

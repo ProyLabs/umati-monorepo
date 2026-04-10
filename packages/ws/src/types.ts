@@ -16,6 +16,7 @@ export interface Lobby {
   pin?: string | null;
   createdAt: Date;
   game: GameLobbyMeta | null;
+  poll?: LobbyPoll | null;
 }
 
 export interface LobbyFull extends Lobby {
@@ -31,6 +32,23 @@ export interface Ranking {
   gold: number;
   silver: number;
   bronze: number;
+}
+
+export interface LobbyPollOption {
+  id: string;
+  text: string;
+  votes: number;
+}
+
+export interface LobbyPoll {
+  id: string;
+  question: string;
+  allowMultiple: boolean;
+  status: "active" | "closed";
+  options: LobbyPollOption[];
+  totalVoters: number;
+  totalPlayers: number;
+  myVotes?: string[];
 }
 
 // Room-level state machine (lobby UI context)
@@ -90,6 +108,10 @@ export interface Room {
   rankings: Ranking[];
 
   game: GameLobbyMeta | null;
+
+  poll: LobbyPoll | null;
+
+  pollVotes: Record<string, string[]>;
 }
 export interface GameLobbyMeta {
   id: string;

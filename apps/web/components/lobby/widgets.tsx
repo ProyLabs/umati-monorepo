@@ -2,11 +2,14 @@
 
 import { useAuth } from "@/providers/auth-provider";
 import { RiGroup3Fill, RiHeart3Line } from "@remixicon/react";
-import { GameType, Games, Player, RoomState } from "@umati/ws";
+import { GameType, Games, LobbyPoll, Player, RoomState } from "@umati/ws";
 import { cva, VariantProps } from "class-variance-authority";
 import {
+  BarChart3Icon,
+  CheckIcon,
   MaximizeIcon,
   MinimizeIcon,
+  PlusIcon,
   UserRoundX,
   WifiHighIcon,
   WifiIcon,
@@ -46,6 +49,7 @@ import { Label } from "../ui/label";
 import UmatiLogo, { UmatiFullLogo } from "../ui/logo";
 import { Separator } from "../ui/separator";
 import { QRCode } from "../ui/shadcn-io/qr-code";
+import { Switch } from "../ui/switch";
 import GameCarousel from "./game-carousel";
 
 export const CopyLinkButton = () => {
@@ -73,6 +77,468 @@ export const CopyLinkButton = () => {
         </motion.span>
       </Fbutton>
     </motion.div>
+  );
+};
+
+const POLL_CHART_COLORS = [
+  "#5eead4",
+  "#f59e0b",
+  "#60a5fa",
+  "#fb7185",
+  "#a78bfa",
+  "#34d399",
+  "#f97316",
+  "#facc15",
+];
+
+const PollResultsChart = ({ poll }: { poll: LobbyPoll }) => {
+  const totalSelections = poll.options.reduce(
+    (sum, option) => sum + option.votes,
+    0,
+  );
+  const radius = 68;
+  const circumference = 2 * Math.PI * radius;
+  let offset = 0;
+
+  return (
+    <div className="grid gap-6 lg:grid-cols-[220px_minmax(0,1fr)] lg:items-center">
+      <div className="relative mx-auto flex size-[220px] items-center justify-center">
+        <svg
+          viewBox="0 0 180 180"
+          className="size-full -rotate-90 overflow-visible"
+        >
+          <circle
+            cx="90"
+            cy="90"
+            r={radius}
+            fill="none"
+            stroke="rgba(255,255,255,0.12)"
+            strokeWidth="20"
+          />
+          {totalSelections > 0 ? (
+            poll.options.map((option, index) => {
+              const segment = (option.votes / totalSelections) * circumference;
+              const circle = (
+                <circle
+                  key={option.id}
+                  cx="90"
+                  cy="90"
+                  r={radius}
+                  fill="none"
+                  stroke={POLL_CHART_COLORS[index % POLL_CHART_COLORS.length]}
+                  strokeWidth="20"
+                  strokeLinecap="round"
+                  strokeDasharray={`${segment} ${circumference - segment}`}
+                  strokeDashoffset={-offset}
+                />
+              );
+              offset += segment;
+              return circle;
+            })
+          ) : (
+            <circle
+              cx="90"
+              cy="90"
+              r={radius}
+              fill="none"
+              stroke="rgba(255,255,255,0.3)"
+              strokeWidth="20"
+              strokeDasharray="10 10"
+            />
+          )}
+        </svg>
+
+        <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center text-center">
+          <p className="text-[11px] font-bold uppercase tracking-[0.24em] text-white/55">
+            {poll.allowMultiple ? "Selections" : "Votes"}
+          </p>
+          <p className="mt-2 text-4xl font-black text-white">
+            {totalSelections}
+          </p>
+          <p className="mt-1 text-xs text-white/60">
+            {poll.totalVoters}/{poll.totalPlayers} players responded
+          </p>
+        </div>
+      </div>
+
+      <div className="space-y-3">
+        {poll.options.map((option, index) => {
+          const ratio =
+            totalSelections > 0 ? option.votes / totalSelections : 0;
+          return (
+            <div
+              key={option.id}
+              className="rounded-[1.35rem] border border-white/10 bg-white/6 p-3 backdrop-blur-sm"
+            >
+              <div className="flex items-center justify-between gap-3 text-sm font-semibold text-white">
+                <div className="flex items-center gap-3 min-w-0">
+                  <span
+                    className="size-3 rounded-full"
+                    style={{
+                      backgroundColor:
+                        POLL_CHART_COLORS[index % POLL_CHART_COLORS.length],
+                    }}
+                  />
+                  <span className="truncate">{option.text}</span>
+                </div>
+                <span className="shrink-0 text-white/70">
+                  {option.votes} {option.votes === 1 ? "vote" : "votes"}
+                </span>
+              </div>
+              <div className="mt-3 h-2 overflow-hidden rounded-full bg-white/10">
+                <motion.div
+                  className="h-full rounded-full"
+                  style={{
+                    backgroundColor:
+                      POLL_CHART_COLORS[index % POLL_CHART_COLORS.length],
+                  }}
+                  initial={{ width: 0 }}
+                  animate={{
+                    width: `${Math.max(ratio * 100, totalSelections > 0 ? 6 : 0)}%`,
+                  }}
+                  transition={{ type: "spring", stiffness: 140, damping: 20 }}
+                />
+              </div>
+              <p className="mt-2 text-xs font-medium uppercase tracking-[0.18em] text-white/45">
+                {Math.round(ratio * 100)}% share
+              </p>
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+};
+
+const HostPollComposer = ({
+  onSubmit,
+}: {
+  onSubmit: (
+    question: string,
+    options: string[],
+    allowMultiple: boolean,
+  ) => void;
+}) => {
+  const [question, setQuestion] = useState("");
+  const [options, setOptions] = useState(["", ""]);
+  const [allowMultiple, setAllowMultiple] = useState(false);
+
+  const normalizedOptions = options
+    .map((option) => option.trim())
+    .filter(Boolean);
+  const canSubmit = question.trim().length > 0 && normalizedOptions.length >= 2;
+
+  const updateOption = (index: number, value: string) => {
+    setOptions((current) =>
+      current.map((option, optionIndex) =>
+        optionIndex === index ? value : option,
+      ),
+    );
+  };
+
+  const addOption = () => {
+    if (options.length >= 6) return;
+    setOptions((current) => [...current, ""]);
+  };
+
+  return (
+    <form
+      className="space-y-5"
+      onSubmit={(event) => {
+        event.preventDefault();
+        if (!canSubmit) return;
+        onSubmit(question.trim(), normalizedOptions, allowMultiple);
+        setQuestion("");
+        setOptions(["", ""]);
+        setAllowMultiple(false);
+      }}
+    >
+      <div className="space-y-2">
+        <Label className="text-white">Question</Label>
+        <Input
+          value={question}
+          onChange={(event) => setQuestion(event.target.value)}
+          placeholder="What should we order after game night?"
+          className="border-white/12 bg-white/8 text-white placeholder:text-white/35"
+        />
+      </div>
+
+      <div className="space-y-3">
+        <div className="flex items-center justify-between gap-3">
+          <Label className="text-white">Options</Label>
+          <Button
+            type="button"
+            variant="ghost"
+            size="sm"
+            className="text-white/75 hover:bg-white/10 hover:text-white"
+            onClick={addOption}
+            disabled={options.length >= 6}
+          >
+            <PlusIcon className="size-4" />
+            Add Option
+          </Button>
+        </div>
+        <div className="space-y-2">
+          {options.map((option, index) => (
+            <Input
+              key={`poll-option-${index}`}
+              value={option}
+              onChange={(event) => updateOption(index, event.target.value)}
+              placeholder={`Option ${index + 1}`}
+              className="border-white/12 bg-white/8 text-white placeholder:text-white/35"
+            />
+          ))}
+        </div>
+      </div>
+
+      <div className="flex items-center justify-between rounded-[1.35rem] border border-white/10 bg-white/6 px-4 py-3">
+        <div>
+          <p className="text-sm font-semibold text-white">
+            Allow multiple answers
+          </p>
+          <p className="text-xs text-white/55">
+            Turn this on for checkbox-style voting.
+          </p>
+        </div>
+        <Switch checked={allowMultiple} onCheckedChange={setAllowMultiple} />
+      </div>
+
+      <div className="flex items-center justify-end gap-3">
+        <Fbutton type="submit" disabled={!canSubmit}>
+          Launch Poll
+        </Fbutton>
+      </div>
+    </form>
+  );
+};
+
+const LobbyPollControl = () => {
+  const { poll, startPoll, endPoll } = useLobbyHost();
+  const [open, setOpen] = useState(false);
+  const [showComposer, setShowComposer] = useState(false);
+
+  useEffect(() => {
+    if (!poll) {
+      setShowComposer(true);
+      return;
+    }
+    setShowComposer(false);
+  }, [poll?.id]);
+
+  const buttonLabel = poll ? "View Poll" : "Start a Poll";
+
+  return (
+    <>
+      <Fbutton
+        size="sm"
+        variant="outline"
+        className="w-full sm:w-auto"
+        onClick={() => setOpen(true)}
+      >
+        <BarChart3Icon className="size-4" />
+        {buttonLabel}
+      </Fbutton>
+
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent className="max-w-3xl overflow-hidden border-white/12 bg-[linear-gradient(180deg,rgba(14,25,53,0.98),rgba(10,18,38,0.98))] p-0 text-white shadow-[0_32px_120px_rgba(0,0,0,0.5)]">
+          <div className="relative overflow-hidden rounded-[inherit] p-6 md:p-8">
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(94,234,212,0.14),transparent_28%),radial-gradient(circle_at_bottom_left,rgba(245,158,11,0.12),transparent_34%)]" />
+            <DialogHeader className="relative z-10 border-b border-white/10 pb-5">
+              <DialogTitle className="text-2xl font-black tracking-tight text-white md:text-3xl">
+                {showComposer ? "Start a Poll" : "Live Poll Results"}
+              </DialogTitle>
+              <DialogDescription className="max-w-2xl text-sm leading-6 text-white/68">
+                {showComposer
+                  ? "Ask one room question, collect votes in real time, and keep the crowd aligned before the next game starts."
+                  : "Results update live as players vote. Close the poll when you are ready to move on."}
+              </DialogDescription>
+            </DialogHeader>
+
+            <div className="relative z-10 mt-6">
+              {showComposer || !poll ? (
+                <HostPollComposer
+                  onSubmit={(question, options, allowMultiple) => {
+                    startPoll(question, options, allowMultiple);
+                    setShowComposer(false);
+                  }}
+                />
+              ) : (
+                <div className="space-y-6">
+                  <div className="flex flex-wrap items-start justify-between gap-4 rounded-[1.5rem] border border-white/10 bg-white/6 p-4">
+                    <div>
+                      <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-white/55">
+                        Active prompt
+                      </p>
+                      <h3 className="mt-2 text-xl font-black text-white md:text-2xl">
+                        {poll.question}
+                      </h3>
+                      <p className="mt-2 text-sm text-white/62">
+                        {poll.allowMultiple
+                          ? "Players can choose more than one option."
+                          : "Players can choose one option only."}
+                      </p>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <span className="rounded-full border border-white/12 bg-black/25 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.18em] text-white/70">
+                        {poll.status === "active" ? "Live" : "Closed"}
+                      </span>
+                    </div>
+                  </div>
+
+                  <PollResultsChart poll={poll} />
+
+                  <div className="flex flex-wrap items-center justify-end gap-3">
+                    {poll.status === "active" ? (
+                      <Fbutton variant="outline" onClick={endPoll}>
+                        Close Poll
+                      </Fbutton>
+                    ) : null}
+                    <Fbutton
+                      variant={
+                        poll.status === "active" ? "secondary" : "default"
+                      }
+                      onClick={() => setShowComposer(true)}
+                    >
+                      <PlusIcon className="size-4" />
+                      Start Another Poll
+                    </Fbutton>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </DialogContent>
+      </Dialog>
+    </>
+  );
+};
+
+export const PlayerPollCard = () => {
+  const { poll, votePoll } = useLobbyPlayer();
+  const [selected, setSelected] = useState<string[]>([]);
+
+  useEffect(() => {
+    setSelected(poll?.myVotes ?? []);
+  }, [poll?.id, poll?.myVotes]);
+
+  if (!poll) return null;
+
+  const totalSelections = poll.options.reduce(
+    (sum, option) => sum + option.votes,
+    0,
+  );
+  const leadingOption = [...poll.options].sort(
+    (left, right) => right.votes - left.votes,
+  )[0];
+
+  return (
+    <Card className="w-full max-w-2xl border-white/12 bg-white/6 py-0 text-white shadow-[0_20px_60px_rgba(0,0,0,0.24)] backdrop-blur-xl">
+      <CardHeader className="gap-3 border-b border-white/10 px-5 py-5">
+        <div className="flex items-center justify-between gap-3">
+          <div>
+            <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-white/55">
+              {poll.status === "active" ? "Live Poll" : "Poll Results"}
+            </p>
+            <CardTitle className="mt-2 text-xl font-black text-white md:text-2xl">
+              {poll.question}
+            </CardTitle>
+          </div>
+          <span className="rounded-full border border-white/12 bg-black/20 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.18em] text-white/70">
+            {poll.allowMultiple ? "Multi-select" : "Single pick"}
+          </span>
+        </div>
+      </CardHeader>
+
+      <CardContent className="space-y-4 px-5 py-5">
+        {poll.status === "active" ? (
+          <>
+            <div className="grid gap-3">
+              {poll.options.map((option) => {
+                const isSelected = selected.includes(option.id);
+                return (
+                  <motion.button
+                    key={option.id}
+                    type="button"
+                    whileTap={{ scale: 0.98 }}
+                    onClick={() => {
+                      if (!poll.allowMultiple) {
+                        setSelected([option.id]);
+                        votePoll([option.id]);
+                        return;
+                      }
+
+                      setSelected((current) =>
+                        current.includes(option.id)
+                          ? current.filter((id) => id !== option.id)
+                          : [...current, option.id],
+                      );
+                    }}
+                    className={cn(
+                      "flex w-full items-center justify-between rounded-[1.35rem] border px-4 py-4 text-left transition",
+                      isSelected
+                        ? "border-teal-300/60 bg-teal-300/12 shadow-[0_18px_40px_rgba(45,212,191,0.12)]"
+                        : "border-white/10 bg-white/5 hover:border-white/20 hover:bg-white/8",
+                    )}
+                  >
+                    <div>
+                      <p className="text-sm font-semibold text-white">
+                        {option.text}
+                      </p>
+                      <p className="mt-1 text-xs text-white/50">
+                        {option.votes} {option.votes === 1 ? "vote" : "votes"}{" "}
+                        so far
+                      </p>
+                    </div>
+                    <span
+                      className={cn(
+                        "flex size-8 items-center justify-center rounded-full border transition",
+                        isSelected
+                          ? "border-teal-300/60 bg-teal-300 text-slate-950"
+                          : "border-white/12 bg-black/15 text-white/35",
+                      )}
+                    >
+                      <CheckIcon className="size-4" />
+                    </span>
+                  </motion.button>
+                );
+              })}
+            </div>
+
+            {poll.allowMultiple ? (
+              <div className="flex items-center justify-between gap-3 rounded-[1.25rem] border border-white/10 bg-white/5 px-4 py-3">
+                <p className="text-sm text-white/70">
+                  {selected.length > 0
+                    ? `${selected.length} option${selected.length === 1 ? "" : "s"} selected`
+                    : "Choose one or more options before submitting."}
+                </p>
+                <Fbutton
+                  size="sm"
+                  onClick={() => votePoll(selected)}
+                  disabled={selected.length === 0}
+                >
+                  Submit Vote
+                </Fbutton>
+              </div>
+            ) : null}
+          </>
+        ) : (
+          <div className="space-y-4">
+            <div className="rounded-[1.35rem] border border-white/10 bg-white/6 p-4">
+              <p className="text-sm font-semibold text-white/70">Top choice</p>
+              <p className="mt-2 text-2xl font-black text-white">
+                {leadingOption?.text ?? "No votes yet"}
+              </p>
+              <p className="mt-2 text-sm text-white/55">
+                {totalSelections > 0
+                  ? `${leadingOption?.votes ?? 0} of ${totalSelections} selections`
+                  : "Nobody voted before the poll closed."}
+              </p>
+            </div>
+            <PollResultsChart poll={poll} />
+          </div>
+        )}
+      </CardContent>
+    </Card>
   );
 };
 
@@ -600,6 +1066,7 @@ export const LobbyTitle = () => {
               off the next crowd favorite.
             </p>
             <div className="mt-4 flex items-center gap-3">
+              <LobbyPollControl />
               <Fbutton
                 size="sm"
                 variant="outline"

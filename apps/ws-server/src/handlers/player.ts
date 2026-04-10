@@ -42,6 +42,17 @@ export async function handlePlayerConnect(
     })
   );
 
+  if (room.poll) {
+    setTimeout(() => {
+      ws.send(
+        JSON.stringify({
+          event: WSEvent.POLL_STATE,
+          payload: { poll: RoomManager.toPollState(roomId, playerId) },
+        })
+      );
+    }, 80);
+  }
+
   if (room.game && room.players.some((p) => p.id === playerId)) {
     const game = GameManager.get(room.game.id);
     if (!game) return;
@@ -255,6 +266,33 @@ export async function handlePlayerKicked(
     WSEvent.ROOM_STATE,
     RoomManager.toLobbyState(roomId)
   );
+}
+
+export async function handlePollVote(
+  ws: WebSocket,
+  payload: WSPayloads[WSEvent.POLL_VOTE]
+) {
+  const { roomId, playerId, optionIds } = payload;
+  const room = RoomManager.get(roomId);
+  if (!room || !room.players.some((player) => player.id === playerId)) {
+    ws.send(
+      JSON.stringify({
+        event: WSEvent.ERROR,
+        payload: { message: "Player not found in room." },
+      })
+    );
+    return;
+  }
+
+  const poll = RoomManager.votePoll(roomId, playerId, optionIds);
+  if (!poll) {
+    ws.send(
+      JSON.stringify({
+        event: WSEvent.ERROR,
+        payload: { message: "Unable to cast vote for this poll." },
+      })
+    );
+  }
 }
 
 /** When a player sends a reaction */

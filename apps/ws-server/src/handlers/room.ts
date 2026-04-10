@@ -48,6 +48,17 @@ export async function handleRoomInit(
           }
         }, 200);
       }
+
+      if (room.poll) {
+        setTimeout(() => {
+          ws.send(
+            JSON.stringify({
+              event: WSEvent.POLL_STATE,
+              payload: { poll: RoomManager.toPollState(roomId) },
+            })
+          );
+        }, 150);
+      }
       return;
     }
 
@@ -133,4 +144,51 @@ export async function handleRoomClose(
 ) {
   const { roomId } = payload;
   await RoomManager.close(roomId, sid);
+}
+
+export async function handlePollStart(
+  ws: WebSocket,
+  payload: WSPayloads[WSEvent.POLL_START]
+) {
+  const { roomId, question, options, allowMultiple } = payload;
+
+  if (!RoomManager.isHostSocket(roomId, ws)) {
+    ws.send(
+      JSON.stringify({
+        event: WSEvent.ERROR,
+        payload: { message: "Only the host can start a poll." },
+      })
+    );
+    return;
+  }
+
+  const poll = RoomManager.startPoll(roomId, question, options, allowMultiple);
+  if (!poll) {
+    ws.send(
+      JSON.stringify({
+        event: WSEvent.ERROR,
+        payload: { message: "Poll needs one question and at least two options." },
+      })
+    );
+    return;
+  }
+}
+
+export async function handlePollEnd(
+  ws: WebSocket,
+  payload: WSPayloads[WSEvent.POLL_END]
+) {
+  const { roomId } = payload;
+
+  if (!RoomManager.isHostSocket(roomId, ws)) {
+    ws.send(
+      JSON.stringify({
+        event: WSEvent.ERROR,
+        payload: { message: "Only the host can end a poll." },
+      })
+    );
+    return;
+  }
+
+  RoomManager.endPoll(roomId);
 }
