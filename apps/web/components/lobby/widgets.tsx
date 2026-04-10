@@ -317,6 +317,13 @@ const LobbyPollControl = () => {
   const [open, setOpen] = useState(false);
   const [showComposer, setShowComposer] = useState(false);
 
+  const closePollModal = (shouldClosePoll = false) => {
+    if (shouldClosePoll && poll?.status === "active") {
+      endPoll();
+    }
+    setOpen(false);
+  };
+
   useEffect(() => {
     if (!poll) {
       setShowComposer(true);
@@ -339,8 +346,17 @@ const LobbyPollControl = () => {
         {buttonLabel}
       </Fbutton>
 
-      <Dialog open={open} onOpenChange={setOpen}>
-        <DialogContent className="max-w-3xl overflow-hidden border-white/12 bg-[linear-gradient(180deg,rgba(14,25,53,0.98),rgba(10,18,38,0.98))] p-0 text-white shadow-[0_32px_120px_rgba(0,0,0,0.5)]">
+      <Dialog
+        open={open}
+        onOpenChange={(nextOpen) => {
+          if (!nextOpen) {
+            closePollModal(true);
+            return;
+          }
+          setOpen(nextOpen);
+        }}
+      >
+        <DialogContent className="max-w-5xl overflow-hidden border-white/12 bg-[linear-gradient(180deg,rgba(14,25,53,0.98),rgba(10,18,38,0.98))] p-0 text-white shadow-[0_32px_120px_rgba(0,0,0,0.5)] xl:max-w-6xl">
           <div className="relative overflow-hidden rounded-[inherit] p-6 md:p-8">
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(94,234,212,0.14),transparent_28%),radial-gradient(circle_at_bottom_left,rgba(245,158,11,0.12),transparent_34%)]" />
             <DialogHeader className="relative z-10 border-b border-white/10 pb-5">
@@ -389,7 +405,10 @@ const LobbyPollControl = () => {
 
                   <div className="flex flex-wrap items-center justify-end gap-3">
                     {poll.status === "active" ? (
-                      <Fbutton variant="outline" onClick={endPoll}>
+                      <Fbutton
+                        variant="outline"
+                        onClick={() => closePollModal(true)}
+                      >
                         Close Poll
                       </Fbutton>
                     ) : null}
@@ -402,6 +421,14 @@ const LobbyPollControl = () => {
                       <PlusIcon className="size-4" />
                       Start Another Poll
                     </Fbutton>
+                    {poll.status !== "active" ? (
+                      <Fbutton
+                        variant="outline"
+                        onClick={() => closePollModal(false)}
+                      >
+                        Dismiss
+                      </Fbutton>
+                    ) : null}
                   </div>
                 </div>
               )}
