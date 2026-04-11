@@ -133,7 +133,7 @@ export function AlertDialogProvider({ children }: { children: React.ReactNode })
             if (!open) handleClose(dialog);
           }}
         >
-          <AlertDialogContent>
+          <AlertDialogContent className="h-fit">
             <AlertDialogHeader>
               <AlertDialogTitle>{dialog.title}</AlertDialogTitle>
               {dialog.description && (
@@ -152,7 +152,10 @@ export function AlertDialogProvider({ children }: { children: React.ReactNode })
               </AlertDialogCancel>
 
               <AlertDialogAction
-                className={fbuttonVariants({ variant: "default" })}
+                className={fbuttonVariants({
+                  variant: "secondary",
+                  className: "text-foreground",
+                })}
                 onClick={async () => {
                   await dialog.onConfirm?.();
                   closeDialogById(dialog.id);

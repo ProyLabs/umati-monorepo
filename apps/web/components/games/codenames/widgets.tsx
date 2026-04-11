@@ -208,7 +208,7 @@ export const CodenamesPlayerSetup = () => {
       players={players}
       teams={[myTeam]}
       footer={
-        <div className="relative z-20 grid gap-3 rounded-[1.6rem] border border-black/10 bg-white/55 p-4">
+        <div className="relative z-20 grid gap-3 rounded-[1.6rem] border border-black/10 bg-white/55 p-4 w-full max-w-2xl mx-auto">
           <div className="rounded-2xl border border-black/10 bg-black/5 px-4 py-3">
             <p className="text-xs font-bold uppercase tracking-[0.16em] text-black/50">
               Your role
