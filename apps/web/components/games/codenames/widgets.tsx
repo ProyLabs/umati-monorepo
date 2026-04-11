@@ -178,7 +178,6 @@ export const CodenamesHostSetup = () => {
             <Fbutton
               type="button"
               className="w-full max-w-md"
-              variant="secondary"
               disabled={!setup.canStart}
               onClick={startMatch}
             >
@@ -323,7 +322,7 @@ function MatchShell({
       ) : null}
 
       <div className="grid  grid-cols-5 gap-3 max-w-3xl mx-auto w-full">
-        {round.board.map((card) => (
+        {round.board?.map((card) => (
           <BoardCard
             key={card.id}
             card={card}
@@ -363,7 +362,6 @@ export const CodenamesPlayerRound = () => {
           <Fbutton
             type="button"
             className="w-full"
-            variant="secondary"
             onClick={() => passTurn(round.activeTeam)}
           >
             End Turn
@@ -432,7 +430,6 @@ export const CodenamesHostResult = () => {
         <Fbutton
           type="button"
           className="w-full max-w-xs mt-4"
-          variant="secondary"
           onClick={nextRound}
         >
           Back to Lobby

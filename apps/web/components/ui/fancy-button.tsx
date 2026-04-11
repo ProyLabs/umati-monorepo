@@ -11,25 +11,13 @@ const fbuttonVariants = cva(
     variants: {
       variant: {
         default:
-          "text-primary-foreground before:bg-[#446BF5] text-[var(--umati-blue)] [&_span]:text-white",
-        red: "text-primary-foreground before:bg-[#FE566B] text-red-900 [&_span]:text-white",
-        aqua: "text-primary-foreground before:bg-[#09DEAE] text-[#059C7A] [&_span]:text-black",
-        purple:
-          "text-primary-foreground before:bg-[#9856FE] text-violet-700 [&_span]:text-white",
-        sky: "text-primary-foreground before:bg-[var(--umati-sky)] text-sky-700 [&_span]:text-white",
-        lime: "text-primary-foreground before:bg-lime-500 text-lime-700 [&_span]:text-white",
-        secondary:
-          "text-primary-foreground before:bg-white hover:before:brightness-90 before:shadow-md before:shadow-[0_4px_0] before:border-[2px] before:border-[#e5e5e5] text-[#e5e5e5] [&_span]:text-foreground dark:[&_span]:text-background",
+          "before:bg-white hover:before:brightness-90 before:shadow-[0_4px_0] before:border-[2px] before:border-[#e5e5e5] text-[#e5e5e5] [&_span]:text-black",
         outline:
-          "text-primary-foreground before:bg-white dark:before:bg-input/30 hover:before:brightness-90 before:shadow-md before:shadow-[0_4px_0] before:border-[2px] before:border-[#e5e5e5] dark:before:border-input text-[#e5e5e5] dark:text-input [&_span]:text-foreground dark:[&_span]:text-foreground dark:hover:[&_span]:text-accent-foreground",
-        "dark-outline":
-          "text-black/60 before:bg-transparent hover:before:brightness-90 before:shadow-md before:shadow-[0_4px_0] before:border-[2px] before:border-black/60  [&_span]:text-black/60",
-        dark:
-          "text-black/20 before:bg-black hover:before:brightness-90 before:shadow-md before:shadow-[0_4px_0] before:border-[2px] before:border-black/20  text-black/50 [&_span]:text-white",
-       
+          "before:bg-white dark:before:bg-input/30 hover:before:brightness-90 before:shadow-[0_4px_0] before:border-[2px] before:border-[#e5e5e5] dark:before:border-input text-[#e5e5e5] dark:text-input [&_span]:text-foreground dark:[&_span]:text-foreground dark:hover:[&_span]:text-accent-foreground",
         ghost:
           "hover:bg-accent hover:text-accent-foreground dark:hover:bg-accent/50",
         link: "text-primary underline-offset-4 hover:underline",
+        destructive: "before:bg-[#FE566B] text-red-900 [&_span]:text-white",
       },
       size: {
         default:
@@ -43,13 +31,31 @@ const fbuttonVariants = cva(
       rounded: {
         true: "rounded-full before:rounded-full",
       },
+      dark: {
+        true: "",
+      },
     },
     defaultVariants: {
       variant: "default",
       size: "default",
       rounded: false,
+      dark: false,
     },
-  }
+    compoundVariants: [
+      {
+        variant: "default",
+        dark: true,
+        class:
+          "before:bg-black before:border-black/20  text-black/50 [&_span]:text-white",
+      },
+      {
+        variant: "outline",
+        dark: true,
+        class:
+          "before:bg-transparent hover:before:brightness-90before:border-black/20  text-black/50 [&_span]:text-black/50 dark:[&_span]:text-white dark:hover:[&_span]:text-white",
+      },
+    ],
+  },
 );
 
 function Fbutton({
@@ -60,6 +66,7 @@ function Fbutton({
   asChild = false,
   children,
   loading = false,
+  dark,
   ...props
 }: React.ComponentProps<"button"> &
   VariantProps<typeof fbuttonVariants> & {
@@ -71,7 +78,9 @@ function Fbutton({
   return (
     <Comp
       data-slot="button"
-      className={cn(fbuttonVariants({ variant, size, rounded, className }))}
+      className={cn(
+        fbuttonVariants({ variant, size, rounded, className, dark }),
+      )}
       {...props}
     >
       {!loading ? (

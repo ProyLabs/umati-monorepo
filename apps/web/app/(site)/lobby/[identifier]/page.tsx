@@ -15,10 +15,10 @@ export default function LobbyPage() {
     return <Loading />;
   } else if (!isInLobby) {
     return <PlayerJoinLobby />;
-  } else if (uiState === "INIT" || uiState === "LOBBY") {
+  } else if (uiState === "INIT" || uiState === "LOBBY" || uiState === "POLL") {
     return <PlayerLobby />;
   } else if (uiState === "PLAYING") {
-   return  <GameResolverPlayer/>
+    return <GameResolverPlayer />;
   }
   // return <BeforeWeBegin/>
   return "";

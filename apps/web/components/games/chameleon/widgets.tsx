@@ -50,7 +50,7 @@ export const Setup = () => {
         is not affiliated with, sponsored by, or endorsed by Big Potato Games.
       </p>
 
-      <Fbutton variant="secondary" onClick={handleClick}>
+      <Fbutton onClick={handleClick}>
         {state === GameState.SPEAKING
           ? "Start Voting Round"
           : "Start Speaking Round"}
@@ -204,12 +204,7 @@ export const VotingRoundPlayer = () => {
             );
           })}
       </div>
-      <Fbutton
-        variant="secondary"
-        className="min-w-44"
-        disabled={hasVoted}
-        onClick={handleSkip}
-      >
+      <Fbutton className="min-w-44" disabled={hasVoted} onClick={handleSkip}>
         Skip Vote
       </Fbutton>
     </div>

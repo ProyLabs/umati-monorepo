@@ -78,7 +78,6 @@ export default function SignIn() {
           </div>
 
           <Fbutton
-            variant="secondary"
             type="submit"
             className="w-full"
             loading={loading}
@@ -95,7 +94,7 @@ export default function SignIn() {
                   onResponse: (ctx) => {
                     setLoading(false);
                   },
-                }
+                },
               );
             }}
           >
@@ -105,7 +104,7 @@ export default function SignIn() {
           <div
             className={cn(
               "w-full gap-2 flex items-center",
-              "justify-between flex-col"
+              "justify-between flex-col",
             )}
           >
             <Button
@@ -125,7 +124,7 @@ export default function SignIn() {
                     onResponse: (ctx) => {
                       setLoading(false);
                     },
-                  }
+                  },
                 );
               }}
             >
@@ -171,7 +170,7 @@ export default function SignIn() {
                     onResponse: (ctx) => {
                       setLoading(false);
                     },
-                  }
+                  },
                 );
               }}
             >
@@ -205,7 +204,7 @@ export default function SignIn() {
                     onResponse: (ctx) => {
                       setLoading(false);
                     },
-                  }
+                  },
                 );
               }}
             >

@@ -31,13 +31,13 @@ const CardFan: React.FC<CardFanProps> = ({ children }) => {
 
   const offset = containerWidth / (total + 1);
   const spread = 15;
-  const curveDepth = 0.6;
+  const curveDepth = isMobile ? 0.25 : 0.5;
   const middle = Math.floor((total - 1) / 2);
 
   return (
     <div
       ref={containerRef}
-      className={`relative w-full flex justify-center max-h-[100dvh] max-w-7xl h-2/5 items-end overflow-y-clip overflow-x-visible select-none`}
+      className={`relative w-full flex justify-center max-h-[100dvh] max-w-7xl h-3/5 sm:h-2/5 items-end overflow-y-clip overflow-x-visible select-none`}
     >
       {childArray.map((child, index) => {
         const normalizedIndex = index - middle;

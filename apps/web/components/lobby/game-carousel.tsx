@@ -185,13 +185,7 @@ export const PrevButton: React.FC<CarouselButtonPropType> = (props) => {
   const { children, ...restProps } = props;
 
   return (
-    <Fbutton
-      variant="secondary"
-      size="icon"
-      rounded
-      type="button"
-      {...restProps}
-    >
+    <Fbutton size="icon" rounded type="button" {...restProps}>
       <ChevronLeftIcon />
       {children}
     </Fbutton>
@@ -202,13 +196,7 @@ export const NextButton: React.FC<CarouselButtonPropType> = (props) => {
   const { children, ...restProps } = props;
 
   return (
-    <Fbutton
-      variant="secondary"
-      size="icon"
-      rounded
-      type="button"
-      {...restProps}
-    >
+    <Fbutton size="icon" rounded type="button" {...restProps}>
       <ChevronRightIcon />
       {children}
     </Fbutton>

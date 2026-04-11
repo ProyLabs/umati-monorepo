@@ -14,7 +14,7 @@ interface ButtonOptionsProps<T extends string | number = string | number> {
   options?: PrimitiveOption<T>[];
   onChange?: (value: T) => void;
   className?: string;
-  variant?: 'outline' | 'dark-outline';
+  dark?: boolean;
 }
 
 
@@ -23,9 +23,11 @@ const ButtonOptions: React.FC<ButtonOptionsProps> = ({
   value,
   onChange,
   className,
-  variant="outline"
+  dark,
 }) => {
-  const [selectedValue, setSelectedValue] = React.useState<string | number| undefined>(value);
+  const [selectedValue, setSelectedValue] = React.useState<
+    string | number | undefined
+  >(value);
 
   React.useEffect(() => {
     setSelectedValue(value);
@@ -33,11 +35,13 @@ const ButtonOptions: React.FC<ButtonOptionsProps> = ({
 
   const normalizedOptions = React.useMemo<Option[]>(() => {
     return options.map((opt) =>
-      typeof opt === "string" || typeof opt === "number" ? { label: String(opt), value: opt } : opt
+      typeof opt === "string" || typeof opt === "number"
+        ? { label: String(opt), value: opt }
+        : opt,
     );
   }, [options]);
 
-  const handleOptionClick = (optionValue: string| number) => {
+  const handleOptionClick = (optionValue: string | number) => {
     setSelectedValue(optionValue);
     onChange?.(optionValue);
   };
@@ -46,13 +50,14 @@ const ButtonOptions: React.FC<ButtonOptionsProps> = ({
     <div
       className={cn(
         "grid grid-flow-col auto-cols-fr gap-2 w-full overflow-x-auto scrollbar-hide h-[110%]",
-        className
+        className,
       )}
     >
       {normalizedOptions.map((option, index) => (
         <Fbutton
           key={index}
-          variant={selectedValue === option.value ? (variant === "dark-outline" ? "dark" : "secondary") : variant}
+          dark={dark}
+          variant={selectedValue === option.value ? "default" : "outline"}
           className="whitespace-nowrap flex-1"
           onClick={() => handleOptionClick(option.value)}
         >

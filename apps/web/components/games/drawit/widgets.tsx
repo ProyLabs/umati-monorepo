@@ -101,13 +101,14 @@ const floodFill = (
   fillProbeCtx.fillStyle = fillColor;
   fillProbeCtx.fillRect(0, 0, 1, 1);
   const fillPixel = fillProbeCtx.getImageData(0, 0, 1, 1).data;
+  const colorTolerance = 18;
 
   const toIndex = (x: number, y: number) => (y * width + x) * 4;
   const colorMatches = (index: number, rgba: Uint8ClampedArray) =>
-    data[index] === rgba[0] &&
-    data[index + 1] === rgba[1] &&
-    data[index + 2] === rgba[2] &&
-    data[index + 3] === rgba[3];
+    Math.abs(data[index] - rgba[0]) <= colorTolerance &&
+    Math.abs(data[index + 1] - rgba[1]) <= colorTolerance &&
+    Math.abs(data[index + 2] - rgba[2]) <= colorTolerance &&
+    Math.abs(data[index + 3] - rgba[3]) <= colorTolerance;
 
   const seedIndex = toIndex(startX, startY);
   const seed = data.slice(seedIndex, seedIndex + 4);
@@ -148,45 +149,82 @@ const floodFill = (
   ctx.putImageData(image, 0, 0);
 };
 
+const getCanvasMetrics = (canvas: HTMLCanvasElement) => {
+  const dpr = window.devicePixelRatio || 1;
+  const rect = canvas.getBoundingClientRect();
+
+  return {
+    dpr,
+    width: Math.max(rect.width, 0),
+    height: Math.max(rect.height, 0),
+  };
+};
+
+const prepareCanvas = (
+  canvas: HTMLCanvasElement,
+  ctx: CanvasRenderingContext2D,
+  width: number,
+  height: number,
+  dpr: number,
+) => {
+  canvas.width = width * dpr;
+  canvas.height = height * dpr;
+
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+  ctx.scale(dpr, dpr);
+  ctx.clearRect(0, 0, width, height);
+  ctx.fillStyle = CANVAS_BG;
+  ctx.fillRect(0, 0, width, height);
+  ctx.lineCap = "round";
+  ctx.lineJoin = "round";
+};
+
+const drawSegmentToCanvas = (
+  ctx: CanvasRenderingContext2D,
+  segment: DrawItSegment,
+  width: number,
+  height: number,
+) => {
+  if (segment.mode === "fill") {
+    floodFill(
+      ctx,
+      clamp(Math.round(segment.x1 * (width - 1)), 0, Math.max(width - 1, 0)),
+      clamp(Math.round(segment.y1 * (height - 1)), 0, Math.max(height - 1, 0)),
+      segment.color,
+      Math.max(Math.round(width), 1),
+      Math.max(Math.round(height), 1),
+    );
+    return;
+  }
+
+  drawStroke(ctx, segment, width, height);
+};
+
 const drawSegments = (canvas: HTMLCanvasElement, segments: DrawItSegment[]) => {
   const ctx = canvas.getContext("2d");
   if (!ctx) return;
 
-  const dpr = window.devicePixelRatio || 1;
-  const rect = canvas.getBoundingClientRect();
-  canvas.width = rect.width * dpr;
-  canvas.height = rect.height * dpr;
-
-  ctx.setTransform(1, 0, 0, 1, 0, 0);
-  ctx.scale(dpr, dpr);
-  ctx.clearRect(0, 0, rect.width, rect.height);
-  ctx.fillStyle = CANVAS_BG;
-  ctx.fillRect(0, 0, rect.width, rect.height);
-  ctx.lineCap = "round";
-  ctx.lineJoin = "round";
+  const { dpr, width, height } = getCanvasMetrics(canvas);
+  prepareCanvas(canvas, ctx, width, height, dpr);
 
   segments.forEach((segment) => {
-    if (segment.mode === "fill") {
-      floodFill(
-        ctx,
-        clamp(
-          Math.round(segment.x1 * (rect.width - 1)),
-          0,
-          Math.max(rect.width - 1, 0),
-        ),
-        clamp(
-          Math.round(segment.y1 * (rect.height - 1)),
-          0,
-          Math.max(rect.height - 1, 0),
-        ),
-        segment.color,
-        Math.max(Math.round(rect.width), 1),
-        Math.max(Math.round(rect.height), 1),
-      );
-      return;
-    }
+    drawSegmentToCanvas(ctx, segment, width, height);
+  });
+};
 
-    drawStroke(ctx, segment, rect.width, rect.height);
+const drawLatestSegments = (
+  canvas: HTMLCanvasElement,
+  segments: DrawItSegment[],
+  startIndex: number,
+) => {
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return;
+
+  const { width, height } = getCanvasMetrics(canvas);
+  if (width === 0 || height === 0) return;
+
+  segments.slice(startIndex).forEach((segment) => {
+    drawSegmentToCanvas(ctx, segment, width, height);
   });
 };
 
@@ -482,7 +520,6 @@ function GuessPanel({
           <Fbutton
             type="submit"
             className="mt-3 w-full transition-all duration-150 active:scale-95"
-            variant="secondary"
           >
             Submit Guess
           </Fbutton>
@@ -511,11 +548,35 @@ function DrawCanvas({
   const drawingRef = useRef(false);
   const movedRef = useRef(false);
   const lastPointRef = useRef<{ x: number; y: number } | null>(null);
+  const segmentCountRef = useRef(0);
+  const lastSegmentsRef = useRef<DrawItSegment[] | null>(null);
+  const initializedRef = useRef(false);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    drawSegments(canvas, segments);
+
+    const previousSegments = lastSegmentsRef.current;
+    const previousCount = segmentCountRef.current;
+    const appendedSegments =
+      previousSegments &&
+      previousSegments !== segments &&
+      segments.length > previousCount &&
+      segments
+        .slice(0, previousCount)
+        .every((segment, index) => segment === previousSegments[index]);
+
+    if (!initializedRef.current) {
+      drawSegments(canvas, segments);
+      initializedRef.current = true;
+    } else if (segments.length === 0 || !appendedSegments) {
+      drawSegments(canvas, segments);
+    } else {
+      drawLatestSegments(canvas, segments, previousCount);
+    }
+
+    segmentCountRef.current = segments.length;
+    lastSegmentsRef.current = segments;
   }, [segments]);
 
   useEffect(() => {
@@ -523,6 +584,9 @@ function DrawCanvas({
       const canvas = canvasRef.current;
       if (!canvas) return;
       drawSegments(canvas, segments);
+      segmentCountRef.current = segments.length;
+      lastSegmentsRef.current = segments;
+      initializedRef.current = true;
     };
 
     handleResize();
@@ -744,7 +808,7 @@ function HostRoundHeader({
           <RadialTimer duration={round.duration} startTime={round.startedAt} />
         ) : null}
         {state === "ROUND_END" ? (
-          <Fbutton type="button" variant="secondary" onClick={nextRound}>
+          <Fbutton type="button" onClick={nextRound}>
             Next
           </Fbutton>
         ) : null}
@@ -807,7 +871,6 @@ export const DrawItPlayerSetup = () => {
               key={word}
               type="button"
               className="w-full"
-              variant="secondary"
               onClick={() => pickWord(word)}
             >
               {word.toUpperCase()}

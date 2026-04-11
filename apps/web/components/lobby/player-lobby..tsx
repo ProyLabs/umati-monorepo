@@ -33,11 +33,7 @@ export default function PlayerLobby() {
 
       <div className="flex items-center justify-center gap-4 w-full relative max-w-md mb-4">
         <UmatiLogo className="w-8 text-foreground block md:hidden" />
-        <Fbutton
-          variant="secondary"
-          className="w-full flex-1 mt-auto"
-          onClick={leaveLobby}
-        >
+        <Fbutton className="w-full flex-1 mt-auto" onClick={leaveLobby}>
           Leave Room
         </Fbutton>
         <Reactions />

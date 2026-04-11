@@ -4,7 +4,7 @@ import { useLobbyPlayer } from "@/providers/lobby-player-provider";
 import { useAlert } from "@/providers/modal-provider";
 import { Scores } from "@umati/ws";
 import confetti from "canvas-confetti";
-import { LightbulbIcon, Maximize2Icon } from "lucide-react";
+import { LightbulbIcon, Maximize2Icon, TrophyIcon } from "lucide-react";
 import { AnimatePresence, motion, useAnimation } from "motion/react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { cn, formatList, rankScores } from "../../lib/utils";
@@ -51,11 +51,7 @@ export const Leaderboard = ({
         <LightbulbIcon />
         <span>Tip: the faster you answer, the more points you score!</span>
       </span>
-      <Fbutton
-        className="max-w-xs mx-auto w-full"
-        variant="secondary"
-        onClick={nextRound}
-      >
+      <Fbutton className="max-w-xs mx-auto w-full" onClick={nextRound}>
         Next
       </Fbutton>
     </div>
@@ -210,7 +206,6 @@ export const Podium = ({
       </motion.div>
       <Fbutton
         className="relative z-10 mx-auto w-full max-w-xs"
-        variant="secondary"
         onClick={nextRound}
       >
         Next
@@ -325,10 +320,6 @@ export const Rankings = () => {
               <h2 className="text-xl font-black tracking-tight text-white md:text-2xl">
                 Leaderboard
               </h2>
-              <p className="text-sm leading-6 text-white/70 md:text-[15px]">
-                Track who is heating up, who is holding ground, and who needs a
-                comeback round.
-              </p>
             </div>
           </div>
           <motion.button
@@ -361,9 +352,9 @@ export const Rankings = () => {
             </div>
           </div>
         ) : (
-          <div className="relative z-10 m-auto flex min-h-56 w-full max-w-xl flex-col items-center justify-center rounded-[1.5rem] border border-dashed border-white/15 bg-black/15 px-6 text-center">
+          <div className="relative z-10 m-auto flex min-h-56 w-full flex-col items-center justify-center rounded-[1.5rem] border border-dashed border-white/15 bg-black/15 px-6 text-center">
             <div className="mb-3 inline-flex size-14 items-center justify-center rounded-2xl bg-white/10 text-2xl">
-              🎊
+              <TrophyIcon />
             </div>
             <p className="text-xl font-bold text-white">No rankings yet</p>
             <p className="mt-2 max-w-sm text-sm leading-6 text-white/65">
@@ -371,17 +362,6 @@ export const Rankings = () => {
               games. Medal finishes still count, but total points decide the
               order.
             </p>
-            <div className="mt-4 flex gap-3 justify-center text-sm font-medium text-white/75">
-              <span className="inline-flex items-center gap-1">
-                ⭐ <span>Total Score</span>
-              </span>
-              <span className="inline-flex items-center gap-1">
-                🥇 <span>1st Place</span>
-              </span>
-              <span className="inline-flex items-center gap-1">
-                🥈🥉 <span>Podium Tally</span>
-              </span>
-            </div>
           </div>
         )}
       </div>
@@ -766,7 +746,6 @@ export const EndGameButton = () => {
 
   return (
     <Fbutton
-      variant="secondary"
       onClick={() =>
         showAlert({
           title: "End game now?",

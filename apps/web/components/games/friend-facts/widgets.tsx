@@ -53,9 +53,7 @@ export const FriendFactsHostSetup = () => {
 
           <div className="flex items-center gap-2">
             {everyoneReady && (
-              <Fbutton variant="secondary" onClick={startRound}>
-                Start Game
-              </Fbutton>
+              <Fbutton onClick={startRound}>Start Game</Fbutton>
             )}
             <EndGameButton />
           </div>
@@ -238,7 +236,6 @@ export const FriendFactsPlayerSetup = () => {
           </Fbutton>
           <Fbutton
             type="button"
-            variant="secondary"
             disabled={!canSubmit}
             onClick={() => {
               submitFacts(
@@ -330,11 +327,7 @@ export const FriendFactsHostRound = () => {
 
           <div className="flex items-center gap-2">
             {state === "ROUND_END" && (
-              <Fbutton
-                className="max-w-40 mx-auto w-full"
-                variant="secondary"
-                onClick={nextRound}
-              >
+              <Fbutton className="max-w-40 mx-auto w-full" onClick={nextRound}>
                 Next
               </Fbutton>
             )}

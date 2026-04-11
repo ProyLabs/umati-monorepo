@@ -120,6 +120,7 @@
 html,
 body {
   cursor: url("/cursor-dark.svg") 4 4, auto;
+  accent-color: #FFFFFF20
 }
 
 button,
@@ -255,4 +256,61 @@ summary {
 }
 .policy a:hover {
   text-decoration: underline;
+}
+
+@keyframes toast-icon-rise {
+  0% {
+    opacity: 0;
+    transform: translateY(14px) scale(0.78);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes toast-content-spread {
+  0% {
+    opacity: 0;
+    transform: translateX(-14px) scaleX(0.72);
+    filter: blur(6px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateX(0) scaleX(1);
+    filter: blur(0);
+  }
+}
+
+@keyframes toast-content-collapse {
+  0% {
+    opacity: 1;
+    transform: translateX(0) scaleX(1);
+    filter: blur(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translateX(-10px) scaleX(0.7);
+    filter: blur(4px);
+  }
+}
+
+@keyframes toast-icon-drop {
+  0% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(16px) scale(0.76);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-sonner-toast] [data-icon],
+  [data-sonner-toast] [data-content] {
+    animation: none !important;
+    filter: none !important;
+    transform: none !important;
+  }
 }

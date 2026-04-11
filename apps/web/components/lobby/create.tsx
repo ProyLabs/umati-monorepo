@@ -18,6 +18,7 @@ import { toast } from "sonner";
 import ButtonOptions from "../ui/button-options";
 import { Fbutton } from "../ui/fancy-button";
 import { cn } from "@/lib/utils";
+import { Separator } from "../ui/separator";
 
 const maxLobbyPlayers = Number(process.env.NEXT_PUBLIC_MAX_LOBBY_PLAYERS ?? 60);
 const lobbySizeOptions = Array.from(
@@ -143,16 +144,22 @@ export default function CreateLobby() {
   }
 
   return (
-    <Card className="z-50 rounded-2xl max-w-md w-full">
-      <CardHeader>
-        <CardTitle className="text-xl md:text-3xl font-bold">
+    <Card className="z-50 max-w-md w-full relative isolate  overflow-clip overflow-x-visible rounded-[2rem] border border-white/12 bg-[linear-gradient(135deg,rgba(255,255,255,0.09),rgba(255,255,255,0.03))] shadow-[0_24px_80px_rgba(255,255,255,0.08)] backdrop-blur-xl">
+      <div className="h-full w-full absolute inset-0 overflow-clip rounded-[2rem] ">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,202,40,0.16),transparent_28%),radial-gradient(circle_at_top_right,rgba(77,199,255,0.16),transparent_32%),radial-gradient(circle_at_bottom,rgba(106,59,255,0.16),transparent_34%)]" />
+        <div className="absolute -left-10 top-8 h-28 w-28 rounded-full bg-[var(--umati-yellow)]/12 blur-3xl" />
+        <div className="absolute right-0 top-0 h-36 w-36 translate-x-1/4 -translate-y-1/4 rounded-full bg-[var(--umati-sky)]/12 blur-3xl" />
+      </div>
+
+      <CardHeader className="relative">
+        <CardTitle className="text-xl md:text-3xl font-bold mb-0">
           Create Lobby
         </CardTitle>
         <CardDescription className="">
           Create a lobby and have fun with your friends!
         </CardDescription>
       </CardHeader>
-      <CardContent>
+      <CardContent className="relative">
         <div className="grid gap-4">
           <div className="grid gap-2">
             <Label htmlFor="lobby-name">Name your Lobby</Label>
@@ -169,7 +176,6 @@ export default function CreateLobby() {
           <div className="grid gap-2">
             <Label htmlFor="maxPlayers">Max Number of Players</Label>
             <ButtonOptions
-              variant="outline"
               value={maxPlayers}
               onChange={(value) => setMaxPlayers(Number(value))}
               options={lobbySizeOptions}
@@ -179,7 +185,6 @@ export default function CreateLobby() {
           <Fbutton
             type="submit"
             className="w-full mt-6"
-            variant="purple"
             loading={loading}
             onClick={async () => {
               await handleCreate();
@@ -187,10 +192,9 @@ export default function CreateLobby() {
           >
             Create Lobby
           </Fbutton>
-        </div>
-      </CardContent>
-      <CardFooter>
-        <div className="flex justify-center w-full border-t py-4">
+
+          <Separator />
+
           <Link href="/join-lobby" className="w-full">
             <Fbutton
               variant="outline"
@@ -201,7 +205,7 @@ export default function CreateLobby() {
             </Fbutton>
           </Link>
         </div>
-      </CardFooter>
+      </CardContent>
     </Card>
   );
 }

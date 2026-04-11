@@ -6,10 +6,14 @@ import { GameType, Games, LobbyPoll, Player, RoomState } from "@umati/ws";
 import { cva, VariantProps } from "class-variance-authority";
 import {
   BarChart3Icon,
+  BrainCircuitIcon,
+  ChevronLeftIcon,
   CheckIcon,
+  ListChecksIcon,
   MaximizeIcon,
   MinimizeIcon,
   PlusIcon,
+  SparklesIcon,
   UserRoundX,
   WifiHighIcon,
   WifiIcon,
@@ -50,6 +54,34 @@ import { Separator } from "../ui/separator";
 import { QRCode } from "../ui/shadcn-io/qr-code";
 import { Switch } from "../ui/switch";
 import GameCarousel from "./game-carousel";
+
+const POLL_SUGGESTIONS = [
+  {
+    id: "next-game",
+    label: "Next Game",
+    question: "What game should we play next?",
+    allowMultiple: false,
+    options: Games.filter((game) => game.playable)
+      .slice(0, 6)
+      .map((game) => game.title),
+  },
+  {
+    id: "snack-break",
+    label: "Break Plan",
+    question: "What should we do after this round?",
+    allowMultiple: false,
+    options: ["Keep playing", "Snack break", "Music break", "Wrap up soon"],
+  },
+  {
+    id: "multi-vote",
+    label: "Top Picks",
+    question: "Which games should stay in tonight's rotation?",
+    allowMultiple: true,
+    options: Games.filter((game) => game.playable)
+      .slice(0, 6)
+      .map((game) => game.title),
+  },
+];
 
 export const CopyLinkButton = () => {
   const { joinUrl } = useLobbyHost();
@@ -100,7 +132,7 @@ const PollResultsChart = ({ poll }: { poll: LobbyPoll }) => {
   let offset = 0;
 
   return (
-    <div className="grid gap-6 lg:grid-cols-[220px_minmax(0,1fr)] lg:items-center">
+    <div className="grid gap-6 md:grid-cols-2 lg:items-center">
       <div className="relative mx-auto flex size-[220px] items-center justify-center">
         <svg
           viewBox="0 0 180 180"
@@ -155,12 +187,12 @@ const PollResultsChart = ({ poll }: { poll: LobbyPoll }) => {
             {totalSelections}
           </p>
           <p className="mt-1 text-xs text-white/60">
-            {poll.totalVoters}/{poll.totalPlayers} players responded
+            {poll.totalVoters}/{poll.totalPlayers} responses
           </p>
         </div>
       </div>
 
-      <div className="space-y-3">
+      <div className="grid grid-cols-2 gap-3">
         {poll.options.map((option, index) => {
           const ratio =
             totalSelections > 0 ? option.votes / totalSelections : 0;
@@ -211,16 +243,34 @@ const PollResultsChart = ({ poll }: { poll: LobbyPoll }) => {
 
 const HostPollComposer = ({
   onSubmit,
+  initialPreset,
 }: {
   onSubmit: (
     question: string,
     options: string[],
     allowMultiple: boolean,
   ) => void;
+  initialPreset?: {
+    question: string;
+    options: string[];
+    allowMultiple: boolean;
+  } | null;
 }) => {
-  const [question, setQuestion] = useState("");
-  const [options, setOptions] = useState(["", ""]);
-  const [allowMultiple, setAllowMultiple] = useState(false);
+  const [question, setQuestion] = useState(initialPreset?.question ?? "");
+  const [options, setOptions] = useState<string[]>(
+    initialPreset?.options?.length ? initialPreset.options : ["", ""],
+  );
+  const [allowMultiple, setAllowMultiple] = useState(
+    initialPreset?.allowMultiple ?? false,
+  );
+
+  useEffect(() => {
+    setQuestion(initialPreset?.question ?? "");
+    setOptions(
+      initialPreset?.options?.length ? initialPreset.options : ["", ""],
+    );
+    setAllowMultiple(initialPreset?.allowMultiple ?? false);
+  }, [initialPreset]);
 
   const normalizedOptions = options
     .map((option) => option.trim())
@@ -241,147 +291,243 @@ const HostPollComposer = ({
   };
 
   return (
-    <form
-      className="space-y-5"
-      onSubmit={(event) => {
-        event.preventDefault();
-        if (!canSubmit) return;
-        onSubmit(question.trim(), normalizedOptions, allowMultiple);
-        setQuestion("");
-        setOptions(["", ""]);
-        setAllowMultiple(false);
-      }}
-    >
-      <div className="space-y-2">
-        <Label className="text-white">Question</Label>
-        <Input
-          value={question}
-          onChange={(event) => setQuestion(event.target.value)}
-          placeholder="What should we order after game night?"
-          className="border-white/12 bg-white/8 text-white placeholder:text-white/35"
-        />
+    <div className="grid gap-6 xl:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)]">
+      <div className="space-y-4">
+        <div className="rounded-[1.6rem] border border-white/10 bg-white/6 p-5 backdrop-blur-xl">
+          <div className="flex items-start gap-3">
+            <div className="flex size-11 items-center justify-center rounded-[1rem] border border-white/10 bg-white/10 text-white">
+              <SparklesIcon className="size-5" />
+            </div>
+            <div>
+              <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-white/55">
+                Suggestions
+              </p>
+              <p className="mt-2 text-lg font-black text-white">
+                Start with a room-ready poll
+              </p>
+              <p className="mt-2 max-w-md text-sm leading-6 text-white/65">
+                Quick presets for the common decisions hosts usually need before
+                the next game.
+              </p>
+            </div>
+          </div>
+
+          <div className="mt-5 grid gap-3">
+            {POLL_SUGGESTIONS.map((suggestion) => (
+              <button
+                key={suggestion.id}
+                type="button"
+                onClick={() => {
+                  setQuestion(suggestion.question);
+                  setOptions(suggestion.options);
+                  setAllowMultiple(suggestion.allowMultiple);
+                }}
+                className="rounded-[1.35rem] border border-white/10 bg-black/22 p-4 text-left transition hover:border-white/18 hover:bg-white/8"
+              >
+                <div className="flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-3">
+                    <div className="flex size-10 items-center justify-center rounded-[0.95rem] bg-white/10 text-white">
+                      {suggestion.allowMultiple ? (
+                        <ListChecksIcon className="size-4" />
+                      ) : (
+                        <BrainCircuitIcon className="size-4" />
+                      )}
+                    </div>
+                    <div>
+                      <p className="text-sm font-black text-white">
+                        {suggestion.label}
+                      </p>
+                      <p className="mt-1 text-xs uppercase tracking-[0.18em] text-white/45">
+                        {suggestion.allowMultiple
+                          ? "Multi-select"
+                          : "Single pick"}
+                      </p>
+                    </div>
+                  </div>
+                  <span className="rounded-full border border-white/10 bg-white/6 px-2.5 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-white/58">
+                    {suggestion.options.length} options
+                  </span>
+                </div>
+                <p className="mt-3 text-sm font-semibold text-white/78">
+                  {suggestion.question}
+                </p>
+              </button>
+            ))}
+          </div>
+        </div>
       </div>
 
-      <div className="space-y-3">
-        <div className="flex items-center justify-between gap-3">
-          <Label className="text-white">Options</Label>
-          <Button
-            type="button"
-            variant="ghost"
-            size="sm"
-            className="text-white/75 hover:bg-white/10 hover:text-white"
-            onClick={addOption}
-            disabled={options.length >= 6}
-          >
-            <PlusIcon className="size-4" />
-            Add Option
-          </Button>
-        </div>
+      <form
+        className="space-y-5 rounded-[1.8rem] border border-white/10 bg-white/6 p-5 backdrop-blur-xl"
+        onSubmit={(event) => {
+          event.preventDefault();
+          if (!canSubmit) return;
+          onSubmit(question.trim(), normalizedOptions, allowMultiple);
+          setQuestion("");
+          setOptions(["", ""]);
+          setAllowMultiple(false);
+        }}
+      >
         <div className="space-y-2">
-          {options.map((option, index) => (
-            <Input
-              key={`poll-option-${index}`}
-              value={option}
-              onChange={(event) => updateOption(index, event.target.value)}
-              placeholder={`Option ${index + 1}`}
-              className="border-white/12 bg-white/8 text-white placeholder:text-white/35"
-            />
-          ))}
+          <Label className="text-white">Question</Label>
+          <Input
+            value={question}
+            onChange={(event) => setQuestion(event.target.value)}
+            placeholder="What should we order after game night?"
+            className="border-white/12 bg-white/8 text-white placeholder:text-white/35"
+          />
         </div>
-      </div>
 
-      <div className="flex items-center justify-between rounded-[1.35rem] border border-white/10 bg-white/6 px-4 py-3">
-        <div>
-          <p className="text-sm font-semibold text-white">
-            Allow multiple answers
-          </p>
-          <p className="text-xs text-white/55">
-            Turn this on for checkbox-style voting.
-          </p>
+        <div className="space-y-3">
+          <div className="flex items-center justify-between gap-3">
+            <Label className="text-white">Options</Label>
+            <Button
+              type="button"
+              variant="ghost"
+              size="sm"
+              className="text-white/75 hover:bg-white/10 hover:text-white"
+              onClick={addOption}
+              disabled={options.length >= 6}
+            >
+              <PlusIcon className="size-4" />
+              Add Option
+            </Button>
+          </div>
+          <div className="space-y-2">
+            {options.map((option, index) => (
+              <Input
+                key={`poll-option-${index}`}
+                value={option}
+                onChange={(event) => updateOption(index, event.target.value)}
+                placeholder={`Option ${index + 1}`}
+                className="border-white/12 bg-white/8 text-white placeholder:text-white/35"
+              />
+            ))}
+          </div>
         </div>
-        <Switch checked={allowMultiple} onCheckedChange={setAllowMultiple} />
-      </div>
 
-      <div className="flex items-center justify-end gap-3">
-        <Fbutton type="submit" disabled={!canSubmit}>
-          Launch Poll
-        </Fbutton>
-      </div>
-    </form>
+        <div className="flex items-center justify-between rounded-[1.35rem] border border-white/10 bg-black/22 px-4 py-3">
+          <div>
+            <p className="text-sm font-semibold text-white">
+              Allow multiple answers
+            </p>
+            <p className="text-xs text-white/55">
+              Turn this on for checkbox-style voting.
+            </p>
+          </div>
+          <Switch checked={allowMultiple} onCheckedChange={setAllowMultiple} />
+        </div>
+
+        <div className="flex items-center justify-end gap-3">
+          <Fbutton type="submit" disabled={!canSubmit}>
+            Launch Poll
+          </Fbutton>
+        </div>
+      </form>
+    </div>
   );
 };
 
 const LobbyPollControl = () => {
-  const { poll, startPoll, endPoll } = useLobbyHost();
-  const [open, setOpen] = useState(false);
-  const [showComposer, setShowComposer] = useState(false);
-
-  const closePollModal = () => {
-    setOpen(false);
-  };
-
-  useEffect(() => {
-    if (!poll) {
-      setShowComposer(true);
-      return;
-    }
-    setShowComposer(false);
-  }, [poll?.id]);
+  const { poll, changeUiState } = useLobbyHost();
 
   const buttonLabel = poll ? "View Poll" : "Start a Poll";
 
   return (
-    <>
-      <Fbutton
-        size="sm"
-        variant="outline"
-        className="w-full sm:w-auto"
-        onClick={() => setOpen(true)}
-      >
-        <BarChart3Icon className="size-4" />
-        {buttonLabel}
-      </Fbutton>
+    <Fbutton
+      size="sm"
+      variant="outline"
+      className="w-full sm:w-auto"
+      onClick={() => changeUiState(RoomState.POLL)}
+    >
+      <BarChart3Icon className="size-4" />
+      {buttonLabel}
+    </Fbutton>
+  );
+};
 
-      <Dialog
-        open={open}
-        onOpenChange={(nextOpen) => {
-          if (!nextOpen) {
-            closePollModal();
-            return;
-          }
-          setOpen(nextOpen);
-        }}
-      >
-        <DialogContent className="max-h-[80vh] max-w-5xl overflow-hidden border-white/12 bg-[linear-gradient(180deg,rgba(14,25,53,0.98),rgba(10,18,38,0.98))] p-0 text-white shadow-[0_32px_120px_rgba(0,0,0,0.5)] xl:max-w-6xl">
-          <div className="relative min-h-0 overflow-y-auto rounded-[inherit] p-6 md:p-8">
-            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(94,234,212,0.14),transparent_28%),radial-gradient(circle_at_bottom_left,rgba(245,158,11,0.12),transparent_34%)]" />
-            <DialogHeader className="relative z-10 border-b border-white/10 pb-5">
-              <DialogTitle className="text-2xl font-black tracking-tight text-white md:text-3xl">
-                {showComposer ? "Start a Poll" : "Live Poll Results"}
-              </DialogTitle>
-              <DialogDescription className="max-w-2xl text-sm leading-6 text-white/68">
-                {showComposer
-                  ? "Ask one room question, collect votes in real time, and keep the crowd aligned before the next game starts."
-                  : "Results update live as players vote."}
-              </DialogDescription>
-            </DialogHeader>
+export const HostPollStage = () => {
+  const { poll, startPoll, endPoll, changeUiState } = useLobbyHost();
+  const [showComposer, setShowComposer] = useState(false);
+  const [preset, setPreset] = useState<{
+    question: string;
+    options: string[];
+    allowMultiple: boolean;
+  } | null>(null);
 
-            <div className="relative z-10 mt-6">
+  useEffect(() => {
+    setShowComposer(!poll);
+  }, [poll?.id]);
+
+  const closeStage = () => {
+    if (poll) {
+      endPoll();
+    }
+    changeUiState(RoomState.LOBBY);
+  };
+
+  return (
+    <div className="relative min-h-dvh overflow-x-hidden overflow-y-auto bg-black text-white">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(70,115,255,0.2),transparent_28%),radial-gradient(circle_at_78%_18%,rgba(255,255,255,0.1),transparent_18%),radial-gradient(circle_at_bottom_right,rgba(48,216,200,0.16),transparent_28%),linear-gradient(180deg,#030507,#070d17_42%,#05070d)]" />
+      <div className="absolute inset-0 bg-[linear-gradient(120deg,rgba(255,255,255,0.04),transparent_28%,transparent_72%,rgba(255,255,255,0.03))]" />
+
+      <div className="relative flex min-h-dvh flex-col">
+        <div className="mx-auto flex w-full max-w-7xl flex-col gap-4 px-4 py-5 md:flex-row md:items-center md:justify-between md:px-8 md:py-6">
+          <div>
+            <p className="text-[11px] font-bold uppercase tracking-[0.24em] text-white/45">
+              Poll Control
+            </p>
+            <h2 className="mt-2 text-3xl font-black tracking-tight text-white md:text-5xl">
+              {showComposer ? "Start a Poll" : "Live Poll Results"}
+            </h2>
+            <p className="mt-2 max-w-2xl text-sm leading-6 text-white/62 md:text-[15px]">
+              {showComposer
+                ? "Ask one room question, collect votes in real time, and keep the crowd aligned before the next game starts."
+                : "Results update live as players vote."}
+            </p>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-3">
+            {!showComposer && poll ? (
+              <Fbutton
+                size="sm"
+                onClick={() => {
+                  setPreset(null);
+                  setShowComposer(true);
+                }}
+              >
+                <PlusIcon className="size-4" />
+                Start Another Poll
+              </Fbutton>
+            ) : null}
+            <Fbutton size="sm" variant="outline" onClick={closeStage}>
+              <ChevronLeftIcon className="size-4" />
+              Back
+            </Fbutton>
+          </div>
+        </div>
+
+        <div className="mx-auto flex w-full max-w-7xl flex-1 px-4 pb-6 md:px-8 md:pb-8">
+          <div className="relative w-full h-fit rounded-[2rem] border border-white/10 bg-white/5 p-5 shadow-[0_30px_120px_rgba(0,0,0,0.42)] backdrop-blur-2xl md:p-8">
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(94,234,212,0.1),transparent_24%),radial-gradient(circle_at_bottom_left,rgba(245,158,11,0.12),transparent_28%)]" />
+            <div className="relative z-10">
               {showComposer || !poll ? (
                 <HostPollComposer
+                  initialPreset={preset}
                   onSubmit={(question, options, allowMultiple) => {
                     startPoll(question, options, allowMultiple);
+                    setPreset(null);
                     setShowComposer(false);
                   }}
                 />
               ) : (
                 <div className="space-y-6">
-                  <div className="flex flex-wrap items-start justify-between gap-4 rounded-[1.5rem] border border-white/10 bg-white/6 p-4">
+                  <div className="flex flex-wrap items-start justify-between gap-4 rounded-[1.6rem] border border-white/10 bg-black/22 p-5">
                     <div>
                       <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-white/55">
                         Active prompt
                       </p>
-                      <h3 className="mt-2 text-xl font-black text-white md:text-2xl">
+                      <h3 className="mt-2 text-xl font-black text-white md:text-3xl">
                         {poll.question}
                       </h3>
                       <p className="mt-2 text-sm text-white/62">
@@ -391,7 +537,7 @@ const LobbyPollControl = () => {
                       </p>
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="rounded-full border border-white/12 bg-black/25 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.18em] text-white/70">
+                      <span className="rounded-full border border-white/12 bg-green/25 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.18em] text-green/70">
                         Live
                       </span>
                     </div>
@@ -400,30 +546,26 @@ const LobbyPollControl = () => {
                   <PollResultsChart poll={poll} />
 
                   <div className="flex flex-wrap items-center justify-end gap-3">
-                    <Fbutton
-                      variant="outline"
-                      onClick={() => {
-                        endPoll();
-                        closePollModal();
-                      }}
-                    >
+                    <Fbutton variant="outline" onClick={closeStage}>
                       Close Poll
                     </Fbutton>
                     <Fbutton
-                      variant="secondary"
-                      onClick={() => setShowComposer(true)}
+                      onClick={() => {
+                        setPreset(null);
+                        setShowComposer(true);
+                      }}
                     >
                       <PlusIcon className="size-4" />
-                      Start Another Poll
+                      Start Another
                     </Fbutton>
                   </div>
                 </div>
               )}
             </div>
           </div>
-        </DialogContent>
-      </Dialog>
-    </>
+        </div>
+      </div>
+    </div>
   );
 };
 
@@ -456,17 +598,17 @@ export const PlayerPollCard = () => {
             <CardTitle className="mt-2 text-xl font-black text-white md:text-2xl">
               {poll.question}
             </CardTitle>
+            <span className="mt-1 rounded-full border border-white/12 bg-black/20 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.18em] text-white/70">
+              {poll.allowMultiple ? "Multi-select" : "Single pick"}
+            </span>
           </div>
-          <span className="rounded-full border border-white/12 bg-black/20 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.18em] text-white/70">
-            {poll.allowMultiple ? "Multi-select" : "Single pick"}
-          </span>
         </div>
       </CardHeader>
 
       <CardContent className="space-y-4 px-5 py-5">
         {poll.status === "active" ? (
           <>
-            <div className="grid gap-3">
+            <div className="grid grid-cols-2 gap-3">
               {poll.options.map((option) => {
                 const isSelected = selected.includes(option.id);
                 return (
@@ -497,10 +639,6 @@ export const PlayerPollCard = () => {
                     <div>
                       <p className="text-sm font-semibold text-white">
                         {option.text}
-                      </p>
-                      <p className="mt-1 text-xs text-white/50">
-                        {option.votes} {option.votes === 1 ? "vote" : "votes"}{" "}
-                        so far
                       </p>
                     </div>
                     <span
@@ -617,7 +755,7 @@ export const Latency = ({ ms }: { ms: number }) => {
   );
 };
 
-export const BeforeWeBegin = ({dark}: {dark?: boolean}) => {
+export const BeforeWeBegin = ({ dark }: { dark?: boolean }) => {
   const { startGame, cancelGame, game } = useLobbyHost();
   const [stepIndex, setStepIndex] = useState(0);
   const activeGame = useMemo(
@@ -1114,18 +1252,14 @@ export const BeforeWeBegin = ({dark}: {dark?: boolean}) => {
       </div>
 
       <div className="relative z-20 flex w-full max-w-md flex-col gap-2">
-        <Fbutton
-          type="button"
-          className="w-full"
-          variant={dark ? "dark" : "secondary"}
-          onClick={startGame}
-        >
+        <Fbutton type="button" className="w-full" dark onClick={startGame}>
           Let's Play
         </Fbutton>
         <Fbutton
           type="button"
           size="sm"
-          variant={dark ? "dark-outline" : "outline"}
+          variant="outline"
+          dark
           className="w-full"
           onClick={cancelGame}
         >
@@ -1238,22 +1372,26 @@ export const LobbyTitle = () => {
             </DialogHeader>
 
             <div className="relative z-10 mt-6 flex flex-col items-center gap-6 text-center">
-              <div className="rounded-[2rem] border border-white/12 bg-white p-4 shadow-[0_20px_60px_rgba(0,0,0,0.18)]">
-                <QRCode
-                  className="size-64 rounded-[1.25rem] bg-white p-3 md:size-80"
-                  data={joinUrl}
-                />
-              </div>
-              <div>
-                <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-white/60">
-                  Join by code
-                </p>
-                <p className="mt-2 text-5xl font-black tracking-[0.12em] text-white md:text-6xl">
-                  {lobby?.code}
-                </p>
-                <p className="mt-3 text-sm font-semibold text-white/68">
-                  Best for big screens, shared links, and quick room entry.
-                </p>
+              <div className="flex flex-col md:flex-row items-center gap-6">
+                <div className="flex-1">
+                  <div className="rounded-[2rem] border border-white/12 bg-white p-4 shadow-[0_20px_60px_rgba(0,0,0,0.18)] w-fit mx-auto">
+                    <QRCode
+                      className="size-32 rounded-[1.25rem] bg-white p-1 md:size-40"
+                      data={joinUrl}
+                    />
+                  </div>
+                </div>
+                <div className="flex-1">
+                  <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-white/60">
+                    Join by code
+                  </p>
+                  <p className="mt-2 text-5xl font-black tracking-[0.12em] text-white md:text-6xl">
+                    {lobby?.code}
+                  </p>
+                  <p className="mt-3 text-sm font-semibold text-white/68">
+                    Best for big screens, shared links, and quick room entry.
+                  </p>
+                </div>
               </div>
               <div className="w-full max-w-xs">
                 <CopyLinkButton />
@@ -1333,12 +1471,8 @@ export const WaitingForPlayers = ({ className }: { className?: string }) => {
           <div className="space-y-2">
             <div>
               <h3 className="text-lg font-black tracking-tight text-white md:text-xl">
-                Players Ready
+                Players
               </h3>
-              <p className="text-sm leading-6 text-white/70 md:text-[15px]">
-                Round up the crew, watch the room fill, and keep the energy
-                high.
-              </p>
             </div>
           </div>
 
@@ -1442,49 +1576,22 @@ export const WaitingForPlayers = ({ className }: { className?: string }) => {
                 </AvatarGroupCount>
               </motion.div>
             )}
+
+           
           </div>
-        </div>
-        <div className="relative z-10 mt-4 flex flex-col gap-2">
-          {waitingForMorePlayers ? (
-            <motion.div
-              className="rounded-[1.25rem] border border-white/12 bg-white/6 px-4 py-3 text-center"
+           <motion.div
+              className="px-4 py-3 text-center"
               animate={{ opacity: [0.5, 1, 0.5] }}
               transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
             >
               <p className="font-semibold text-white/75">
-                Waiting for{" "}
-                {Math.max((lobby?.maxPlayers ?? 0) - players.length, 0)} more{" "}
+                Waiting for more{" "}
                 {Math.max((lobby?.maxPlayers ?? 0) - players.length, 0) === 1
                   ? "player"
                   : "players"}
                 ...
               </p>
             </motion.div>
-          ) : lobbyReady && uiState === RoomState.INIT ? (
-            <motion.div
-              className="rounded-[1.25rem] border border-[var(--umati-yellow)]/30 bg-[var(--umati-yellow)]/10 px-4 py-3 text-center"
-              initial={{ opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4, ease: [0.25, 1, 0.5, 1] }}
-            >
-              <p className="font-semibold text-white">
-                ✓ Game ready! Everyone is here.
-              </p>
-              <p className="mt-1 text-xs text-white/75">
-                Start the game from the instructions screen
-              </p>
-            </motion.div>
-          ) : (
-            <motion.p
-              className="text-center text-sm font-semibold text-white/70"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 0.3 }}
-            >
-              {players.length} player{players.length === 1 ? "" : "s"} in the
-              room
-            </motion.p>
-          )}
         </div>
       </motion.div>
       <Dialog
@@ -1533,7 +1640,7 @@ export const WaitingForPlayers = ({ className }: { className?: string }) => {
 
                 <div className="grid gap-3">
                   <Fbutton
-                    variant="red"
+                    variant="destructive"
                     className="w-full"
                     onClick={() => {
                       kickPlayer(
@@ -1733,7 +1840,7 @@ export const PlayerJoinLobby = () => {
   const { user } = useAuth();
   const [displayName, setDisplayName] = useState(user?.displayName ?? "");
   const [avatar, setAvatar] = useState<string>(
-    user?.avatar ?? getRandomAvatarUrl()
+    user?.avatar ?? getRandomAvatarUrl(),
   );
   const router = useRouter();
   const [loading, setLoading] = useState(false);
@@ -1783,7 +1890,9 @@ export const PlayerJoinLobby = () => {
                 value={displayName}
               />
               <div className="flex items-center justify-end">
-                <span className="text-xs opacity-55">{displayName.length}/{MAX_DISPLAY_NAME_LENGTH}</span>
+                <span className="text-xs opacity-55">
+                  {displayName.length}/{MAX_DISPLAY_NAME_LENGTH}
+                </span>
               </div>
             </div>
 
@@ -1799,7 +1908,12 @@ export const PlayerJoinLobby = () => {
         </CardContent>
       </Card>
 
-      <Link href="/" className="text-center text-white font-medium hover:underline">Back to Homepage</Link>
+      <Link
+        href="/"
+        className="text-center text-white font-medium hover:underline"
+      >
+        Back to Homepage
+      </Link>
     </div>
   );
 };
@@ -1807,11 +1921,7 @@ export const PlayerJoinLobby = () => {
 export const PlayerLeaveButton = () => {
   const { leaveLobby } = useLobbyPlayer();
   return (
-    <Fbutton
-      variant="secondary"
-      className="w-full flex-1 mt-auto"
-      onClick={leaveLobby}
-    >
+    <Fbutton className="w-full flex-1 mt-auto" onClick={leaveLobby}>
       Leave Room
     </Fbutton>
   );
@@ -1961,9 +2071,8 @@ export const PlayerReactionLayer = () => {
   );
 };
 
-
 export const PlayerJoinAnimationLayer = () => {
-    const { players, uiState } = useLobbyHost();
+  const { players, uiState } = useLobbyHost();
   const [activeReactions, setActiveReactions] = useState<
     {
       id: string;
@@ -2030,9 +2139,7 @@ export const PlayerJoinAnimationLayer = () => {
               bottom: "0px",
             }}
             onAnimationComplete={() => {
-              setActiveReactions((prev) =>
-                prev.filter((x) => x.id !== r.id)
-              );
+              setActiveReactions((prev) => prev.filter((x) => x.id !== r.id));
             }}
           >
             {/* Replace emoji with avatar */}
@@ -2042,18 +2149,15 @@ export const PlayerJoinAnimationLayer = () => {
                 {
                   "size-16": uiState === RoomState.INIT,
                   "size-12": uiState === RoomState.LOBBY,
-                }
+                },
               )}
             >
-              <AvatarImage
-                src={r.player.avatar}
-                alt={r.player.displayName}
-              />
-              <AvatarFallback>
-                {r.player.displayName?.[0]}
-              </AvatarFallback>
+              <AvatarImage src={r.player.avatar} alt={r.player.displayName} />
+              <AvatarFallback>{r.player.displayName?.[0]}</AvatarFallback>
             </Avatar>
-            <p className="text-sm font-semibold text-center">{r.player.displayName} Joined!</p>
+            <p className="text-sm font-semibold text-center">
+              {r.player.displayName} Joined!
+            </p>
           </motion.div>
         ))}
       </AnimatePresence>
@@ -2092,7 +2196,6 @@ export const DesktopOnly = () => {
     </div>
   );
 };
-
 
 export const GameShelf = ({ className }: { className?: string }) => {
   return (

@@ -55,6 +55,7 @@ export interface LobbyPoll {
 export const RoomState = {
   INIT: "INIT",
   LOBBY: "LOBBY",
+  POLL: "POLL",
   WAITING: "WAITING",
   PLAYING: "PLAYING",
   ENDED: "ENDED",

@@ -181,7 +181,9 @@ const TriviaGameConfig = ({action}: { action: GameConfigAction}) => {
         <Label>Question Region</Label>
         <Select
           value={questionProfile}
-          onValueChange={(value) => setQuestionProfile(value as QuestionProfile)}
+          onValueChange={(value) =>
+            setQuestionProfile(value as QuestionProfile)
+          }
         >
           <SelectTrigger className="w-full">
             <SelectValue placeholder="Select question region" />
@@ -200,7 +202,6 @@ const TriviaGameConfig = ({action}: { action: GameConfigAction}) => {
       <div className="grid gap-2">
         <Fbutton
           type="submit"
-          variant="secondary"
           className="w-full"
           onClick={async () => {
             await action({
@@ -235,7 +236,6 @@ const DrawItGameConfig = ({ action }: { action: GameConfigAction }) => {
       <div className="grid gap-2">
         <Fbutton
           type="submit"
-          variant="secondary"
           className="w-full"
           onClick={async () => {
             await action({
@@ -282,7 +282,9 @@ const HMGameConfig = ({action}: { action: GameConfigAction}) => {
         <Label>Question Region</Label>
         <Select
           value={questionProfile}
-          onValueChange={(value) => setQuestionProfile(value as QuestionProfile)}
+          onValueChange={(value) =>
+            setQuestionProfile(value as QuestionProfile)
+          }
         >
           <SelectTrigger className="w-full">
             <SelectValue placeholder="Select question region" />
@@ -301,7 +303,6 @@ const HMGameConfig = ({action}: { action: GameConfigAction}) => {
       <div className="grid gap-2">
         <Fbutton
           type="submit"
-          variant="dark"
           className="w-full"
           onClick={async () => {
             await action({
@@ -312,7 +313,7 @@ const HMGameConfig = ({action}: { action: GameConfigAction}) => {
         >
           Start Game
         </Fbutton>
-        <Fbutton variant="dark-outline" className="w-full" onClick={closeModal}>
+        <Fbutton variant="outline" dark className="w-full" onClick={closeModal}>
           Cancel
         </Fbutton>
       </div>
@@ -342,7 +343,6 @@ const ChameleonGameConfig = ({action}: { action: GameConfigAction}) => {
       <div className="grid gap-2">
         <Fbutton
           type="submit"
-          variant="secondary"
           className="w-full"
           onClick={async () => {
             await action({
@@ -352,7 +352,7 @@ const ChameleonGameConfig = ({action}: { action: GameConfigAction}) => {
         >
           Start Game
         </Fbutton>
-        <Fbutton variant="outline"  className="w-full" onClick={closeModal}>
+        <Fbutton variant="outline" className="w-full" onClick={closeModal}>
           Cancel
         </Fbutton>
       </div>
@@ -478,7 +478,6 @@ const QuizzerGameConfig = ({ action }: { action: GameConfigAction }) => {
         <div className="mt-auto grid gap-2">
           <Fbutton
             type="button"
-            variant="secondary"
             className="w-full"
             onClick={async () => {
               let parsed: unknown;
@@ -527,7 +526,7 @@ const QuizzerGameConfig = ({ action }: { action: GameConfigAction }) => {
           <div className="mb-4 grid grid-cols-2 gap-2">
             <Fbutton
               type="button"
-              variant={activeTab === "preview" ? "secondary" : "outline"}
+              variant={activeTab === "preview" ? "default" : "outline"}
               className="w-full"
               onClick={() => setActiveTab("preview")}
             >
@@ -535,7 +534,7 @@ const QuizzerGameConfig = ({ action }: { action: GameConfigAction }) => {
             </Fbutton>
             <Fbutton
               type="button"
-              variant={activeTab === "edit" ? "secondary" : "outline"}
+              variant={activeTab === "edit" ? "default" : "outline"}
               className="w-full"
               onClick={() => setActiveTab("edit")}
             >
@@ -545,95 +544,96 @@ const QuizzerGameConfig = ({ action }: { action: GameConfigAction }) => {
 
           {activeTab === "preview" ? (
             activeQuestion ? (
-            <div className="grid gap-4">
-              <div className="rounded-[1.5rem] border border-black/10 bg-white/85 p-5 shadow-inner">
-                <div className="mb-5 flex items-center justify-between gap-3">
-                  <span className="rounded-full border border-black/10 bg-black/5 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.18em] text-black/60">
-                    {activeQuestion.type === QuizzerQuestionType.SELECTION
-                      ? "Selection"
-                      : "True / False"}
-                  </span>
-                  <span className="text-sm font-semibold text-black/55">
-                    Question {activeIndex + 1}
-                  </span>
+              <div className="grid gap-4">
+                <div className="rounded-[1.5rem] border border-black/10 bg-white/85 p-5 shadow-inner">
+                  <div className="mb-5 flex items-center justify-between gap-3">
+                    <span className="rounded-full border border-black/10 bg-black/5 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.18em] text-black/60">
+                      {activeQuestion.type === QuizzerQuestionType.SELECTION
+                        ? "Selection"
+                        : "True / False"}
+                    </span>
+                    <span className="text-sm font-semibold text-black/55">
+                      Question {activeIndex + 1}
+                    </span>
+                  </div>
+
+                  <div className="rounded-[1.25rem] bg-gradient-to-br from-black to-black/85 px-5 py-6 text-white shadow-lg">
+                    <p className="text-lg font-bold leading-8 md:text-2xl">
+                      {activeQuestion.question}
+                    </p>
+
+                    {activeQuestion.type === QuizzerQuestionType.SELECTION ? (
+                      <div className="mt-6 grid gap-3">
+                        {activeQuestion.options?.map((option, index) => (
+                          <div
+                            key={option}
+                            className={`rounded-2xl border px-4 py-3 text-sm font-semibold md:text-base ${
+                              option === activeQuestion.correctAnswer
+                                ? "border-emerald-300/40 bg-emerald-400/15 text-emerald-50"
+                                : "border-white/10 bg-white/8 text-white/80"
+                            }`}
+                          >
+                            <span className="mr-3 inline-flex size-7 items-center justify-center rounded-full bg-white/10 text-xs font-black">
+                              {String.fromCharCode(65 + index)}
+                            </span>
+                            {option}
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="mt-6 grid grid-cols-2 gap-3">
+                        {[
+                          { label: "True", value: true },
+                          { label: "False", value: false },
+                        ].map((option) => (
+                          <div
+                            key={option.label}
+                            className={`rounded-2xl border px-4 py-4 text-center text-base font-bold ${
+                              option.value === activeQuestion.correctAnswer
+                                ? "border-emerald-300/40 bg-emerald-400/15 text-emerald-50"
+                                : "border-white/10 bg-white/8 text-white/80"
+                            }`}
+                          >
+                            {option.label}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 </div>
 
-                <div className="rounded-[1.25rem] bg-gradient-to-br from-black to-black/85 px-5 py-6 text-white shadow-lg">
-                  <p className="text-lg font-bold leading-8 md:text-2xl">
-                    {activeQuestion.question}
-                  </p>
-
-                  {activeQuestion.type === QuizzerQuestionType.SELECTION ? (
-                    <div className="mt-6 grid gap-3">
-                      {activeQuestion.options?.map((option, index) => (
-                        <div
-                          key={option}
-                          className={`rounded-2xl border px-4 py-3 text-sm font-semibold md:text-base ${
-                            option === activeQuestion.correctAnswer
-                              ? "border-emerald-300/40 bg-emerald-400/15 text-emerald-50"
-                              : "border-white/10 bg-white/8 text-white/80"
-                          }`}
-                        >
-                          <span className="mr-3 inline-flex size-7 items-center justify-center rounded-full bg-white/10 text-xs font-black">
-                            {String.fromCharCode(65 + index)}
-                          </span>
-                          {option}
-                        </div>
-                      ))}
-                    </div>
-                  ) : (
-                    <div className="mt-6 grid grid-cols-2 gap-3">
-                      {[
-                        { label: "True", value: true },
-                        { label: "False", value: false },
-                      ].map((option) => (
-                        <div
-                          key={option.label}
-                          className={`rounded-2xl border px-4 py-4 text-center text-base font-bold ${
-                            option.value === activeQuestion.correctAnswer
-                              ? "border-emerald-300/40 bg-emerald-400/15 text-emerald-50"
-                              : "border-white/10 bg-white/8 text-white/80"
-                          }`}
-                        >
-                          {option.label}
-                        </div>
-                      ))}
-                    </div>
-                  )}
+                <div className="flex items-center justify-between gap-3">
+                  <Fbutton
+                    type="button"
+                    variant="outline"
+                    className="w-full"
+                    disabled={activeIndex === 0}
+                    onClick={() =>
+                      setActiveIndex((index) => Math.max(index - 1, 0))
+                    }
+                  >
+                    Previous
+                  </Fbutton>
+                  <Fbutton
+                    type="button"
+                    variant="outline"
+                    className="w-full"
+                    disabled={activeIndex === questionCount - 1}
+                    onClick={() =>
+                      setActiveIndex((index) =>
+                        Math.min(index + 1, questionCount - 1),
+                      )
+                    }
+                  >
+                    Next
+                  </Fbutton>
                 </div>
               </div>
-
-              <div className="flex items-center justify-between gap-3">
-                <Fbutton
-                  type="button"
-                  variant="outline"
-                  className="w-full"
-                  disabled={activeIndex === 0}
-                  onClick={() =>
-                    setActiveIndex((index) => Math.max(index - 1, 0))
-                  }
-                >
-                  Previous
-                </Fbutton>
-                <Fbutton
-                  type="button"
-                  variant="outline"
-                  className="w-full"
-                  disabled={activeIndex === questionCount - 1}
-                  onClick={() =>
-                    setActiveIndex((index) =>
-                      Math.min(index + 1, questionCount - 1),
-                    )
-                  }
-                >
-                  Next
-                </Fbutton>
-              </div>
-            </div>
             ) : (
-            <div className="rounded-[1.25rem] border border-dashed border-black/15 bg-black/5 px-4 py-10 text-center text-black/60">
-              Upload or reset a valid question set to preview it slide by slide.
-            </div>
+              <div className="rounded-[1.25rem] border border-dashed border-black/15 bg-black/5 px-4 py-10 text-center text-black/60">
+                Upload or reset a valid question set to preview it slide by
+                slide.
+              </div>
             )
           ) : (
             <textarea
@@ -678,7 +678,6 @@ const FriendFactsGameConfig = ({ action }: { action: GameConfigAction }) => {
       <div className="grid gap-2">
         <Fbutton
           type="button"
-          variant="secondary"
           className="w-full"
           onClick={async () => {
             await action({ noOfRounds });
@@ -706,7 +705,6 @@ const CodenamesGameConfig = ({ action }: { action: GameConfigAction }) => {
       <div className="grid gap-2">
         <Fbutton
           type="button"
-          variant="secondary"
           className="w-full"
           onClick={async () => {
             await action({});

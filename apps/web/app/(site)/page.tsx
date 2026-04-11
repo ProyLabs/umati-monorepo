@@ -23,7 +23,7 @@ export default function Home() {
 
           <div className="grid grid-cols-2 gap-4 mt-8 max-w-lg w-full mx-auto">
             <Link href="/create-lobby">
-              <Fbutton variant="secondary" className="w-full">Create a Lobby</Fbutton>
+              <Fbutton className="w-full">Create a Lobby</Fbutton>
             </Link>
             <Link href="/join-lobby">
               <Fbutton variant="outline" className="w-full">
@@ -34,13 +34,18 @@ export default function Home() {
         </div>
 
         <CardFan>
-          {
-            Games.map((game)=> {
-              return <GameCard key={game.id} title={game.title} variant={game.color as any} description={game.description} src={game.src} />
-            })
-          }
+          {Games.map((game) => {
+            return (
+              <GameCard
+                key={game.id}
+                title={game.title}
+                variant={game.color as any}
+                description={game.description}
+                src={game.src}
+              />
+            );
+          })}
         </CardFan>
-
       </section>
       <Particles
         className="absolute inset-0"

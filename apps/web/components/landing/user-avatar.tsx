@@ -9,11 +9,9 @@ export default async function UserAvatar() {
 
 
     return (
-        <Link href="/auth/login">
-      <Fbutton size="sm"  variant="secondary">
-        Login
-      </Fbutton>
-        </Link>
+      <Link href="/auth/login">
+        <Fbutton size="sm">Login</Fbutton>
+      </Link>
     );
 
 

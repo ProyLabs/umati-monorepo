@@ -11,9 +11,7 @@ export default async function NotFound() {
         <h2 className="text-4xl md:text-5xl font-bold mb-2">Not Found!</h2>
         <p className="mb-8">We could not find the resource you requested for</p>
         <Link href="/">
-          <Fbutton  variant="secondary" className="max-w-4/5 mx-auto w-full">
-            Back to Home
-          </Fbutton>
+          <Fbutton className="max-w-4/5 mx-auto w-full">Back to Home</Fbutton>
         </Link>
       </div>
       <BubbleBackground className="absolute inset-0 flex items-center justify-center rounded-xl !z-0" />
