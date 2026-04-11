@@ -661,6 +661,45 @@ export const BeforeWeBegin = ({dark}: {dark?: boolean}) => {
             },
           ],
         };
+      case GameType.DRAWIT:
+        return {
+          eyebrow: "Draw It!",
+          title: "Draw fast, guess faster",
+          tone: "sky",
+          example: { kind: "card", value: "_ _ _ _ _", label: "5 letter word" },
+          steps: [
+            {
+              label: "One player draws",
+              role: "Game",
+              body: "Each turn picks one player to draw while everyone else guesses.",
+            },
+            {
+              label: "Choose a word",
+              role: "Drawer",
+              body: "The drawer gets 3 word choices and picks 1 in secret.",
+            },
+            {
+              label: "Watch the canvas",
+              role: "Room",
+              body: "The drawing appears live on the main screen and on player phones.",
+            },
+            {
+              label: "Guess quickly",
+              role: "Guessers",
+              body: "Submit guesses while the timer runs. Faster correct guesses score more.",
+            },
+            {
+              label: "Help the drawer",
+              role: "Scoring",
+              body: "The drawer also scores when more players guess the word correctly.",
+            },
+            {
+              label: "Everyone gets a turn",
+              role: "Rounds",
+              body: "One round means every player draws once before the leaderboard.",
+            },
+          ],
+        };
       case GameType.HM:
         return {
           eyebrow: "Herd Mentality",
@@ -902,9 +941,11 @@ export const BeforeWeBegin = ({dark}: {dark?: boolean}) => {
         ? "bg-[var(--umati-aqua)] text-black"
         : instructionFlow.tone === "orange"
           ? "bg-orange-500 text-white"
-          : instructionFlow.tone === "lime"
-            ? "bg-lime-500 text-black"
-            : "bg-white/10 text-white";
+          : instructionFlow.tone === "sky"
+            ? "bg-[var(--umati-sky)] text-white"
+            : instructionFlow.tone === "lime"
+              ? "bg-lime-500 text-black"
+              : "bg-white/10 text-white";
 
   return (
     <div className="mx-auto flex h-full w-full max-w-screen-2xl flex-col items-center justify-center gap-6 px-4 py-4">

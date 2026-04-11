@@ -22,6 +22,10 @@ import { CodenamesHostProvider } from '@/providers/games/codenames/codenames-hos
 import CodenamesHost from './codenames/host';
 import { CodenamesPlayerProvider } from '@/providers/games/codenames/codenames-player-provider';
 import CodenamesPlayer from './codenames/player';
+import { DrawItHostProvider } from '@/providers/games/drawit/drawit-host-provider';
+import DrawItHost from './drawit/host';
+import { DrawItPlayerProvider } from '@/providers/games/drawit/drawit-player-provider';
+import DrawItPlayer from './drawit/player';
 
 export function GameResolverHost () {
     const {game} = useLobbyHost();
@@ -32,9 +36,12 @@ export function GameResolverHost () {
     const Chameleon = <ChameleonHostProvider><ChameleonHost/></ChameleonHostProvider>
     const FriendFacts = <FriendFactsHostProvider><FriendFactsHost /></FriendFactsHostProvider>
     const Codenames = <CodenamesHostProvider><CodenamesHost /></CodenamesHostProvider>
+    const DrawIt = <DrawItHostProvider><DrawItHost /></DrawItHostProvider>
 
     if(game?.type === GameType.TRIVIA || game?.type === GameType.QUIZZER){
         return TriviaGame;
+    } else if (game?.type === GameType.DRAWIT) {
+      return DrawIt;
     } else if(game?.type === GameType.HM){
         return HerdMentality;
     } else if(game?.type === GameType.CHAMELEON){
@@ -59,10 +66,13 @@ export function GameResolverPlayer () {
     const Chameleon = <ChameleonPlayerProvider><ChameleonPlayer/></ChameleonPlayerProvider>
     const FriendFacts = <FriendFactsPlayerProvider><FriendFactsPlayer /></FriendFactsPlayerProvider>
     const Codenames = <CodenamesPlayerProvider><CodenamesPlayer /></CodenamesPlayerProvider>
+    const DrawIt = <DrawItPlayerProvider><DrawItPlayer /></DrawItPlayerProvider>
 
 
     if(game?.type === GameType.TRIVIA || game?.type === GameType.QUIZZER){
         return TriviaGame;
+    } else if (game?.type === GameType.DRAWIT) {
+      return DrawIt;
     } else if(game?.type === GameType.HM){
         return HerdMentality;
     }  else if(game?.type === GameType.CHAMELEON){

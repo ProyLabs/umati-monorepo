@@ -22,7 +22,7 @@ export const Games: Game[] = [
     className: "from-[var(--umati-blue)] to-[#446BF5]",
     src: "https://img.icons8.com/?size=400&id=13370&format=png&color=000000",
     min: 3,
-    playable: false,
+    playable: true,
   },
   {
     id: "quizzer",

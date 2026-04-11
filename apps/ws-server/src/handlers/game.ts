@@ -5,6 +5,7 @@ import { logInfo } from "../utils/logger";
 import { GameManager } from "../lib/game-manager";
 import { FriendFactsGame } from "../lib/games/friend-facts";
 import { CodenamesGame } from "../lib/games/codenames";
+import { DrawItGame } from "../lib/games/drawit";
 
 /** When host setup a new game */
 export async function handleInitGame(
@@ -115,12 +116,15 @@ export async function handleGameAnswer(
     | WSEvent.CH_ROUND_VOTE
     | WSEvent.FF_ROUND_ANSWER
     | WSEvent.CN_CARD_PICK
+    | WSEvent.DI_GUESS
   ],
 ) {
     const roomId = payload.roomId;
     const playerId = payload.playerId;
     const answer = "answerPlayerId" in payload
       ? payload.answerPlayerId
+      : "guess" in payload
+        ? payload.guess
       : "cardId" in payload
         ? payload.cardId
         : payload.answer;
@@ -178,6 +182,48 @@ export async function handleCodenamesPassTurn(
   if (!game || game.type !== GameType.CN) return;
 
   (game as CodenamesGame).passTurn(playerId, team);
+}
+
+export async function handleDrawItWordPick(
+  ws: WebSocket,
+  payload: WSPayloads[WSEvent.DI_WORD_PICK],
+) {
+  const { roomId, playerId, word } = payload;
+  const room = RoomManager.get(roomId);
+  if (!room?.game) return;
+
+  const game = GameManager.get(room.game.id);
+  if (!game || game.type !== GameType.DRAWIT) return;
+
+  (game as DrawItGame).pickWord(playerId, word);
+}
+
+export async function handleDrawItSegment(
+  ws: WebSocket,
+  payload: WSPayloads[WSEvent.DI_DRAW_SEGMENT],
+) {
+  const { roomId, playerId, segment } = payload;
+  const room = RoomManager.get(roomId);
+  if (!room?.game) return;
+
+  const game = GameManager.get(room.game.id);
+  if (!game || game.type !== GameType.DRAWIT) return;
+
+  (game as DrawItGame).addSegment(playerId, segment);
+}
+
+export async function handleDrawItCanvasClear(
+  ws: WebSocket,
+  payload: WSPayloads[WSEvent.DI_CANVAS_CLEAR],
+) {
+  const { roomId, playerId } = payload;
+  const room = RoomManager.get(roomId);
+  if (!room?.game) return;
+
+  const game = GameManager.get(room.game.id);
+  if (!game || game.type !== GameType.DRAWIT) return;
+
+  (game as DrawItGame).clearCanvas(playerId);
 }
 
 export async function handleGameStateChange(ws: WebSocket, payload: WSPayloads[WSEvent.GAME_STATE_CHANGE]|WSPayloads[WSEvent.CH_ROUND_STATE_CHANGE]) {

@@ -12,6 +12,7 @@ import { Chameleon } from "./games/chameleon";
 import { QuizzerGame } from "./games/quizzer-game";
 import { FriendFactsGame } from "./games/friend-facts";
 import { CodenamesGame } from "./games/codenames";
+import { DrawItGame } from "./games/drawit";
 
 const games = new Map<string, BaseGame>();
 
@@ -33,6 +34,9 @@ export const GameManager = {
         break;
       case GameType.FF:
         game = new FriendFactsGame(roomId, options);
+        break;
+      case GameType.DRAWIT:
+        game = new DrawItGame(roomId, options);
         break;
       case GameType.CN:
         game = new CodenamesGame(roomId, options);
@@ -60,7 +64,7 @@ export const GameManager = {
       id: game.id,
       type: game.type,
       state: game.state,
-      round: (game as TriviaGame | HerdMentality | Chameleon | QuizzerGame | FriendFactsGame | CodenamesGame).round,
+      round: (game as TriviaGame | HerdMentality | Chameleon | QuizzerGame | FriendFactsGame | CodenamesGame | DrawItGame).round,
       scores: game.scores,
     };
   },
@@ -79,6 +83,9 @@ export const GameManager = {
     } else if (game.type === GameType.FF) {
       const friendFactsGame = game as FriendFactsGame;
       friendFactsGame.submitAnswer(playerId, answer as string);
+    } else if (game.type === GameType.DRAWIT) {
+      const drawItGame = game as DrawItGame;
+      drawItGame.submitGuess(playerId, answer as string);
     } else if (game.type === GameType.CN) {
       const codenamesGame = game as CodenamesGame;
       codenamesGame.pickCard(playerId, answer as string);
@@ -99,15 +106,19 @@ export const GameManager = {
       game.type === GameType.TRIVIA ||
       game.type === GameType.QUIZZER ||
       game.type === GameType.FF
+      || game.type === GameType.DRAWIT
       || game.type === GameType.CN
     ) {
       const roundGame = game as
         | TriviaGame
         | QuizzerGame
         | FriendFactsGame
+        | DrawItGame
         | CodenamesGame;
       if (game.type === GameType.CN) {
         (roundGame as CodenamesGame).advanceToState(state, hostWs);
+      } else if (game.type === GameType.DRAWIT) {
+        (roundGame as DrawItGame).advanceToState(state);
       } else {
         roundGame.advanceToState(state);
       }

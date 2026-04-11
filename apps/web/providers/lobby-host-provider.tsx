@@ -125,9 +125,6 @@ export function LobbyHostProvider({ children }: { children: ReactNode }) {
           break;
 
         case WSEvent.PLAYER_JOIN:
-          toast.success(`${payload?.displayName} joined the lobby`, {
-            position: "bottom-right",
-          });
           break;
         case WSEvent.PLAYER_LEAVE:
           console.log("📤 Player left:", payload);

@@ -10,7 +10,7 @@
  *  - 🔹 WSMessage: full message shape { event, payload }
  */
 
-import { ChameleonRound, CodenamesRound, CodenamesSetupState, CodenamesTeam, FriendFactsFact, FriendFactsFactInput, FriendFactsRound, FriendFactsSetupState, Game, GameState, GameType, HerdMentalityOptions, HerdMentalityRound, Lobby, LobbyFull, LobbyPoll, Player, QuestionProfile, QuizzerQuestionInput, Ranking, RoomState, Scores, TriviaOptions, TriviaRound } from "./types";
+import { ChameleonRound, CodenamesRound, CodenamesSetupState, CodenamesTeam, DrawItRound, DrawItSegment, DrawItSetupState, FriendFactsFact, FriendFactsFactInput, FriendFactsRound, FriendFactsSetupState, Game, GameState, GameType, HerdMentalityOptions, HerdMentalityRound, Lobby, LobbyFull, LobbyPoll, Player, QuestionProfile, QuizzerQuestionInput, Ranking, RoomState, Scores, TriviaOptions, TriviaRound } from "./types";
 
 export enum WSEvent {
   // --- Core lifecycle ---
@@ -82,6 +82,17 @@ export enum WSEvent {
   FF_ROUND_ANSWER="GAME:FF:ROUND:ANSWER",
   FF_ROUND_ANSWERED="GAME:FF:ROUND:ANSWERED",
   FF_ROUND_END="GAME:FF:ROUND:END",
+
+  //Draw It
+  DI_SETUP_UPDATE="GAME:DI:SETUP:UPDATE",
+  DI_WORD_PICK="GAME:DI:WORD:PICK",
+  DI_ROUND_START="GAME:DI:ROUND:START",
+  DI_ROUND_UPDATE="GAME:DI:ROUND:UPDATE",
+  DI_ROUND_END="GAME:DI:ROUND:END",
+  DI_DRAW_SEGMENT="GAME:DI:DRAW:SEGMENT",
+  DI_CANVAS_CLEAR="GAME:DI:CANVAS:CLEAR",
+  DI_GUESS="GAME:DI:GUESS",
+  DI_GUESS_RESULT="GAME:DI:GUESS:RESULT",
 
   //Codenames
   CN_SETUP_UPDATE="GAME:CN:SETUP:UPDATE",
@@ -224,6 +235,16 @@ export interface WSPayloads {
   [WSEvent.FF_ROUND_ANSWER]: { roomId: string; playerId: string; answerPlayerId: string };
   [WSEvent.FF_ROUND_ANSWERED]: { answerPlayerId: string | null };
   [WSEvent.FF_ROUND_END]: { state: GameState; round: FriendFactsRound; scores: Scores; counts: Record<string, number> };
+
+  [WSEvent.DI_SETUP_UPDATE]: { state: GameState; setup: DrawItSetupState };
+  [WSEvent.DI_WORD_PICK]: { roomId: string; playerId: string; word: string };
+  [WSEvent.DI_ROUND_START]: { state: GameState; round: DrawItRound };
+  [WSEvent.DI_ROUND_UPDATE]: { state: GameState; round: DrawItRound; scores?: Scores };
+  [WSEvent.DI_ROUND_END]: { state: GameState; round: DrawItRound; scores: Scores };
+  [WSEvent.DI_DRAW_SEGMENT]: { roomId: string; playerId: string; segment: DrawItSegment };
+  [WSEvent.DI_CANVAS_CLEAR]: { roomId: string; playerId: string };
+  [WSEvent.DI_GUESS]: { roomId: string; playerId: string; guess: string };
+  [WSEvent.DI_GUESS_RESULT]: { guess: string; correct: boolean };
 
   [WSEvent.CN_SETUP_UPDATE]: { state: GameState; setup: CodenamesSetupState };
   [WSEvent.CN_SET_SPYMASTER]: { roomId: string; playerId: string };

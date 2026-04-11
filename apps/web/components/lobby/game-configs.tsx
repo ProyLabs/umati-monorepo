@@ -99,7 +99,7 @@ function GameConfig({ game, action }: GameConfigProps) {
             case GameType.TRIVIA:
               return <TriviaGameConfig action={action} />;
             case GameType.DRAWIT:
-              return <DrawItGameConfig />;
+              return <DrawItGameConfig action={action} />;
             case GameType.OOO:
               return <OddOneOutGameConfig />;
             case GameType.HM:
@@ -219,30 +219,30 @@ const TriviaGameConfig = ({action}: { action: GameConfigAction}) => {
   );
 };
 
-const DrawItGameConfig = () => {
+const DrawItGameConfig = ({ action }: { action: GameConfigAction }) => {
   const { closeModal } = useModal();
+  const [noOfRounds, setNoOfRounds] = useState(3);
   return (
     <div className="grid gap-8">
       <div className="grid gap-2">
         <Label htmlFor="lobby-code">Number of Rounds</Label>
-        <ButtonOptions value={3} options={[1, 2, 3, 5, 10]} />
-      </div>
-
-      <div className="grid gap-2">
-        <Label htmlFor="lobby-code">Word Count</Label>
-        <ButtonOptions value={3} options={[2, 3, 4, 5]} />
-      </div>
-
-      <div className="grid gap-2">
-        <Label htmlFor="lobby-code">Drawtime</Label>
-        <ButtonOptions value={60} options={[30, 60, 80]} />
+        <ButtonOptions
+          value={noOfRounds}
+          options={[1, 2, 3, 4, 5]}
+          onChange={(val) => setNoOfRounds(val as number)}
+        />
       </div>
       <div className="grid gap-2">
         <Fbutton
           type="submit"
           variant="secondary"
           className="w-full"
-          onClick={async () => {}}
+          onClick={async () => {
+            await action({
+              noOfRounds,
+              duration: 60,
+            });
+          }}
         >
           Start Game
         </Fbutton>

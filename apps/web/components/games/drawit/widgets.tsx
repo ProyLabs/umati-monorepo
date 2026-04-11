@@ -1,14 +1,152 @@
 "use client";
 
 import { Fbutton } from "@/components/ui/fancy-button";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Slider } from "@/components/ui/slider";
+import { PlayerAvatar } from "@/components/lobby/widgets";
 import { cn } from "@/lib/utils";
-import { EndGameButton, ScoreGapHint } from "../shared";
 import { useDrawItHost } from "@/providers/games/drawit/drawit-host-provider";
 import { useDrawItPlayer } from "@/providers/games/drawit/drawit-player-provider";
 import { useLobbyPlayer } from "@/providers/lobby-player-provider";
 import { DrawItRound, DrawItSegment } from "@umati/ws";
-import { useEffect, useRef, useState } from "react";
-import { PlayerAvatar } from "@/components/lobby/widgets";
+import {
+  Eraser,
+  PaintBucket,
+  Palette,
+  Pencil,
+  RotateCcw,
+  Trash2,
+} from "lucide-react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type ComponentType,
+  type PointerEvent,
+  type ReactNode,
+} from "react";
+import { EndGameButton, ScoreGapHint } from "../shared";
+
+const CANVAS_BG = "#fffdf7";
+const DEFAULT_COLOR = "#141821";
+const DRAW_COLORS = [
+  "#141821",
+  "#ffffff",
+  "#63666f",
+  "#d93025",
+  "#f97316",
+  "#facc15",
+  "#66a80f",
+  "#16a34a",
+  "#0f766e",
+  "#0ea5e9",
+  "#2563eb",
+  "#4f46e5",
+  "#a21caf",
+  "#db2777",
+  "#b45309",
+  "#7c4a2d",
+];
+
+const clamp = (value: number, min: number, max: number) =>
+  Math.min(Math.max(value, min), max);
+
+const wordLengthLabel = (length: number) =>
+  `${length} ${length === 1 ? "letter" : "letters"}`;
+
+const toWordLengthLabel = (round: DrawItRound) => {
+  if (!round.wordLengths.length) return wordLengthLabel(round.wordLength);
+  if (round.wordLengths.length === 1)
+    return wordLengthLabel(round.wordLengths[0]);
+  return round.wordLengths.join(" ");
+};
+
+const drawStroke = (
+  ctx: CanvasRenderingContext2D,
+  segment: DrawItSegment,
+  width: number,
+  height: number,
+) => {
+  ctx.strokeStyle = segment.mode === "erase" ? CANVAS_BG : segment.color;
+  ctx.lineWidth = segment.width;
+  ctx.beginPath();
+  ctx.moveTo(segment.x1 * width, segment.y1 * height);
+  ctx.lineTo(segment.x2 * width, segment.y2 * height);
+  ctx.stroke();
+};
+
+const floodFill = (
+  ctx: CanvasRenderingContext2D,
+  startX: number,
+  startY: number,
+  fillColor: string,
+  width: number,
+  height: number,
+) => {
+  const image = ctx.getImageData(0, 0, width, height);
+  const { data } = image;
+  const stack = [[startX, startY]];
+  const visited = new Uint8Array(width * height);
+
+  const fillProbe = document.createElement("canvas");
+  fillProbe.width = 1;
+  fillProbe.height = 1;
+  const fillProbeCtx = fillProbe.getContext("2d");
+  if (!fillProbeCtx) return;
+
+  fillProbeCtx.fillStyle = fillColor;
+  fillProbeCtx.fillRect(0, 0, 1, 1);
+  const fillPixel = fillProbeCtx.getImageData(0, 0, 1, 1).data;
+
+  const toIndex = (x: number, y: number) => (y * width + x) * 4;
+  const colorMatches = (index: number, rgba: Uint8ClampedArray) =>
+    data[index] === rgba[0] &&
+    data[index + 1] === rgba[1] &&
+    data[index + 2] === rgba[2] &&
+    data[index + 3] === rgba[3];
+
+  const seedIndex = toIndex(startX, startY);
+  const seed = data.slice(seedIndex, seedIndex + 4);
+  if (
+    seed[0] === fillPixel[0] &&
+    seed[1] === fillPixel[1] &&
+    seed[2] === fillPixel[2] &&
+    seed[3] === fillPixel[3]
+  ) {
+    return;
+  }
+
+  while (stack.length) {
+    const next = stack.pop();
+    if (!next) continue;
+
+    const [x, y] = next;
+    if (x < 0 || x >= width || y < 0 || y >= height) continue;
+
+    const visitIndex = y * width + x;
+    if (visited[visitIndex]) continue;
+    visited[visitIndex] = 1;
+
+    const pixelIndex = toIndex(x, y);
+    if (!colorMatches(pixelIndex, seed)) continue;
+
+    data[pixelIndex] = fillPixel[0];
+    data[pixelIndex + 1] = fillPixel[1];
+    data[pixelIndex + 2] = fillPixel[2];
+    data[pixelIndex + 3] = fillPixel[3];
+
+    stack.push([x + 1, y]);
+    stack.push([x - 1, y]);
+    stack.push([x, y + 1]);
+    stack.push([x, y - 1]);
+  }
+
+  ctx.putImageData(image, 0, 0);
+};
 
 const drawSegments = (canvas: HTMLCanvasElement, segments: DrawItSegment[]) => {
   const ctx = canvas.getContext("2d");
@@ -18,31 +156,164 @@ const drawSegments = (canvas: HTMLCanvasElement, segments: DrawItSegment[]) => {
   const rect = canvas.getBoundingClientRect();
   canvas.width = rect.width * dpr;
   canvas.height = rect.height * dpr;
+
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
   ctx.scale(dpr, dpr);
   ctx.clearRect(0, 0, rect.width, rect.height);
-  ctx.fillStyle = "#fffdf7";
+  ctx.fillStyle = CANVAS_BG;
   ctx.fillRect(0, 0, rect.width, rect.height);
   ctx.lineCap = "round";
   ctx.lineJoin = "round";
 
   segments.forEach((segment) => {
     if (segment.mode === "fill") {
-      ctx.fillStyle = segment.color;
-      ctx.fillRect(0, 0, rect.width, rect.height);
+      floodFill(
+        ctx,
+        clamp(
+          Math.round(segment.x1 * (rect.width - 1)),
+          0,
+          Math.max(rect.width - 1, 0),
+        ),
+        clamp(
+          Math.round(segment.y1 * (rect.height - 1)),
+          0,
+          Math.max(rect.height - 1, 0),
+        ),
+        segment.color,
+        Math.max(Math.round(rect.width), 1),
+        Math.max(Math.round(rect.height), 1),
+      );
       return;
     }
 
-    ctx.strokeStyle = segment.mode === "erase" ? "#fffdf7" : segment.color;
-    ctx.lineWidth = segment.width;
-    ctx.beginPath();
-    ctx.moveTo(segment.x1 * rect.width, segment.y1 * rect.height);
-    ctx.lineTo(segment.x2 * rect.width, segment.y2 * rect.height);
-    ctx.stroke();
+    drawStroke(ctx, segment, rect.width, rect.height);
   });
 };
 
-const wordLengthLabel = (length: number) =>
-  `${length} ${length === 1 ? "letter" : "letters"}`;
+const ToolButton = ({
+  active,
+  label,
+  icon: Icon,
+  onClick,
+}: {
+  active: boolean;
+  label: string;
+  icon: ComponentType<{ className?: string }>;
+  onClick: () => void;
+}) => (
+  <button
+    type="button"
+    aria-label={label}
+    aria-pressed={active}
+    onClick={onClick}
+    className={cn(
+      "flex h-13 min-w-13 items-center justify-center rounded-[1.1rem] border transition-all duration-150",
+      active
+        ? "border-white/70 bg-[#9c69f5] text-white shadow-[0_12px_24px_rgba(70,26,150,0.28)]"
+        : "border-[#d9e1ff] bg-white text-[#3656aa]",
+    )}
+  >
+    <Icon className="size-5" />
+  </button>
+);
+
+function BrushSizePopover({
+  strokeWidth,
+  onChange,
+}: {
+  strokeWidth: number;
+  onChange: (value: number) => void;
+}) {
+  return (
+    <Popover>
+      <PopoverTrigger asChild>
+        <button
+          type="button"
+          aria-label="Brush size"
+          className="flex h-13 min-w-13 items-center justify-center rounded-[1.1rem] border border-[#d9e1ff] bg-white text-[#3656aa] transition-transform duration-150 active:scale-95"
+        >
+          <div
+            className="rounded-full bg-[#141821]"
+            style={{
+              width: Math.max(strokeWidth * 1.8, 8),
+              height: Math.max(strokeWidth * 1.8, 8),
+            }}
+          />
+        </button>
+      </PopoverTrigger>
+      <PopoverContent className="w-[17rem] rounded-[1.5rem] bg-[#254ca7] p-4">
+        <div className="space-y-4">
+          <div className="flex items-center justify-between">
+            <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-white/70">
+              Brush Size
+            </p>
+            <p className="text-sm font-bold text-white">{strokeWidth}px</p>
+          </div>
+          <div className="flex h-16 items-center justify-center rounded-[1.15rem] bg-white">
+            <div
+              className="rounded-full bg-[#141821]"
+              style={{
+                width: Math.max(strokeWidth * 2.8, 10),
+                height: Math.max(strokeWidth * 2.8, 10),
+              }}
+            />
+          </div>
+          <Slider
+            min={2}
+            max={24}
+            step={1}
+            value={[strokeWidth]}
+            onValueChange={(value) => onChange(value[0] ?? strokeWidth)}
+          />
+          <div className="flex items-center justify-between text-xs font-semibold text-white/72">
+            <span>Thin</span>
+            <span>Thick</span>
+          </div>
+        </div>
+      </PopoverContent>
+    </Popover>
+  );
+}
+
+function ClueChip({
+  round,
+  revealWord = false,
+}: {
+  round: DrawItRound;
+  revealWord?: boolean;
+}) {
+  const clue = revealWord
+    ? round.word?.toUpperCase()
+    : round.wordMask?.toUpperCase();
+
+  return (
+    <div className="relative mx-auto w-fit rounded-[1.1rem] border border-[#d7def8] bg-[#fffdf8] px-4 py-2 text-[#11131a] shadow-[0_10px_30px_rgba(13,22,51,0.16)]">
+      <div className="flex items-start gap-3">
+        <span className="text-[clamp(1.15rem,2vw,1.9rem)] font-black tracking-[0.18em]">
+          {clue}
+        </span>
+        {round.wordLengths.length ? (
+          <span className="pt-0.5 text-xs font-black tracking-[0.22em] text-[#23397a]">
+            {round.wordLengths.join(" ")}
+          </span>
+        ) : null}
+      </div>
+    </div>
+  );
+}
+
+function TurnBanner({ round }: { round: DrawItRound }) {
+  return (
+    <div className="flex flex-wrap items-center justify-between gap-3 rounded-[1.6rem] border border-white/14 bg-white/8 px-4 py-3">
+      <div>
+        <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-white/55">
+          Round {round.roundNumber} of {round.totalRounds}
+        </p>
+        <p className="mt-1 text-xl font-black">{round.drawerName} is drawing</p>
+      </div>
+    </div>
+  );
+}
 
 export const DrawItTitleScreen = () => {
   return (
@@ -59,19 +330,6 @@ export const DrawItTitleScreen = () => {
     </div>
   );
 };
-
-function TurnBanner({ round }: { round: DrawItRound }) {
-  return (
-    <div className="flex flex-wrap items-center justify-between gap-3 rounded-[1.6rem] border border-white/14 bg-white/8 px-4 py-3">
-      <div>
-        <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-white/55">
-          Round {round.roundNumber} of {round.totalRounds}
-        </p>
-        <p className="mt-1 text-xl font-black">{round.drawerName} is drawing</p>
-      </div>
-    </div>
-  );
-}
 
 function RadialTimer({
   duration,
@@ -183,7 +441,7 @@ function GuessPanel({
 
   return (
     <form
-      className="rounded-[1.5rem] border border-white/20 bg-gradient-to-br from-white/8 to-white/4 p-6 animate-in fade-in duration-300 space-y-4"
+      className="rounded-[1.5rem] border border-white/14 bg-black/12 p-4 animate-in fade-in duration-300"
       onSubmit={(event) => {
         event.preventDefault();
         if (!guess.trim()) return;
@@ -191,22 +449,22 @@ function GuessPanel({
         setGuess("");
       }}
     >
-      <p className="text-[10px] font-black uppercase tracking-[0.22em] text-white/50">
-        🔍 Guess the Word
+      <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-white/55">
+        Guess the word
       </p>
-      <div className="mt-4 rounded-[1.35rem] border border-white/15 bg-white/6 px-4 py-4 text-center backdrop-blur-sm hover:border-white/25 transition-colors duration-200">
-        <p className="text-[10px] font-black uppercase tracking-[0.22em] text-white/45 mb-2">
+      <div className="mt-3 rounded-[1.35rem] border border-white/12 bg-white/8 px-4 py-4 text-center">
+        <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-white/45">
           Clue
         </p>
-        <p className="mt-2 text-3xl font-black tracking-[0.18em] text-white leading-tight">
-          {guessedCorrectly ? (round.word ?? "").toUpperCase() : round.wordMask}
-        </p>
-        <p className="mt-3 text-xs font-semibold text-white/60">
-          {wordLengthLabel(round.wordLength)}
+        <div className="mt-2">
+          <ClueChip round={round} revealWord={guessedCorrectly} />
+        </div>
+        <p className="mt-2 text-sm font-semibold text-white/68">
+          {toWordLengthLabel(round)}
         </p>
       </div>
       {guessedCorrectly ? (
-        <p className="mt-4 text-sm font-bold text-white/75 text-center">
+        <p className="mt-4 text-base font-semibold text-white/78">
           You got it. Waiting for the rest of the room.
         </p>
       ) : (
@@ -219,15 +477,14 @@ function GuessPanel({
                 ? `LAST: ${lastSubmittedGuess.toUpperCase()}`
                 : "TYPE YOUR GUESS"
             }
-            autoComplete="off"
-            className="mt-4 h-12 w-full rounded-xl border border-white/15 bg-white/8 px-4 text-base font-bold uppercase text-white placeholder:text-white/40 outline-none transition-all duration-200 focus:border-white/40 focus:bg-white/12 focus:ring-2 focus:ring-white/10"
+            className="mt-3 h-12 w-full rounded-xl border border-white/12 bg-white/12 px-4 text-base font-semibold uppercase text-white placeholder:text-white/40 outline-none transition-colors duration-200 focus:border-white/40 focus:bg-white/14"
           />
-          <Fbutton 
-            type="submit" 
-            className="w-full transition-all duration-200 active:scale-95 font-black uppercase tracking-wider" 
+          <Fbutton
+            type="submit"
+            className="mt-3 w-full transition-all duration-150 active:scale-95"
             variant="secondary"
           >
-            Submit 🚀
+            Submit Guess
           </Fbutton>
         </>
       )}
@@ -239,10 +496,9 @@ function DrawCanvas({
   segments,
   interactive = false,
   onSegment,
-  activeColor = "#111827",
+  activeColor = DEFAULT_COLOR,
   strokeWidth = 4,
   tool = "draw",
-  onFill,
 }: {
   segments: DrawItSegment[];
   interactive?: boolean;
@@ -250,10 +506,10 @@ function DrawCanvas({
   activeColor?: string;
   strokeWidth?: number;
   tool?: "draw" | "erase" | "fill";
-  onFill?: (segment: DrawItSegment) => void;
 }) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const drawingRef = useRef(false);
+  const movedRef = useRef(false);
   const lastPointRef = useRef<{ x: number; y: number } | null>(null);
 
   useEffect(() => {
@@ -274,12 +530,24 @@ function DrawCanvas({
     return () => window.removeEventListener("resize", handleResize);
   }, [segments]);
 
-  const toPoint = (event: React.PointerEvent<HTMLCanvasElement>) => {
+  const toPoint = (event: PointerEvent<HTMLCanvasElement>) => {
     const rect = event.currentTarget.getBoundingClientRect();
     return {
-      x: (event.clientX - rect.left) / rect.width,
-      y: (event.clientY - rect.top) / rect.height,
+      x: clamp((event.clientX - rect.left) / rect.width, 0, 1),
+      y: clamp((event.clientY - rect.top) / rect.height, 0, 1),
     };
+  };
+
+  const submitDot = (point: { x: number; y: number }) => {
+    onSegment?.({
+      x1: point.x,
+      y1: point.y,
+      x2: point.x,
+      y2: point.y,
+      color: activeColor,
+      width: strokeWidth,
+      mode: tool,
+    });
   };
 
   return (
@@ -291,26 +559,33 @@ function DrawCanvas({
       )}
       onPointerDown={(event) => {
         if (!interactive) return;
+        const point = toPoint(event);
+
         if (tool === "fill") {
-          onFill?.({
-            x1: 0,
-            y1: 0,
-            x2: 1,
-            y2: 1,
+          onSegment?.({
+            x1: point.x,
+            y1: point.y,
+            x2: point.x,
+            y2: point.y,
             color: activeColor,
             width: strokeWidth,
             mode: "fill",
           });
           return;
         }
+
+        event.currentTarget.setPointerCapture(event.pointerId);
         drawingRef.current = true;
-        lastPointRef.current = toPoint(event);
+        movedRef.current = false;
+        lastPointRef.current = point;
       }}
       onPointerMove={(event) => {
         if (!interactive || !drawingRef.current || !lastPointRef.current)
           return;
+
         const point = toPoint(event);
-        const segment = {
+        movedRef.current = true;
+        onSegment?.({
           x1: lastPointRef.current.x,
           y1: lastPointRef.current.y,
           x2: point.x,
@@ -318,19 +593,105 @@ function DrawCanvas({
           color: activeColor,
           width: strokeWidth,
           mode: tool,
-        };
+        });
         lastPointRef.current = point;
-        onSegment?.(segment);
       }}
-      onPointerUp={() => {
+      onPointerUp={(event) => {
+        if (!interactive || !drawingRef.current || !lastPointRef.current)
+          return;
+        if (!movedRef.current) {
+          submitDot(lastPointRef.current);
+        }
         drawingRef.current = false;
+        movedRef.current = false;
         lastPointRef.current = null;
+        event.currentTarget.releasePointerCapture(event.pointerId);
       }}
       onPointerLeave={() => {
         drawingRef.current = false;
+        movedRef.current = false;
         lastPointRef.current = null;
       }}
     />
+  );
+}
+
+function DrawToolbar({
+  tool,
+  setTool,
+  activeColor,
+  setActiveColor,
+  strokeWidth,
+  setStrokeWidth,
+  clearCanvas,
+}: {
+  tool: "draw" | "erase" | "fill";
+  setTool: (tool: "draw" | "erase" | "fill") => void;
+  activeColor: string;
+  setActiveColor: (color: string) => void;
+  strokeWidth: number;
+  setStrokeWidth: (width: number) => void;
+  clearCanvas: () => void;
+}) {
+  return (
+    <div className="rounded-[1.6rem] border border-[#88a6ff]/35 bg-[#3157b7]/92 p-3 shadow-[0_18px_48px_rgba(11,26,70,0.32)]">
+      <div className="flex flex-wrap items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2 rounded-[1.25rem] bg-[#294da8] p-2">
+          {DRAW_COLORS.map((color) => {
+            const isWhite = color === "#ffffff";
+            const isActive = activeColor === color;
+
+            return (
+              <button
+                key={color}
+                type="button"
+                aria-label={`Select ${color} color`}
+                aria-pressed={isActive}
+                onClick={() => setActiveColor(color)}
+                className={cn(
+                  "size-8 rounded-[0.7rem] border transition-transform duration-150 active:scale-95",
+                  isWhite ? "border-[#cad5ff]" : "border-transparent",
+                  isActive &&
+                    "scale-105 ring-2 ring-white ring-offset-2 ring-offset-[#294da8]",
+                )}
+                style={{ backgroundColor: color }}
+              />
+            );
+          })}
+        </div>
+
+        <BrushSizePopover strokeWidth={strokeWidth} onChange={setStrokeWidth} />
+
+        <div className="ml-auto flex items-center gap-2">
+          <ToolButton
+            active={tool === "draw"}
+            label="Brush"
+            icon={Pencil}
+            onClick={() => setTool("draw")}
+          />
+          <ToolButton
+            active={tool === "fill"}
+            label="Fill"
+            icon={PaintBucket}
+            onClick={() => setTool("fill")}
+          />
+          <ToolButton
+            active={tool === "erase"}
+            label="Erase"
+            icon={Eraser}
+            onClick={() => setTool("erase")}
+          />
+          <button
+            type="button"
+            aria-label="Clear canvas"
+            onClick={clearCanvas}
+            className="flex h-13 min-w-13 items-center justify-center rounded-[1.1rem] border border-[#d9e1ff] bg-white text-[#3656aa] transition-transform duration-150 active:scale-95"
+          >
+            <Trash2 className="size-5" />
+          </button>
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -364,16 +725,10 @@ function HostRoundHeader({
   nextRound: () => void;
 }) {
   return (
-    <div className="flex items-start justify-between gap-4">
+    <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
       <div className="flex-1">
-        <p className="text-xl font-medium flex gap-4 items-center text-white/75">
+        <p className="flex items-center gap-4 text-xl font-medium text-white/75">
           <span>
-            {" "}
-            Round {round.roundNumber} of {round.totalRounds}
-          </span>{" "}
-          |
-          <span className="text-sm font-semibold  uppercase">
-            {" "}
             Turn {round.turnNumber} of {round.totalTurns}
           </span>
         </p>
@@ -382,17 +737,9 @@ function HostRoundHeader({
         </p>
       </div>
       <div className="flex-1">
-        <div className="relative rounded-lg border border-white/14 bg-black/15 px-4 py-2 text-base font-bold uppercase  text-white/85 w-fit mx-auto flex items-start">
-          <span className="tracking-[0.18em] uppercase text-lg">
-            {state === "ROUND_END"
-              ? round.word?.toUpperCase()
-              : round.wordMask?.toUpperCase()}
-          </span>
-          <span className="text-sm -mt-2">{round.wordLength}</span>
-        </div>
+        <ClueChip round={round} revealWord={state === "ROUND_END"} />
       </div>
-
-      <div className="flex items-center gap-2 flex-1 justify-end">
+      <div className="flex flex-1 items-center justify-start gap-2 lg:justify-end">
         {state === "ROUND" ? (
           <RadialTimer duration={round.duration} startTime={round.startedAt} />
         ) : null}
@@ -416,14 +763,14 @@ function HostRoundShell({
   round: DrawItRound;
   state: string;
   nextRound: () => void;
-  footer?: React.ReactNode;
+  footer?: ReactNode;
 }) {
   return (
     <div className="mx-auto flex h-full w-full max-w-6xl flex-col gap-4 px-4 py-5 md:px-8">
       <HostRoundHeader round={round} state={state} nextRound={nextRound} />
       <div className="grid flex-1 gap-4 lg:grid-cols-[minmax(0,1fr)_280px]">
         <div className="rounded-[2rem] border border-white/14 bg-white/8 p-3 shadow-[0_24px_80px_rgba(0,0,0,0.2)]">
-          <div className="h-full min-h-[24rem] overflow-hidden rounded-[1.75rem] relative">
+          <div className="relative h-full min-h-[24rem] overflow-hidden rounded-[1.75rem]">
             <DrawCanvas segments={round.segments} />
           </div>
         </div>
@@ -454,7 +801,7 @@ export const DrawItPlayerSetup = () => {
         <h2 className="text-4xl font-black tracking-tight">
           Pick a word to draw
         </h2>
-        <div className="grid grid-cols-3 w-full gap-3">
+        <div className="grid w-full grid-cols-1 gap-3 sm:grid-cols-3">
           {setup.wordChoices?.map((word) => (
             <Fbutton
               key={word}
@@ -492,202 +839,93 @@ export const DrawItPlayerRound = () => {
   const { player } = useLobbyPlayer();
   const [guess, setGuess] = useState("");
   const [tool, setTool] = useState<"draw" | "erase" | "fill">("draw");
-  const [activeColor, setActiveColor] = useState("#111827");
-  const [strokeWidth, setStrokeWidth] = useState(4);
-  const [isCanvasCleared, setIsCanvasCleared] = useState(false);
+  const [activeColor, setActiveColor] = useState(DEFAULT_COLOR);
+  const [strokeWidth, setStrokeWidth] = useState(6);
 
   useEffect(() => {
     setGuess("");
   }, [round?.turnNumber]);
-
-  const handleClearCanvas = () => {
-    clearCanvas();
-    setIsCanvasCleared(true);
-    setTimeout(() => setIsCanvasCleared(false), 300);
-  };
 
   if (!round) return null;
 
   const isDrawer = !!round.isDrawer;
   const guessedCorrectly =
     !!player && round.guessedCorrectlyIds.includes(player.id);
-  const colors = [
-    "#111827",
-    "#ef4444",
-    "#f59e0b",
-    "#22c55e",
-    "#2563eb",
-    "#a855f7",
-  ];
 
   return (
     <div className="mx-auto flex h-full w-full max-w-6xl flex-col gap-4 px-4 py-5 md:px-8">
       {isDrawer ? (
-        <div className="grid flex-1 gap-4 lg:grid-cols-[minmax(0,1fr)_min(100%,380px)]">
-          <div className="rounded-[2rem] border border-white/14 bg-white/8 p-3 shadow-[0_24px_80px_rgba(0,0,0,0.2)]">
-            <div className="h-full min-h-[24rem] overflow-hidden rounded-[1.75rem]">
-              <DrawCanvas
-                segments={round.segments}
-                interactive
-                onSegment={submitSegment}
-                onFill={submitSegment}
-                activeColor={activeColor}
-                strokeWidth={strokeWidth}
-                tool={tool}
-              />
-            </div>
-          </div>
-          <div className="flex flex-col gap-6">
-            {/* Word Info Section - Prominent, Energetic */}
-            <div className="group rounded-[1.5rem] border border-white/20 bg-gradient-to-br from-white/8 to-white/4 p-5 animate-in fade-in hover:border-white/30 hover:bg-gradient-to-br hover:from-white/12 hover:to-white/6 transition-colors duration-200">
-              <p className="text-[10px] font-black uppercase tracking-[0.22em] text-white/50 mb-3">
-                📝 Your Word
+        <div className="grid flex-1 gap-4 lg:grid-cols-[minmax(0,1fr)_min(100%,360px)]">
+          <div className="flex min-h-0 flex-col gap-3">
+            <div className="rounded-[1.5rem] border border-white/14 bg-black/12 p-4">
+              <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-white/55">
+                Your word
               </p>
-              <p className="text-4xl font-black leading-tight tracking-tight text-white">
-                {round.word?.toUpperCase()}
-              </p>
-              <p className="mt-3 text-xs font-medium text-white/60 leading-relaxed">
-                Draw it bold. Precision wins points. ✨
-              </p>
-            </div>
-
-            {/* Tool Selection Group - Clear, Scannable */}
-            <div className="flex flex-col gap-3">
-              <p className="text-[10px] font-black uppercase tracking-[0.22em] text-white/50">
-                🎨 Tools
-              </p>
-              <div className="grid grid-cols-3 gap-2">
-                <button
-                  type="button"
-                  onClick={() => setTool("draw")}
-                  className={cn(
-                    "group relative rounded-xl border px-3 py-3 transition-all duration-200 active:scale-95 hover:scale-105 overflow-hidden",
-                    tool === "draw"
-                      ? "border-white/70 bg-white/14 shadow-[0_0_20px_rgba(255,255,255,0.15)]"
-                      : "border-white/12 bg-white/6 hover:bg-white/10 hover:border-white/20",
-                  )}
-                >
-                  <span className="text-[11px] font-black uppercase tracking-[0.18em]">
-                    ✏️ Brush
-                  </span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setTool("erase")}
-                  className={cn(
-                    "group relative rounded-xl border px-3 py-3 transition-all duration-200 active:scale-95 hover:scale-105 overflow-hidden",
-                    tool === "erase"
-                      ? "border-white/70 bg-white/14 shadow-[0_0_20px_rgba(255,255,255,0.15)]"
-                      : "border-white/12 bg-white/6 hover:bg-white/10 hover:border-white/20",
-                  )}
-                >
-                  <span className="text-[11px] font-black uppercase tracking-[0.18em]">
-                    🗑️ Erase
-                  </span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setTool("fill")}
-                  className={cn(
-                    "group relative rounded-xl border px-3 py-3 transition-all duration-200 active:scale-95 hover:scale-105 overflow-hidden",
-                    tool === "fill"
-                      ? "border-white/70 bg-white/14 shadow-[0_0_20px_rgba(255,255,255,0.15)]"
-                      : "border-white/12 bg-white/6 hover:bg-white/10 hover:border-white/20",
-                  )}
-                >
-                  <span className="text-[11px] font-black uppercase tracking-[0.18em]">
-                    🪣 Fill
-                  </span>
-                </button>
+              <div className="mt-3">
+                <ClueChip round={round} revealWord />
               </div>
+              <p className="mt-2 text-sm font-semibold text-white/68">
+                Draw clearly. More correct guessers means more points for you.
+              </p>
             </div>
 
-            {/* Color Palette Section - Visual, Expressive */}
-            <div className="flex flex-col gap-3">
-              <p className="text-[10px] font-black uppercase tracking-[0.22em] text-white/50">
-                🌈 Color
-              </p>
-              <div className="flex flex-wrap gap-2">
-                {colors.map((color, idx) => (
-                  <button
-                    key={color}
-                    type="button"
-                    onClick={() => setActiveColor(color)}
-                    className={cn(
-                      "size-9 rounded-full border-2 transition-all duration-200 hover:scale-110 active:scale-95 shadow-sm",
-                      activeColor === color
-                        ? "border-white shadow-[0_0_16px_rgba(255,255,255,0.5)] animate-pulse scale-110"
-                        : "border-white/30 hover:border-white/50 hover:shadow-[0_0_12px_rgba(255,255,255,0.2)]",
-                    )}
-                    style={{ 
-                      backgroundColor: color,
-                      transition: "all 200ms cubic-bezier(0.34, 1.56, 0.64, 1)"
-                    }}
-                    title={`Color ${idx + 1}`}
-                  />
-                ))}
-              </div>
-            </div>
-
-            {/* Stroke Width Section - Interactive Feedback */}
-            <div className="flex flex-col gap-3">
-              <p className="text-[10px] font-black uppercase tracking-[0.22em] text-white/50">
-                📏 Brush Size
-              </p>
-              <div className="space-y-2">
-                <input
-                  type="range"
-                  min="2"
-                  max="14"
-                  value={strokeWidth}
-                  onChange={(event) =>
-                    setStrokeWidth(Number(event.target.value))
-                  }
-                  className="w-full accent-white transition-all duration-150 cursor-pointer"
+            <div className="rounded-[2rem] border border-white/14 bg-white/8 p-3 shadow-[0_24px_80px_rgba(0,0,0,0.2)]">
+              <div className="relative h-[min(52vh,28rem)] min-h-[22rem] overflow-hidden rounded-[1.75rem]">
+                <DrawCanvas
+                  segments={round.segments}
+                  interactive
+                  onSegment={submitSegment}
+                  activeColor={tool === "erase" ? CANVAS_BG : activeColor}
+                  strokeWidth={strokeWidth}
+                  tool={tool}
                 />
-                <div className="flex items-center justify-between px-1">
-                  <p className="text-xs font-semibold text-white/70">{strokeWidth}px</p>
-                  <div className="flex items-center gap-3">
+                <div className="pointer-events-none absolute right-4 top-4 rounded-full border border-[#d7def8] bg-white/96 px-3 py-2 text-[#11131a] shadow-[0_12px_28px_rgba(13,22,51,0.15)]">
+                  <div className="flex items-center gap-2">
                     <div
-                      className="rounded-full bg-gradient-to-br from-white to-white/60 transition-all duration-200 shadow-sm"
+                      className="rounded-full border border-black/10"
                       style={{
-                        width: `${Math.max(strokeWidth * 1.8, 10)}px`,
-                        height: `${Math.max(strokeWidth * 1.8, 10)}px`,
+                        width: Math.max(strokeWidth * 1.7, 8),
+                        height: Math.max(strokeWidth * 1.7, 8),
+                        backgroundColor:
+                          tool === "erase" ? CANVAS_BG : activeColor,
                       }}
                     />
+                    <span className="text-xs font-black tracking-[0.14em] text-[#26345c]">
+                      {strokeWidth}px
+                    </span>
                   </div>
                 </div>
               </div>
             </div>
 
-            {/* Action Button - Prominent, Intentional */}
-            <Fbutton
-              type="button"
-              className="w-full transition-all duration-200 active:scale-95 hover:shadow-lg font-bold uppercase tracking-wider"
-              variant="outline"
-              onClick={handleClearCanvas}
-            >
-              {isCanvasCleared ? "✓ Cleared" : "🧹 Clear Canvas"}
-            </Fbutton>
+            <DrawToolbar
+              tool={tool}
+              setTool={setTool}
+              activeColor={activeColor}
+              setActiveColor={setActiveColor}
+              strokeWidth={strokeWidth}
+              setStrokeWidth={setStrokeWidth}
+              clearCanvas={clearCanvas}
+            />
           </div>
         </div>
       ) : (
         <div className="mx-auto flex h-full w-full max-w-md flex-1 flex-col justify-center">
           {guessedCorrectly ? (
-            <div className="rounded-[1.5rem] border border-white/20 bg-gradient-to-br from-green-500/20 to-green-500/5 p-6 text-center animate-in fade-in zoom-in duration-300 shadow-[0_0_32px_rgba(34,197,94,0.2)]">
-              <p className="text-[10px] font-black uppercase tracking-[0.22em] text-green-400 mb-2">
-                ✓ Correct
+            <div className="rounded-[1.5rem] border border-white/14 bg-black/12 p-4 text-center animate-in fade-in zoom-in duration-300">
+              <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-white/55">
+                Correct
               </p>
-              <div className="mt-4 rounded-[1.35rem] border border-green-400/30 bg-green-500/10 px-4 py-4 text-center backdrop-blur-sm">
-                <p className="text-[10px] font-black uppercase tracking-[0.22em] text-green-300 mb-1">
+              <div className="mt-3 rounded-[1.35rem] border border-white/12 bg-white/8 px-4 py-4 text-center">
+                <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-white/45">
                   Word
                 </p>
-                <p className="mt-2 text-3xl font-black tracking-[0.18em] text-white">
-                  {round.word?.toUpperCase()}
-                </p>
+                <div className="mt-2">
+                  <ClueChip round={round} revealWord />
+                </div>
               </div>
-              <p className="mt-5 text-sm font-bold text-white/75">
-                Well done! Waiting for others... 🎯
+              <p className="mt-4 text-base font-semibold text-white/75">
+                Sit tight while the others keep guessing.
               </p>
             </div>
           ) : (
@@ -724,7 +962,7 @@ export const DrawItPlayerTurnEnd = () => {
         {round.drawerName} was drawing. {round.guessedCorrectlyIds.length}{" "}
         players got it.
       </p>
-      <div className="animate-bounce animation-duration-[5s] mt-4">
+      <div className="mt-4 animate-bounce animation-duration-[5s]">
         <PlayerAvatar
           displayName={player?.displayName!}
           avatar={player?.avatar!}

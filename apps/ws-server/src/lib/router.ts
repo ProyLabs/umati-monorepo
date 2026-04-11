@@ -3,7 +3,7 @@ import type { WebSocket } from "ws";
 import { handlePlayerConnect, handlePlayerJoin, handlePlayerKicked, handlePlayerLeft, handlePlayerReaction, handlePollVote } from "../handlers/player";
 import { handlePollEnd, handlePollStart, handleRoomClose, handleRoomInit, handleRoomStateChange } from "../handlers/room";
 import { logInfo } from "../utils/logger";
-import { handleCancelGame, handleCodenamesPassTurn, handleCodenamesSetSpymaster, handleFriendFactsSetupSubmit, handleGameAnswer, handleGameStateChange, handleInitGame, handleStartGame } from "../handlers/game";
+import { handleCancelGame, handleCodenamesPassTurn, handleCodenamesSetSpymaster, handleDrawItCanvasClear, handleDrawItSegment, handleDrawItWordPick, handleFriendFactsSetupSubmit, handleGameAnswer, handleGameStateChange, handleInitGame, handleStartGame } from "../handlers/game";
 
 export async function handleMessage(ws: WebSocket, msg: WSMessage, sid: string) {
   logInfo("🔻", msg.event, msg.payload)
@@ -91,10 +91,32 @@ export async function handleMessage(ws: WebSocket, msg: WSMessage, sid: string) 
       );
       break;
 
+    case WSEvent.DI_WORD_PICK:
+      await handleDrawItWordPick(
+        ws,
+        msg.payload as WSPayloads[WSEvent.DI_WORD_PICK],
+      );
+      break;
+
+    case WSEvent.DI_DRAW_SEGMENT:
+      await handleDrawItSegment(
+        ws,
+        msg.payload as WSPayloads[WSEvent.DI_DRAW_SEGMENT],
+      );
+      break;
+
+    case WSEvent.DI_CANVAS_CLEAR:
+      await handleDrawItCanvasClear(
+        ws,
+        msg.payload as WSPayloads[WSEvent.DI_CANVAS_CLEAR],
+      );
+      break;
+
     case WSEvent.GAME_ANSWER:
     case WSEvent.TRIVIA_ROUND_ANSWER:
     case WSEvent.HM_ROUND_ANSWER:
     case WSEvent.FF_ROUND_ANSWER:
+    case WSEvent.DI_GUESS:
     case WSEvent.CN_CARD_PICK:
     case WSEvent.CH_ROUND_VOTE:
       await handleGameAnswer(ws, msg.payload as WSPayloads[WSEvent.GAME_ANSWER]);

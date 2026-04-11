@@ -65,10 +65,10 @@ export type RoomState = (typeof RoomState)[keyof typeof RoomState];
 // Game-level state machine (handled internally by game logic)
 export const GameState = {
   BEFORE: "BEFORE",
-  ROUND_SETUP: "ROUND_SETUP",   // 👈 New: Chameleon (setup phase)
-  SPEAKING: "SPEAKING",         // 👈 New: Chameleon (each player says a clue)
-  VOTING: "VOTING",             // 👈 New: Chameleon (players vote)
-  REVEAL: "REVEAL",             // 👈 New: Chameleon (players vote)
+  ROUND_SETUP: "ROUND_SETUP", // 👈 New: Chameleon (setup phase)
+  SPEAKING: "SPEAKING", // 👈 New: Chameleon (each player says a clue)
+  VOTING: "VOTING", // 👈 New: Chameleon (players vote)
+  REVEAL: "REVEAL", // 👈 New: Chameleon (players vote)
   ROUND: "ROUND",
   ROUND_END: "ROUND_END",
   LEADERBOARD: "LEADERBOARD",
@@ -115,7 +115,7 @@ export interface Room {
 }
 export interface GameLobbyMeta {
   id: string;
-  type: GameType
+  type: GameType;
 }
 
 export const GameType = {
@@ -141,7 +141,6 @@ export const QuestionProfile = {
 
 export type QuestionProfile =
   (typeof QuestionProfile)[keyof typeof QuestionProfile];
-
 
 export type Score = { id: string; displayName: string; score: number };
 export type Scores = Score[];
@@ -176,7 +175,6 @@ export interface QuizzerQuestionInput {
   correctAnswer: string | boolean;
 }
 
-
 interface Randomize {}
 
 export interface TriviaRound {
@@ -204,7 +202,6 @@ export const TriviaOptions = {
 
 export type TriviaOptions = (typeof TriviaOptions)[keyof typeof TriviaOptions];
 
-
 export interface HerdMentalityRound {
   number: number;
   totalRounds: number;
@@ -215,9 +212,9 @@ export interface HerdMentalityRound {
 }
 
 export type HerdMentalityDataItem = {
-    question: string;
-    choices: string[];
-}
+  question: string;
+  choices: string[];
+};
 
 export type HerdMentalityPlayerAnswer = {
   answer: HerdMentalityOptions;
@@ -229,11 +226,12 @@ export const HerdMentalityOptions = {
   1: 1,
   2: 2,
   3: 3,
-  4:4,
-  5:5
+  4: 4,
+  5: 5,
 } as const;
 
-export type HerdMentalityOptions = (typeof HerdMentalityOptions)[keyof typeof HerdMentalityOptions];
+export type HerdMentalityOptions =
+  (typeof HerdMentalityOptions)[keyof typeof HerdMentalityOptions];
 
 export interface FriendFactsFact {
   id: string;
@@ -274,21 +272,67 @@ export interface FriendFactsPlayerAnswer {
   timeTaken: number;
 }
 
+export interface DrawItSetupState {
+  roundNumber: number;
+  totalRounds: number;
+  turnNumber: number;
+  totalTurns: number;
+  drawerId: string;
+  drawerName: string;
+  isDrawer?: boolean;
+  wordChoices?: string[];
+}
+
+export interface DrawItSegment {
+  x1: number;
+  y1: number;
+  x2: number;
+  y2: number;
+  color: string;
+  width: number;
+  mode?: "draw" | "erase" | "fill";
+}
+
+export interface DrawItFeedItem {
+  id: string;
+  type: "system" | "guess" | "correct";
+  message: string;
+  playerId?: string;
+}
+
+export interface DrawItRound {
+  roundNumber: number;
+  totalRounds: number;
+  turnNumber: number;
+  totalTurns: number;
+  drawerId: string;
+  drawerName: string;
+  wordMask: string;
+  wordLength: number;
+  wordLengths: number[];
+  word: string | null;
+  duration: number;
+  startedAt: number;
+  segments: DrawItSegment[];
+  guessedCorrectlyIds: string[];
+  feed: DrawItFeedItem[];
+  isDrawer?: boolean;
+  myGuess?: string | null;
+}
+
 export const CodenamesTeam = {
   RED: "RED",
   BLUE: "BLUE",
 } as const;
 
-export type CodenamesTeam =
-  (typeof CodenamesTeam)[keyof typeof CodenamesTeam];
+export type CodenamesTeam = (typeof CodenamesTeam)[keyof typeof CodenamesTeam];
 
 export const CodenamesRole = {
   SPYMASTER: "SPYMASTER",
   OPERATIVE: "OPERATIVE",
 } as const;
 
-export type CodenamesRole =
-  (typeof CodenamesRole)[keyof typeof CodenamesRole];
+export type CodenamesRole = (typeof CodenamesRole)[keyof typeof CodenamesRole];
 
 export const CodenamesCardColor = {
   RED: "RED",
@@ -339,31 +383,32 @@ export interface CodenamesRound {
 export const ChameleonRoundRole = {
   HOST: "HOST",
   CIVILIAN: "CIVILIAN",
-  CHAMELEON: "CHAMELEON"
+  CHAMELEON: "CHAMELEON",
 } as const;
-export type ChameleonRoundRole = (typeof ChameleonRoundRole)[keyof typeof ChameleonRoundRole];
+export type ChameleonRoundRole =
+  (typeof ChameleonRoundRole)[keyof typeof ChameleonRoundRole];
 
 export type ChameleonRound = {
   number: number;
   totalRounds: number;
-  category: ChameleonCategory
-  roles: Record<string, ChameleonRoundRole>
+  category: ChameleonCategory;
+  roles: Record<string, ChameleonRoundRole>;
   myRole?: ChameleonRoundRole;
-  roll: string; 
-  speakingOrder?: {starter: Player; direction: "CLOCKWISE"|"ANTICLOCKWISE"};
+  roll: string;
+  speakingOrder?: { starter: Player; direction: "CLOCKWISE" | "ANTICLOCKWISE" };
   timer: {
     duration: number; // seconds
-  startedAt: number; // timestamp (ms)
-  }
+    startedAt: number; // timestamp (ms)
+  };
   votes: Record<string, string>;
   counts?: Record<string, number>;
   votedCount?: number;
   totalVoters?: number;
-}
+};
 
 export type ChameleonCategory = {
   title: string;
-  words: string[]
-}
+  words: string[];
+};
 
-export type ChameleonCategories = ChameleonCategory[]
+export type ChameleonCategories = ChameleonCategory[];
