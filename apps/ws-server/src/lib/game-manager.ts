@@ -1,3 +1,4 @@
+import type { WebSocket } from "ws";
 import {
   HerdMentalityOptions,
   TriviaOptions,
@@ -10,6 +11,7 @@ import { HerdMentality } from "./games/herd-mentality";
 import { Chameleon } from "./games/chameleon";
 import { QuizzerGame } from "./games/quizzer-game";
 import { FriendFactsGame } from "./games/friend-facts";
+import { CodenamesGame } from "./games/codenames";
 
 const games = new Map<string, BaseGame>();
 
@@ -31,6 +33,9 @@ export const GameManager = {
         break;
       case GameType.FF:
         game = new FriendFactsGame(roomId, options);
+        break;
+      case GameType.CN:
+        game = new CodenamesGame(roomId, options);
         break;
       // case "emojiRace": game = new EmojiRaceGame(roomId, options); break;
       default:
@@ -55,7 +60,7 @@ export const GameManager = {
       id: game.id,
       type: game.type,
       state: game.state,
-      round: (game as TriviaGame | HerdMentality | Chameleon | QuizzerGame | FriendFactsGame).round,
+      round: (game as TriviaGame | HerdMentality | Chameleon | QuizzerGame | FriendFactsGame | CodenamesGame).round,
       scores: game.scores,
     };
   },
@@ -74,6 +79,9 @@ export const GameManager = {
     } else if (game.type === GameType.FF) {
       const friendFactsGame = game as FriendFactsGame;
       friendFactsGame.submitAnswer(playerId, answer as string);
+    } else if (game.type === GameType.CN) {
+      const codenamesGame = game as CodenamesGame;
+      codenamesGame.pickCard(playerId, answer as string);
     } else if (game.type === GameType.HM) {
       const herdMentalityGame = game as HerdMentality;
       herdMentalityGame.submitAnswer(playerId, answer as HerdMentalityOptions);
@@ -83,7 +91,7 @@ export const GameManager = {
     }
   },
 
-  updateState(gameId: string, state: GameState) {
+  updateState(gameId: string, state: GameState, hostWs?: WebSocket) {
     const game = games.get(gameId);
     if (!game) return;
 
@@ -91,12 +99,18 @@ export const GameManager = {
       game.type === GameType.TRIVIA ||
       game.type === GameType.QUIZZER ||
       game.type === GameType.FF
+      || game.type === GameType.CN
     ) {
       const roundGame = game as
         | TriviaGame
         | QuizzerGame
-        | FriendFactsGame;
-      roundGame.advanceToState(state);
+        | FriendFactsGame
+        | CodenamesGame;
+      if (game.type === GameType.CN) {
+        (roundGame as CodenamesGame).advanceToState(state, hostWs);
+      } else {
+        roundGame.advanceToState(state);
+      }
       return;
     }
 

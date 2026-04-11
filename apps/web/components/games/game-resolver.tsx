@@ -18,6 +18,10 @@ import { FriendFactsHostProvider } from '@/providers/games/friend-facts/friend-f
 import FriendFactsHost from './friend-facts/host';
 import { FriendFactsPlayerProvider } from '@/providers/games/friend-facts/friend-facts-player-provider';
 import FriendFactsPlayer from './friend-facts/player';
+import { CodenamesHostProvider } from '@/providers/games/codenames/codenames-host-provider';
+import CodenamesHost from './codenames/host';
+import { CodenamesPlayerProvider } from '@/providers/games/codenames/codenames-player-provider';
+import CodenamesPlayer from './codenames/player';
 
 export function GameResolverHost () {
     const {game} = useLobbyHost();
@@ -27,6 +31,7 @@ export function GameResolverHost () {
     const HerdMentality = <HerdMentalityHostProvider><HerdMentalityaHost/></HerdMentalityHostProvider>
     const Chameleon = <ChameleonHostProvider><ChameleonHost/></ChameleonHostProvider>
     const FriendFacts = <FriendFactsHostProvider><FriendFactsHost /></FriendFactsHostProvider>
+    const Codenames = <CodenamesHostProvider><CodenamesHost /></CodenamesHostProvider>
 
     if(game?.type === GameType.TRIVIA || game?.type === GameType.QUIZZER){
         return TriviaGame;
@@ -34,6 +39,8 @@ export function GameResolverHost () {
         return HerdMentality;
     } else if(game?.type === GameType.CHAMELEON){
       return Chameleon;
+    } else if (game?.type === GameType.CN) {
+      return Codenames;
     } else if (game?.type === GameType.FF) {
       return FriendFacts;
     }
@@ -51,6 +58,7 @@ export function GameResolverPlayer () {
     const HerdMentality = <HerdMentalityPlayerProvider><HerdMentalityPlayer/></HerdMentalityPlayerProvider>
     const Chameleon = <ChameleonPlayerProvider><ChameleonPlayer/></ChameleonPlayerProvider>
     const FriendFacts = <FriendFactsPlayerProvider><FriendFactsPlayer /></FriendFactsPlayerProvider>
+    const Codenames = <CodenamesPlayerProvider><CodenamesPlayer /></CodenamesPlayerProvider>
 
 
     if(game?.type === GameType.TRIVIA || game?.type === GameType.QUIZZER){
@@ -59,6 +67,8 @@ export function GameResolverPlayer () {
         return HerdMentality;
     }  else if(game?.type === GameType.CHAMELEON){
       return Chameleon;
+    } else if (game?.type === GameType.CN) {
+      return Codenames;
     } else if (game?.type === GameType.FF) {
       return FriendFacts;
     }

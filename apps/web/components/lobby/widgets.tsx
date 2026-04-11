@@ -817,6 +817,51 @@ export const BeforeWeBegin = ({dark}: {dark?: boolean}) => {
             },
           ],
         };
+      case GameType.CN:
+        return {
+          eyebrow: "Codenames",
+          title: "Clue, guess, repeat",
+          tone: "yellow",
+          darkText: true,
+          example: { kind: "card", value: "TREE", label: "Word card" },
+          steps: [
+            {
+              label: "Split teams",
+              role: "Game",
+              body: "The room is split into red and blue teams automatically.",
+            },
+            {
+              label: "Claim spymaster",
+              role: "Players",
+              body: "One player on each team claims the spymaster role first.",
+            },
+            {
+              label: "Board appears",
+              role: "Game",
+              body: "A 5x5 word grid is dealt once setup is ready.",
+            },
+            {
+              label: "See the key",
+              role: "Spymasters",
+              body: "Only spymasters can see which cards are red, blue, neutral, or assassin.",
+            },
+            {
+              label: "Give a clue",
+              role: "Spymasters",
+              body: "Say one word and one number out loud to guide your operatives.",
+            },
+            {
+              label: "Tap cards",
+              role: "Operatives",
+              body: "Operatives tap cards on their phone while it is their team's turn.",
+            },
+            {
+              label: "Avoid assassin",
+              role: "Rule",
+              body: "Wrong color or neutral ends the turn. The assassin ends the game instantly.",
+            },
+          ],
+        };
       default:
         return {
           eyebrow: game?.type ?? "Game",
@@ -1027,8 +1072,9 @@ export const BeforeWeBegin = ({dark}: {dark?: boolean}) => {
         </div>
       </div>
 
-      <div className="flex w-full max-w-md flex-col gap-2">
+      <div className="relative z-20 flex w-full max-w-md flex-col gap-2">
         <Fbutton
+          type="button"
           className="w-full"
           variant={dark ? "dark" : "secondary"}
           onClick={startGame}
@@ -1036,6 +1082,7 @@ export const BeforeWeBegin = ({dark}: {dark?: boolean}) => {
           Let's Play
         </Fbutton>
         <Fbutton
+          type="button"
           size="sm"
           variant={dark ? "dark-outline" : "outline"}
           className="w-full"
@@ -1487,7 +1534,7 @@ const gameCardVariants = cva(
         purple: "from-[#9856FE] to-[var(--umati-purple)] ",
         lime: "from-lime-500 to-green-600",
         orange: "from-orange-400 to-orange-600",
-        yellow: "from-yellow-400 to-yellow-600 text-black",
+        yellow: "from-yellow-300 to-yellow-400 text-black",
       },
     },
   },

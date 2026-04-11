@@ -7,7 +7,8 @@
     "lint": "turbo run lint",
     "format": "prettier --write \"**/*.{ts,tsx,md}\"",
     "clean": "rm -rf node_modules dist",
-    "check-types": "turbo run check-types"
+    "check-types": "turbo run check-types",
+    "empty-db": "pnpm -F @umati/prisma prisma:empty-db"
   },
   "devDependencies": {
     "prettier": "^3.6.2",

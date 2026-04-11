@@ -29,24 +29,34 @@ export const TriviaPlayerProvider = ({ children }: { children: React.ReactNode }
   useEffect(() => {
     if (!wsClient) return;
 
-    wsClient.on(WSEvent.GAME_STATE, (payload) => {
+    const handleGameState = (payload: any) => {
       setGameId(payload.id);
       setGameType(payload.type);
       setState(payload.state);
-        if (payload.round) setRound(payload.round as TriviaRound);
-        if (payload.scores) setScores(payload.scores);
-    });
+      if (payload.round) setRound(payload.round as TriviaRound);
+      if (payload.scores) setScores(payload.scores);
+    };
 
-    wsClient.on(WSEvent.TRIVIA_ROUND_START, ({ round }) => {
+    const handleRoundStart = ({ round }: any) => {
       setState("ROUND");
       setRound(round);
-    });
+    };
 
-   wsClient.on(WSEvent.TRIVIA_ROUND_END, ({ state, round, scores }) => {
+    const handleRoundEnd = ({ state, round, scores }: any) => {
       setState(state);
       setRound(round);
       setScores(scores ?? []);
-    });
+    };
+
+    wsClient.on(WSEvent.GAME_STATE, handleGameState);
+    wsClient.on(WSEvent.TRIVIA_ROUND_START, handleRoundStart);
+    wsClient.on(WSEvent.TRIVIA_ROUND_END, handleRoundEnd);
+
+    return () => {
+      wsClient.off(WSEvent.GAME_STATE, handleGameState);
+      wsClient.off(WSEvent.TRIVIA_ROUND_START, handleRoundStart);
+      wsClient.off(WSEvent.TRIVIA_ROUND_END, handleRoundEnd);
+    };
 
     // wsClient.on("GAME_ENDED", ({ finalScores }) => {
     //   setState("GAME_END");

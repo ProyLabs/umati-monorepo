@@ -3,6 +3,7 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import { useLobbyHost } from "@/providers/lobby-host-provider"; // Host context provides wsClient
 import { ChameleonRound, GameState, Scores, WSEvent } from "@umati/ws";
 
+
 interface ChameleonHostContextType {
   gameId: string | null;
   gameType: string | null;
@@ -21,7 +22,7 @@ interface ChameleonHostContextType {
 const ChameleonHostContext = createContext<ChameleonHostContextType | null>(null);
 
 export const ChameleonHostProvider = ({ children }: { children: React.ReactNode }) => {
-  const { wsClient, lobby } = useLobbyHost();
+  const { wsClient, lobby, cancelGame } = useLobbyHost();
 
   const [gameId, setGameId] = useState<string | null>(lobby?.game?.id ?? null);
   const [gameType, setGameType] = useState<string | null>(lobby?.game?.type ?? null);
@@ -36,7 +37,7 @@ export const ChameleonHostProvider = ({ children }: { children: React.ReactNode 
   useEffect(() => {
     if (!wsClient) return;
 
-    wsClient.on(WSEvent.GAME_STATE, (payload) => {
+    const handleGameState = (payload: any) => {
       console.log("🚀 ~ ChameleonHostProvider ~ payload:", payload);
       setGameId(payload.id);
       setGameType(payload.type);
@@ -48,29 +49,41 @@ export const ChameleonHostProvider = ({ children }: { children: React.ReactNode 
         setTotalVoters(payload.round.totalVoters ?? 0);
       }
       if (payload.scores) setScores(payload.scores ?? []);
-    });
+    };
 
-    wsClient.on(WSEvent.CH_ROUND_START, ({ state, round }) => {
+    const handleRoundStart = ({ state, round }: any) => {
       setState(state);
       setRound(round);
       setCounts(undefined);
       setVotedCount(round.votedCount ?? 0);
       setTotalVoters(round.totalVoters ?? 0);
-    });
+    };
 
-    wsClient.on(WSEvent.CH_ROUND_END, ({ state, round, scores }) => {
+    const handleRoundEnd = ({ state, round, scores }: any) => {
       setState(state);
       setRound(round);
       setScores(scores ?? []);
       setCounts(round.counts);
       setVotedCount(round.votedCount ?? 0);
       setTotalVoters(round.totalVoters ?? 0);
-    });
+    };
 
-    wsClient.on(WSEvent.CH_VOTE_PROGRESS, ({ votedCount, totalVoters }) => {
+    const handleVoteProgress = ({ votedCount, totalVoters }: any) => {
       setVotedCount(votedCount);
       setTotalVoters(totalVoters);
-    });
+    };
+
+    wsClient.on(WSEvent.GAME_STATE, handleGameState);
+    wsClient.on(WSEvent.CH_ROUND_START, handleRoundStart);
+    wsClient.on(WSEvent.CH_ROUND_END, handleRoundEnd);
+    wsClient.on(WSEvent.CH_VOTE_PROGRESS, handleVoteProgress);
+
+    return () => {
+      wsClient.off(WSEvent.GAME_STATE, handleGameState);
+      wsClient.off(WSEvent.CH_ROUND_START, handleRoundStart);
+      wsClient.off(WSEvent.CH_ROUND_END, handleRoundEnd);
+      wsClient.off(WSEvent.CH_VOTE_PROGRESS, handleVoteProgress);
+    };
 
     // wsClient.on("GAME_ENDED", ({ finalScores }) => {
     //   setState("GAME_END");
@@ -95,13 +108,9 @@ export const ChameleonHostProvider = ({ children }: { children: React.ReactNode 
   }
 
   const nextRound = () => {
-    // if (!wsClient || !lobby) return;
-    // wsClient.send(
-    //   JSON.stringify({
-    //     event: "GAME_NEXT_ROUND",
-    //     payload: { roomId: lobby.id },
-    //   })
-    // );
+    if (state === GameState.RANKING) {
+      cancelGame();
+    }
   };
 
   return (
@@ -118,11 +127,11 @@ export const ChameleonHostProvider = ({ children }: { children: React.ReactNode 
         startGame,
         nextRound,
         startSpeakingRound,
-        startVotingRound
+        startVotingRound,
       }}
     >
-      <div className='bg-gradient-to-br from-lime-500 to-green-600 text-white h-dvh w-dvw'>
-      {children}
+      <div className="relative bg-gradient-to-br from-lime-500 to-green-600 text-white h-dvh w-dvw">
+        {children}
       </div>
     </ChameleonHostContext.Provider>
   );

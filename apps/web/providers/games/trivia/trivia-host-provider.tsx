@@ -3,6 +3,7 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import { useLobbyHost } from "@/providers/lobby-host-provider"; // Host context provides wsClient
 import { GameState, GameType, Scores, TriviaOptions, TriviaRound, WSEvent } from "@umati/ws";
 
+
 interface TriviaHostContextType {
   gameId: string | null;
   gameType: string | null;
@@ -30,27 +31,37 @@ export const TriviaHostProvider = ({ children }: { children: React.ReactNode }) 
   useEffect(() => {
     if (!wsClient) return;
 
-    wsClient.on(WSEvent.GAME_STATE, (payload) => {
+    const handleGameState = (payload: any) => {
       console.log("🚀 ~ TriviaHostProvider ~ payload:", payload);
       setGameId(payload.id);
       setGameType(payload.type);
       setState(payload.state);
-        if (payload.round) setRound(payload.round as TriviaRound);
-        if (payload.counts) setCounts(payload.counts);
-        if (payload.scores) setScores(payload.scores ?? []);
-    });
+      if (payload.round) setRound(payload.round as TriviaRound);
+      if (payload.counts) setCounts(payload.counts);
+      if (payload.scores) setScores(payload.scores ?? []);
+    };
 
-    wsClient.on(WSEvent.TRIVIA_ROUND_START, ({ state, round }) => {
+    const handleRoundStart = ({ state, round }: any) => {
       setState(state);
       setRound(round);
-    });
+    };
 
-    wsClient.on(WSEvent.TRIVIA_ROUND_END, ({ state, round, scores, counts }) => {
+    const handleRoundEnd = ({ state, round, scores, counts }: any) => {
       setState(state);
       setRound(round);
       setScores(scores ?? []);
       setCounts(counts);
-    });
+    };
+
+    wsClient.on(WSEvent.GAME_STATE, handleGameState);
+    wsClient.on(WSEvent.TRIVIA_ROUND_START, handleRoundStart);
+    wsClient.on(WSEvent.TRIVIA_ROUND_END, handleRoundEnd);
+
+    return () => {
+      wsClient.off(WSEvent.GAME_STATE, handleGameState);
+      wsClient.off(WSEvent.TRIVIA_ROUND_START, handleRoundStart);
+      wsClient.off(WSEvent.TRIVIA_ROUND_END, handleRoundEnd);
+    };
 
     // wsClient.on("GAME_ENDED", ({ finalScores }) => {
     //   setState("GAME_END");
@@ -103,11 +114,11 @@ export const TriviaHostProvider = ({ children }: { children: React.ReactNode }) 
       <div
         className={
           gameType === GameType.QUIZZER
-            ? "bg-gradient-to-br from-orange-400 to-orange-600 h-dvh w-dvw"
-            : "bg-gradient-to-br from-[#FE566B] to-[var(--umati-red)] h-dvh w-dvw"
+            ? "relative bg-gradient-to-br from-orange-400 to-orange-600 h-dvh w-dvw"
+            : "relative bg-gradient-to-br from-[#FE566B] to-[var(--umati-red)] h-dvh w-dvw"
         }
       >
-      {children}
+        {children}
       </div>
     </TriviaHostContext.Provider>
   );

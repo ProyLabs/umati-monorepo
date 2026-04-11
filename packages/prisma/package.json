@@ -9,6 +9,7 @@
     "postinstall": "pnpm prisma:generate",
     "prisma:generate": "prisma generate",
     "prisma:migrate": "prisma migrate deploy",
+    "prisma:empty-db": "tsx src/scripts/empty-db.ts",
     "studio": "prisma studio"
   },
   "dependencies": {

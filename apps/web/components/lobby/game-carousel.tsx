@@ -24,6 +24,7 @@ const GAME_ORDER = [
   "trivia",
   "herdmentality",
   "chameleon",
+  "codenames",
   "quizzer",
   "friendfacts",
   "drawit",

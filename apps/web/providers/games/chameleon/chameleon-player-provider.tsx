@@ -49,7 +49,7 @@ export const ChameleonPlayerProvider = ({
   useEffect(() => {
     if (!wsClient) return;
 
-    wsClient.on(WSEvent.GAME_STATE, (payload) => {
+    const handleGameState = (payload: any) => {
       console.log("🚀 ~ ChameleonPlayerProvider ~ payload:", payload);
       setGameId(payload.id);
       setGameType(payload.type);
@@ -61,29 +61,41 @@ export const ChameleonPlayerProvider = ({
       }
       // if (payload.counts) setCounts(payload.counts);
       if (payload.scores) setScores(payload.scores ?? []);
-    });
+    };
 
-    wsClient.on(WSEvent.CH_ROUND_START, ({ state, round }) => {
+    const handleRoundStart = ({ state, round }: any) => {
       setState(state);
       setRound(round);
       const role = round.myRole ?? round.roles[player?.id!];
       console.log("🚀 ~ ChameleonPlayerProvider ~ role:", role);
       setRole(role);
       setMyVote(null);
-    });
+    };
 
-    wsClient.on(WSEvent.CH_ROUND_END, ({ state, round, scores }) => {
+    const handleRoundEnd = ({ state, round, scores }: any) => {
       setState(state);
       setRound(round);
       const role = round.myRole ?? round.roles[player?.id!];
       setRole(role);
       setScores(scores ?? []);
       // setCounts(counts);
-    });
+    };
 
-    wsClient.on(WSEvent.CH_ROUND_VOTED, ({ vote }) => {
+    const handleRoundVoted = ({ vote }: any) => {
       setMyVote(vote);
-    });
+    };
+
+    wsClient.on(WSEvent.GAME_STATE, handleGameState);
+    wsClient.on(WSEvent.CH_ROUND_START, handleRoundStart);
+    wsClient.on(WSEvent.CH_ROUND_END, handleRoundEnd);
+    wsClient.on(WSEvent.CH_ROUND_VOTED, handleRoundVoted);
+
+    return () => {
+      wsClient.off(WSEvent.GAME_STATE, handleGameState);
+      wsClient.off(WSEvent.CH_ROUND_START, handleRoundStart);
+      wsClient.off(WSEvent.CH_ROUND_END, handleRoundEnd);
+      wsClient.off(WSEvent.CH_ROUND_VOTED, handleRoundVoted);
+    };
 
     // wsClient.on("GAME_ENDED", ({ finalScores }) => {
     //   setState("GAME_END");

@@ -6,6 +6,7 @@ import { logInfo, logError } from "../utils/logger";
 import { GameManager } from "../lib/game-manager";
 import { Chameleon } from "../lib/games/chameleon";
 import { FriendFactsGame } from "../lib/games/friend-facts";
+import { CodenamesGame } from "../lib/games/codenames";
 
 export async function handleRoomInit(
   ws: WebSocket,
@@ -38,6 +39,8 @@ export async function handleRoomInit(
             (game as Chameleon).sendStateToSocket(ws, { isHost: true });
           } else if (game.type === GameType.FF) {
             (game as FriendFactsGame).sendStateToSocket({ isHost: true, ws });
+          } else if (game.type === GameType.CN) {
+            (game as CodenamesGame).sendStateToSocket({ isHost: true, ws });
           } else {
             ws.send(
               JSON.stringify({

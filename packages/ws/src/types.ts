@@ -125,6 +125,7 @@ export const GameType = {
   OOO: "oddoneout",
   HM: "herdmentality",
   CHAMELEON: "chameleon",
+  CN: "codenames",
   JL: "jaroflies",
   FF: "friendfacts",
 } as const;
@@ -271,6 +272,68 @@ export interface FriendFactsPlayerAnswer {
   playerId: string;
   guessedPlayerId: string;
   timeTaken: number;
+}
+
+export const CodenamesTeam = {
+  RED: "RED",
+  BLUE: "BLUE",
+} as const;
+
+export type CodenamesTeam =
+  (typeof CodenamesTeam)[keyof typeof CodenamesTeam];
+
+export const CodenamesRole = {
+  SPYMASTER: "SPYMASTER",
+  OPERATIVE: "OPERATIVE",
+} as const;
+
+export type CodenamesRole =
+  (typeof CodenamesRole)[keyof typeof CodenamesRole];
+
+export const CodenamesCardColor = {
+  RED: "RED",
+  BLUE: "BLUE",
+  NEUTRAL: "NEUTRAL",
+  ASSASSIN: "ASSASSIN",
+} as const;
+
+export type CodenamesCardColor =
+  (typeof CodenamesCardColor)[keyof typeof CodenamesCardColor];
+
+export interface CodenamesSetupTeamState {
+  playerIds: string[];
+  spymasterId: string | null;
+}
+
+export interface CodenamesSetupState {
+  teams: Record<CodenamesTeam, CodenamesSetupTeamState>;
+  myTeam?: CodenamesTeam;
+  myRole?: CodenamesRole;
+  startingTeam: CodenamesTeam;
+  canStart: boolean;
+}
+
+export interface CodenamesCard {
+  id: string;
+  word: string;
+  color: CodenamesCardColor | null;
+  revealed: boolean;
+}
+
+export interface CodenamesTeamStatus {
+  spymasterId: string | null;
+  playerIds: string[];
+  wordsRemaining: number;
+}
+
+export interface CodenamesRound {
+  board: CodenamesCard[];
+  activeTeam: CodenamesTeam;
+  startingTeam: CodenamesTeam;
+  winnerTeam: CodenamesTeam | null;
+  teams: Record<CodenamesTeam, CodenamesTeamStatus>;
+  myTeam?: CodenamesTeam;
+  myRole?: CodenamesRole;
 }
 
 export const ChameleonRoundRole = {

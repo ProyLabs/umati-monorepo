@@ -4,6 +4,7 @@ import { RoomManager } from "../lib/room-manager";
 import { logInfo } from "../utils/logger";
 import { GameManager } from "../lib/game-manager";
 import { FriendFactsGame } from "../lib/games/friend-facts";
+import { CodenamesGame } from "../lib/games/codenames";
 
 /** When host setup a new game */
 export async function handleInitGame(
@@ -62,6 +63,16 @@ export function handleStartGame(ws: WebSocket,  payload: WSPayloads[WSEvent.GAME
   const room = RoomManager.get(roomId);
   if (!room?.game) return;
 
+  if (!RoomManager.isHostSocket(roomId, ws)) {
+    ws.send(
+      JSON.stringify({
+        event: WSEvent.ERROR,
+        payload: { message: "Only the host can start the game." },
+      })
+    );
+    return;
+  }
+
   const game = GameManager.get(room.game.id);
   if (!game) return;
 
@@ -103,12 +114,16 @@ export async function handleGameAnswer(
     | WSEvent.HM_ROUND_ANSWER
     | WSEvent.CH_ROUND_VOTE
     | WSEvent.FF_ROUND_ANSWER
+    | WSEvent.CN_CARD_PICK
   ],
 ) {
     const roomId = payload.roomId;
     const playerId = payload.playerId;
-    const answer =
-      "answerPlayerId" in payload ? payload.answerPlayerId : payload.answer;
+    const answer = "answerPlayerId" in payload
+      ? payload.answerPlayerId
+      : "cardId" in payload
+        ? payload.cardId
+        : payload.answer;
     const room = RoomManager.get(roomId);
     if(!room) return;
     if(!room.game) return;
@@ -129,6 +144,42 @@ export async function handleFriendFactsSetupSubmit(
   (game as FriendFactsGame).submitFacts(playerId, facts);
 }
 
+export async function handleCodenamesSetSpymaster(
+  ws: WebSocket,
+  payload: WSPayloads[WSEvent.CN_SET_SPYMASTER],
+) {
+  const { roomId, playerId } = payload;
+  const room = RoomManager.get(roomId);
+  if (!room?.game) return;
+
+  const game = GameManager.get(room.game.id);
+  if (!game || game.type !== GameType.CN) return;
+
+  const result = (game as CodenamesGame).toggleSpymaster(playerId);
+  if (!result.success && result.error) {
+    ws.send(
+      JSON.stringify({
+        event: WSEvent.ERROR,
+        payload: { message: result.error },
+      })
+    );
+  }
+}
+
+export async function handleCodenamesPassTurn(
+  ws: WebSocket,
+  payload: WSPayloads[WSEvent.CN_PASS_TURN],
+) {
+  const { roomId, playerId, team } = payload;
+  const room = RoomManager.get(roomId);
+  if (!room?.game) return;
+
+  const game = GameManager.get(room.game.id);
+  if (!game || game.type !== GameType.CN) return;
+
+  (game as CodenamesGame).passTurn(playerId, team);
+}
+
 export async function handleGameStateChange(ws: WebSocket, payload: WSPayloads[WSEvent.GAME_STATE_CHANGE]|WSPayloads[WSEvent.CH_ROUND_STATE_CHANGE]) {
    const {roomId, state} = payload;
     const room = RoomManager.get(roomId);
@@ -143,5 +194,5 @@ export async function handleGameStateChange(ws: WebSocket, payload: WSPayloads[W
       );
       return;
     }
-    GameManager.updateState(room.game.id, state);
+    GameManager.updateState(room.game.id, state, ws);
 }

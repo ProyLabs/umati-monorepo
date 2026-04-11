@@ -15,7 +15,7 @@ const gameCardVariants = cva(
         purple: "from-[#9856FE] to-[var(--umati-purple)] ",
         lime: "from-lime-500 to-green-600",
         orange: "from-orange-400 to-orange-600",
-        yellow: "from-yellow-400 to-yellow-600 text-black",
+        yellow: "from-yellow-300 to-yellow-400 text-black",
         pink: "from-pink-400 to-pink-600 text-black",
       },
       size: {

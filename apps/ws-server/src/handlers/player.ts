@@ -6,6 +6,7 @@ import { GameManager } from "../lib/game-manager";
 import { HerdMentality } from "../lib/games/herd-mentality";
 import { Chameleon } from "../lib/games/chameleon";
 import { FriendFactsGame } from "../lib/games/friend-facts";
+import { CodenamesGame } from "../lib/games/codenames";
 
 /** When a player connects to a room */
 export async function handlePlayerConnect(
@@ -62,6 +63,8 @@ export async function handlePlayerConnect(
         (game as Chameleon).sendStateToSocket(ws, { playerId, isHost: false });
       } else if (game.type === GameType.FF) {
         (game as FriendFactsGame).sendStateToSocket({ isHost: false, playerId });
+      } else if (game.type === GameType.CN) {
+        (game as CodenamesGame).sendStateToSocket({ isHost: false, playerId });
       } else {
         ws.send(
           JSON.stringify({

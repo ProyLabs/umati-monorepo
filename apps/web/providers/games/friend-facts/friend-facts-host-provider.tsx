@@ -10,6 +10,7 @@ import {
 } from "@umati/ws";
 import { useLobbyHost } from "@/providers/lobby-host-provider";
 
+
 interface FriendFactsHostContextType {
   gameId: string | null;
   gameType: string | null;
@@ -45,33 +46,45 @@ export const FriendFactsHostProvider = ({
   useEffect(() => {
     if (!wsClient) return;
 
-    wsClient.on(WSEvent.GAME_STATE, (payload) => {
+    const handleGameState = (payload: any) => {
       setGameId(payload.id);
       setGameType(payload.type);
       setState(payload.state);
       setRound((payload.round as FriendFactsRound) ?? null);
       setScores(payload.scores ?? []);
       setCounts(payload.counts);
-    });
+    };
 
-    wsClient.on(WSEvent.FF_SETUP_UPDATE, ({ state, setup }) => {
+    const handleSetupUpdate = ({ state, setup }: any) => {
       setState(state);
       setSetup(setup);
       setRound(null);
-    });
+    };
 
-    wsClient.on(WSEvent.FF_ROUND_START, ({ state, round }) => {
+    const handleRoundStart = ({ state, round }: any) => {
       setState(state);
       setRound(round);
       setCounts(undefined);
-    });
+    };
 
-    wsClient.on(WSEvent.FF_ROUND_END, ({ state, round, scores, counts }) => {
+    const handleRoundEnd = ({ state, round, scores, counts }: any) => {
       setState(state);
       setRound(round);
       setScores(scores ?? []);
       setCounts(counts);
-    });
+    };
+
+    wsClient.on(WSEvent.GAME_STATE, handleGameState);
+    wsClient.on(WSEvent.FF_SETUP_UPDATE, handleSetupUpdate);
+    wsClient.on(WSEvent.FF_ROUND_START, handleRoundStart);
+    wsClient.on(WSEvent.FF_ROUND_END, handleRoundEnd);
+
+    return () => {
+      wsClient.off(WSEvent.GAME_STATE, handleGameState);
+      wsClient.off(WSEvent.FF_SETUP_UPDATE, handleSetupUpdate);
+      wsClient.off(WSEvent.FF_ROUND_START, handleRoundStart);
+      wsClient.off(WSEvent.FF_ROUND_END, handleRoundEnd);
+    };
   }, [wsClient]);
 
   const nextRound = () => {
@@ -119,7 +132,7 @@ export const FriendFactsHostProvider = ({
         nextRound,
       }}
     >
-      <div className="bg-gradient-to-br from-[var(--umati-sky)] to-[#3A6EE4] h-dvh w-dvw text-white">
+      <div className="relative bg-gradient-to-br from-[var(--umati-sky)] to-[#3A6EE4] h-dvh w-dvw text-white">
         {children}
       </div>
     </FriendFactsHostContext.Provider>

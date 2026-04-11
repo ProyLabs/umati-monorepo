@@ -3,7 +3,7 @@ import type { WebSocket } from "ws";
 import { handlePlayerConnect, handlePlayerJoin, handlePlayerKicked, handlePlayerLeft, handlePlayerReaction, handlePollVote } from "../handlers/player";
 import { handlePollEnd, handlePollStart, handleRoomClose, handleRoomInit, handleRoomStateChange } from "../handlers/room";
 import { logInfo } from "../utils/logger";
-import { handleCancelGame, handleFriendFactsSetupSubmit, handleGameAnswer, handleGameStateChange, handleInitGame, handleStartGame } from "../handlers/game";
+import { handleCancelGame, handleCodenamesPassTurn, handleCodenamesSetSpymaster, handleFriendFactsSetupSubmit, handleGameAnswer, handleGameStateChange, handleInitGame, handleStartGame } from "../handlers/game";
 
 export async function handleMessage(ws: WebSocket, msg: WSMessage, sid: string) {
   logInfo("🔻", msg.event, msg.payload)
@@ -77,10 +77,25 @@ export async function handleMessage(ws: WebSocket, msg: WSMessage, sid: string) 
       );
       break;
 
+    case WSEvent.CN_SET_SPYMASTER:
+      await handleCodenamesSetSpymaster(
+        ws,
+        msg.payload as WSPayloads[WSEvent.CN_SET_SPYMASTER],
+      );
+      break;
+
+    case WSEvent.CN_PASS_TURN:
+      await handleCodenamesPassTurn(
+        ws,
+        msg.payload as WSPayloads[WSEvent.CN_PASS_TURN],
+      );
+      break;
+
     case WSEvent.GAME_ANSWER:
     case WSEvent.TRIVIA_ROUND_ANSWER:
     case WSEvent.HM_ROUND_ANSWER:
     case WSEvent.FF_ROUND_ANSWER:
+    case WSEvent.CN_CARD_PICK:
     case WSEvent.CH_ROUND_VOTE:
       await handleGameAnswer(ws, msg.payload as WSPayloads[WSEvent.GAME_ANSWER]);
       break;

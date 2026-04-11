@@ -3,6 +3,7 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import { useLobbyHost } from "@/providers/lobby-host-provider"; // Host context provides wsClient
 import { GameState, Scores, HerdMentalityOptions, HerdMentalityRound, WSEvent } from "@umati/ws";
 
+
 interface HerdMentalityHostContextType {
   gameId: string | null;
   gameType: string | null;
@@ -30,27 +31,37 @@ export const HerdMentalityHostProvider = ({ children }: { children: React.ReactN
   useEffect(() => {
     if (!wsClient) return;
 
-    wsClient.on(WSEvent.GAME_STATE, (payload) => {
+    const handleGameState = (payload: any) => {
       console.log("🚀 ~ HerdMentalityHostProvider ~ payload:", payload);
       setGameId(payload.id);
       setGameType(payload.type);
       setState(payload.state);
-        if (payload.round) setRound(payload.round as HerdMentalityRound);
-        if (payload.counts) setCounts(payload.counts);
-        if (payload.scores) setScores(payload.scores ?? []);
-    });
+      if (payload.round) setRound(payload.round as HerdMentalityRound);
+      if (payload.counts) setCounts(payload.counts);
+      if (payload.scores) setScores(payload.scores ?? []);
+    };
 
-    wsClient.on(WSEvent.HM_ROUND_START, ({ state, round }) => {
+    const handleRoundStart = ({ state, round }: any) => {
       setState(state);
       setRound(round);
-    });
+    };
 
-    wsClient.on(WSEvent.HM_ROUND_END, ({ state, round, scores, counts }) => {
+    const handleRoundEnd = ({ state, round, scores, counts }: any) => {
       setState(state);
       setRound(round);
       setScores(scores ?? []);
       setCounts(counts);
-    });
+    };
+
+    wsClient.on(WSEvent.GAME_STATE, handleGameState);
+    wsClient.on(WSEvent.HM_ROUND_START, handleRoundStart);
+    wsClient.on(WSEvent.HM_ROUND_END, handleRoundEnd);
+
+    return () => {
+      wsClient.off(WSEvent.GAME_STATE, handleGameState);
+      wsClient.off(WSEvent.HM_ROUND_START, handleRoundStart);
+      wsClient.off(WSEvent.HM_ROUND_END, handleRoundEnd);
+    };
 
     // wsClient.on("GAME_ENDED", ({ finalScores }) => {
     //   setState("GAME_END");
@@ -100,8 +111,8 @@ export const HerdMentalityHostProvider = ({ children }: { children: React.ReactN
         nextRound,
       }}
     >
-      <div className='bg-gradient-to-br from-(--umati-aqua) to-[#00D9D5] text-white h-dvh w-dvw'>
-      {children}
+      <div className="relative bg-gradient-to-br from-(--umati-aqua) to-[#00D9D5] text-white h-dvh w-dvw">
+        {children}
       </div>
     </HerdMentalityHostContext.Provider>
   );

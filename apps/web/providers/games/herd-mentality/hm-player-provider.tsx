@@ -31,34 +31,48 @@ export const HerdMentalityPlayerProvider = ({ children }: { children: React.Reac
   useEffect(() => {
     if (!wsClient) return;
 
-    wsClient.on(WSEvent.GAME_STATE, (payload) => {
+    const handleGameState = (payload: any) => {
       setGameId(payload.id);
       setGameType(payload.type);
       setState(payload.state);
-        if (payload.round) setRound(payload.round as HerdMentalityRound);
-        if (payload.scores) setScores(payload.scores);
-    });
+      if (payload.round) setRound(payload.round as HerdMentalityRound);
+      if (payload.scores) setScores(payload.scores);
+    };
 
-    wsClient.on(WSEvent.GAME_MY_ANSWER, ({answer}) => {
-      console.log("🚀 ~ HerdMentalityPlayerProvider ~ answer:", answer)
+    const handleMyAnswer = ({ answer }: any) => {
+      console.log("🚀 ~ HerdMentalityPlayerProvider ~ answer:", answer);
       setMyAnswer(answer);
-    });
+    };
 
-    wsClient.on(WSEvent.HM_ROUND_ANSWERED, ({ answer }) => {
+    const handleRoundAnswered = ({ answer }: any) => {
       setMyAnswer(answer);
-    });
+    };
 
-    wsClient.on(WSEvent.HM_ROUND_START, ({ round }) => {
+    const handleRoundStart = ({ round }: any) => {
       setState("ROUND");
       setRound(round);
-      setMyAnswer(null)
-    });
+      setMyAnswer(null);
+    };
 
-   wsClient.on(WSEvent.HM_ROUND_END, ({ state, round, scores }) => {
+    const handleRoundEnd = ({ state, round, scores }: any) => {
       setState(state);
       setRound(round);
       setScores(scores ?? []);
-    });
+    };
+
+    wsClient.on(WSEvent.GAME_STATE, handleGameState);
+    wsClient.on(WSEvent.GAME_MY_ANSWER, handleMyAnswer);
+    wsClient.on(WSEvent.HM_ROUND_ANSWERED, handleRoundAnswered);
+    wsClient.on(WSEvent.HM_ROUND_START, handleRoundStart);
+    wsClient.on(WSEvent.HM_ROUND_END, handleRoundEnd);
+
+    return () => {
+      wsClient.off(WSEvent.GAME_STATE, handleGameState);
+      wsClient.off(WSEvent.GAME_MY_ANSWER, handleMyAnswer);
+      wsClient.off(WSEvent.HM_ROUND_ANSWERED, handleRoundAnswered);
+      wsClient.off(WSEvent.HM_ROUND_START, handleRoundStart);
+      wsClient.off(WSEvent.HM_ROUND_END, handleRoundEnd);
+    };
 
     // wsClient.on("GAME_ENDED", ({ finalScores }) => {
     //   setState("GAME_END");

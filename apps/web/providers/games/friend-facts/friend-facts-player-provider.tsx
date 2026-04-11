@@ -47,36 +47,50 @@ export const FriendFactsPlayerProvider = ({
   useEffect(() => {
     if (!wsClient) return;
 
-    wsClient.on(WSEvent.GAME_STATE, (payload) => {
+    const handleGameState = (payload: any) => {
       setGameId(payload.id);
       setGameType(payload.type);
       setState(payload.state);
       setRound((payload.round as FriendFactsRound) ?? null);
       setScores(payload.scores ?? []);
-    });
+    };
 
-    wsClient.on(WSEvent.FF_SETUP_UPDATE, ({ state, setup }) => {
+    const handleSetupUpdate = ({ state, setup }: any) => {
       setState(state);
       setSetup(setup);
       setRound(null);
       setMyAnswer(null);
-    });
+    };
 
-    wsClient.on(WSEvent.FF_ROUND_START, ({ state, round }) => {
+    const handleRoundStart = ({ state, round }: any) => {
       setState(state);
       setRound(round);
       setMyAnswer(null);
-    });
+    };
 
-    wsClient.on(WSEvent.FF_ROUND_ANSWERED, ({ answerPlayerId }) => {
+    const handleRoundAnswered = ({ answerPlayerId }: any) => {
       setMyAnswer(answerPlayerId);
-    });
+    };
 
-    wsClient.on(WSEvent.FF_ROUND_END, ({ state, round, scores }) => {
+    const handleRoundEnd = ({ state, round, scores }: any) => {
       setState(state);
       setRound(round);
       setScores(scores ?? []);
-    });
+    };
+
+    wsClient.on(WSEvent.GAME_STATE, handleGameState);
+    wsClient.on(WSEvent.FF_SETUP_UPDATE, handleSetupUpdate);
+    wsClient.on(WSEvent.FF_ROUND_START, handleRoundStart);
+    wsClient.on(WSEvent.FF_ROUND_ANSWERED, handleRoundAnswered);
+    wsClient.on(WSEvent.FF_ROUND_END, handleRoundEnd);
+
+    return () => {
+      wsClient.off(WSEvent.GAME_STATE, handleGameState);
+      wsClient.off(WSEvent.FF_SETUP_UPDATE, handleSetupUpdate);
+      wsClient.off(WSEvent.FF_ROUND_START, handleRoundStart);
+      wsClient.off(WSEvent.FF_ROUND_ANSWERED, handleRoundAnswered);
+      wsClient.off(WSEvent.FF_ROUND_END, handleRoundEnd);
+    };
   }, [wsClient]);
 
   const submitFacts = (facts: FriendFactsFactInput[]) => {

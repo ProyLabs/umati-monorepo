@@ -106,6 +106,8 @@ function GameConfig({ game, action }: GameConfigProps) {
               return <HMGameConfig action={action} />;
             case GameType.CHAMELEON:
               return <ChameleonGameConfig action={action} />;
+            case GameType.CN:
+              return <CodenamesGameConfig action={action} />;
             case GameType.QUIZZER:
               return <QuizzerGameConfig action={action} />;
             case GameType.FF:
@@ -680,6 +682,34 @@ const FriendFactsGameConfig = ({ action }: { action: GameConfigAction }) => {
           className="w-full"
           onClick={async () => {
             await action({ noOfRounds });
+          }}
+        >
+          Start Setup
+        </Fbutton>
+        <Fbutton variant="outline" className="w-full" onClick={closeModal}>
+          Cancel
+        </Fbutton>
+      </div>
+    </div>
+  );
+};
+
+const CodenamesGameConfig = ({ action }: { action: GameConfigAction }) => {
+  const { closeModal } = useModal();
+
+  return (
+    <div className="grid gap-6">
+      <div className="rounded-[1.5rem] border border-black/10 bg-black/5 px-4 py-4 text-sm text-black/70">
+        Teams are split randomly in setup. Players claim spymaster spots from
+        their own devices.
+      </div>
+      <div className="grid gap-2">
+        <Fbutton
+          type="button"
+          variant="secondary"
+          className="w-full"
+          onClick={async () => {
+            await action({});
           }}
         >
           Start Setup

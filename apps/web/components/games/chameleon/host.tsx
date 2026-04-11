@@ -1,4 +1,5 @@
 import { BeforeWeBegin } from "@/components/lobby/widgets";
+import { EndGameButton } from "@/components/games/shared";
 
 // import { RoundHost } from "./widgets";
 import { Leaderboard, Podium } from "../shared";
@@ -9,25 +10,34 @@ import { GameState } from "@umati/ws";
 export default function ChameleonHost() {
   const { state, scores } = useChameleonHost();
 
+  let content;
   if (state === GameState.BEFORE) {
     return <BeforeWeBegin/>;
   } else if(state === GameState.ROUND_SETUP || state === GameState.SPEAKING){
-    return <Setup />
+    content = <Setup />;
   } else if (state === GameState.VOTING || state === GameState.ROUND_END){
-    return <VotingRound />
+    content = <VotingRound />;
   }
   else if (state === GameState.ROUND) {
-    return <GetReady />;
-  }  else if (state === GameState.REVEAL) {
-    return <Reveal />;
+    content = <GetReady />;
+  } else if (state === GameState.REVEAL) {
+    content = <Reveal />;
   }
-  
   else if(state === GameState.LEADERBOARD){ 
-    return <Leaderboard scores={scores} nextRound={() => {}} />;
+    content = <Leaderboard scores={scores} nextRound={() => {}} />;
   } else if(state === GameState.RANKING){
-    return <Podium scores={scores} nextRound={() => {}} />
+    content = <Podium scores={scores} nextRound={() => {}} />
+  } else {
+    return '';
   }
 
-  return ''
+  return (
+    <div className="relative h-full w-full">
+      <div className="absolute right-4 top-4 z-50">
+        <EndGameButton />
+      </div>
+      {content}
+    </div>
+  );
 }
 

@@ -10,7 +10,7 @@
  *  - 🔹 WSMessage: full message shape { event, payload }
  */
 
-import { ChameleonRound, FriendFactsFact, FriendFactsFactInput, FriendFactsRound, FriendFactsSetupState, Game, GameState, GameType, HerdMentalityOptions, HerdMentalityRound, Lobby, LobbyFull, LobbyPoll, Player, QuestionProfile, QuizzerQuestionInput, Ranking, RoomState, Scores, TriviaOptions, TriviaRound } from "./types";
+import { ChameleonRound, CodenamesRound, CodenamesSetupState, CodenamesTeam, FriendFactsFact, FriendFactsFactInput, FriendFactsRound, FriendFactsSetupState, Game, GameState, GameType, HerdMentalityOptions, HerdMentalityRound, Lobby, LobbyFull, LobbyPoll, Player, QuestionProfile, QuizzerQuestionInput, Ranking, RoomState, Scores, TriviaOptions, TriviaRound } from "./types";
 
 export enum WSEvent {
   // --- Core lifecycle ---
@@ -82,6 +82,13 @@ export enum WSEvent {
   FF_ROUND_ANSWER="GAME:FF:ROUND:ANSWER",
   FF_ROUND_ANSWERED="GAME:FF:ROUND:ANSWERED",
   FF_ROUND_END="GAME:FF:ROUND:END",
+
+  //Codenames
+  CN_SETUP_UPDATE="GAME:CN:SETUP:UPDATE",
+  CN_SET_SPYMASTER="GAME:CN:SETUP:SPYMASTER",
+  CN_STATE_UPDATE="GAME:CN:STATE:UPDATE",
+  CN_CARD_PICK="GAME:CN:CARD:PICK",
+  CN_PASS_TURN="GAME:CN:TURN:PASS",
 
   //Chameleon
   CH_ROUND_START="GAME:CH:ROUND:START",
@@ -217,6 +224,12 @@ export interface WSPayloads {
   [WSEvent.FF_ROUND_ANSWER]: { roomId: string; playerId: string; answerPlayerId: string };
   [WSEvent.FF_ROUND_ANSWERED]: { answerPlayerId: string | null };
   [WSEvent.FF_ROUND_END]: { state: GameState; round: FriendFactsRound; scores: Scores; counts: Record<string, number> };
+
+  [WSEvent.CN_SETUP_UPDATE]: { state: GameState; setup: CodenamesSetupState };
+  [WSEvent.CN_SET_SPYMASTER]: { roomId: string; playerId: string };
+  [WSEvent.CN_STATE_UPDATE]: { state: GameState; round: CodenamesRound; scores: Scores };
+  [WSEvent.CN_CARD_PICK]: { roomId: string; playerId: string; cardId: string };
+  [WSEvent.CN_PASS_TURN]: { roomId: string; playerId: string; team: CodenamesTeam };
 
   [WSEvent.CH_ROUND_START]: {state: GameState, round: ChameleonRound}
   [WSEvent.CH_ROUND_STATE_CHANGE]: {roomId: string; state: GameState,}
