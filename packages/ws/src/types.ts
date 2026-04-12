@@ -176,6 +176,12 @@ export interface QuizzerQuestionInput {
   correctAnswer: string | boolean;
 }
 
+export interface QuizzerSetupState {
+  questions: QuizzerQuestionInput[];
+  totalQuestions: number;
+  canStart: boolean;
+}
+
 interface Randomize {}
 
 export interface TriviaRound {

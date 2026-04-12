@@ -219,7 +219,7 @@ export const CodenamesPlayerSetup = () => {
           <Fbutton
             type="button"
             className="w-full"
-            variant={isSpymaster ? "outline" : "secondary"}
+            variant={isSpymaster ? "outline" : "default"}
             disabled={spymasterTaken}
             onClick={toggleSpymaster}
           >

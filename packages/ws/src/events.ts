@@ -10,7 +10,7 @@
  *  - 🔹 WSMessage: full message shape { event, payload }
  */
 
-import { ChameleonRound, CodenamesRound, CodenamesSetupState, CodenamesTeam, DrawItRound, DrawItSegment, DrawItSetupState, FriendFactsFact, FriendFactsFactInput, FriendFactsRound, FriendFactsSetupState, Game, GameState, GameType, HerdMentalityOptions, HerdMentalityRound, Lobby, LobbyFull, LobbyPoll, Player, QuestionProfile, QuizzerQuestionInput, Ranking, RoomState, Scores, TriviaOptions, TriviaRound } from "./types";
+import { ChameleonRound, CodenamesRound, CodenamesSetupState, CodenamesTeam, DrawItRound, DrawItSegment, DrawItSetupState, FriendFactsFact, FriendFactsFactInput, FriendFactsRound, FriendFactsSetupState, Game, GameState, GameType, HerdMentalityOptions, HerdMentalityRound, Lobby, LobbyFull, LobbyPoll, Player, QuestionProfile, QuizzerQuestionInput, QuizzerSetupState, Ranking, RoomState, Scores, TriviaOptions, TriviaRound } from "./types";
 
 export enum WSEvent {
   // --- Core lifecycle ---
@@ -78,6 +78,7 @@ export enum WSEvent {
   //Friend Facts
   FF_SETUP_UPDATE="GAME:FF:SETUP:UPDATE",
   FF_SETUP_SUBMIT="GAME:FF:SETUP:SUBMIT",
+  QZ_SETUP_SYNC="GAME:QZ:SETUP:SYNC",
   FF_ROUND_START="GAME:FF:ROUND:START",
   FF_ROUND_ANSWER="GAME:FF:ROUND:ANSWER",
   FF_ROUND_ANSWERED="GAME:FF:ROUND:ANSWERED",
@@ -231,6 +232,7 @@ export interface WSPayloads {
   //Friend Facts actions
   [WSEvent.FF_SETUP_UPDATE]: { state: GameState; setup: FriendFactsSetupState };
   [WSEvent.FF_SETUP_SUBMIT]: { roomId: string; playerId: string; facts: FriendFactsFactInput[] };
+  [WSEvent.QZ_SETUP_SYNC]: { roomId: string; questions: QuizzerQuestionInput[] };
   [WSEvent.FF_ROUND_START]: { state: GameState; round: FriendFactsRound };
   [WSEvent.FF_ROUND_ANSWER]: { roomId: string; playerId: string; answerPlayerId: string };
   [WSEvent.FF_ROUND_ANSWERED]: { answerPlayerId: string | null };

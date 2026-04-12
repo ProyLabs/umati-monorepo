@@ -4,7 +4,13 @@ import {
   Reactions,
 } from "@/components/lobby/widgets";
 import { cn } from "../../../lib/utils";
-import { CheckIcon } from "lucide-react";
+import {
+  CheckIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  PlusIcon,
+  Trash2Icon,
+} from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import React, { Fragment } from "react";
 import { useEffect, useState } from "react";
@@ -16,6 +22,11 @@ import { useLobbyHost } from "@/providers/lobby-host-provider";
 import { useTriviaPlayer } from "@/providers/games/trivia/trivia-player-provider";
 import { GameType, TriviaOptions } from "@umati/ws";
 import { EndGameButton, ScoreGapHint } from "../shared";
+import {
+  quizzerTemplate,
+  validateQuizzerQuestions,
+} from "@/lib/quizzer-template";
+import { QuizzerQuestionType, type QuizzerQuestionInput } from "@umati/ws";
 
 export const Question = ({ text }: { text: string }) => {
   return (
@@ -287,6 +298,534 @@ export const TriviaTitleScreen = () => {
   );
 };
 
+const emptyQuizzerQuestion = (): QuizzerQuestionInput => ({
+  question: "",
+  type: QuizzerQuestionType.SELECTION,
+  options: ["", ""],
+  correctAnswer: "",
+});
+
+function QuizzerSlidePreview({
+  question,
+  index,
+  active,
+  onSelect,
+}: {
+  question: QuizzerQuestionInput;
+  index: number;
+  active?: boolean;
+  onSelect: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onSelect}
+      className={cn(
+        "w-full rounded-xl border p-3 text-left transition h-fit max-w-xs",
+        active
+          ? "border-white/30 bg-white/16 shadow-[0_18px_40px_rgba(0,0,0,0.18)]"
+          : "border-white/10 bg-black/16 hover:border-white/20 hover:bg-white/10",
+      )}
+    >
+      <div className="mb-3 flex flex-col">
+        <div className="flex items-center gap-3 justify-between">
+          <p className="text-[10px] font-bold uppercase tracking-[0.22em] text-white/45 flex-1">
+            Slide {index + 1}
+          </p>
+          <div className="rounded-full bg-white/10 px-2 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-white/60">
+            {question.type === QuizzerQuestionType.SELECTION ? "Choice" : "T/F"}
+          </div>
+        </div>
+        <p className="mt-1 text-sm font-black text-white">
+          {question.question.trim() || "Untitled question"}
+        </p>
+      </div>
+    </button>
+  );
+}
+
+function QuizzerCompactStage({
+  question,
+  onChange,
+}: {
+  question: QuizzerQuestionInput;
+  onChange: (question: QuizzerQuestionInput) => void;
+}) {
+  const previewOptions =
+    question.type === QuizzerQuestionType.SELECTION
+      ? (question.options ?? [])
+      : ["True", "False"];
+
+  const updateQuestion = (value: string) => {
+    onChange({
+      ...question,
+      question: value.replace(/\n+/g, " ").trim(),
+    });
+  };
+
+  const updateOption = (optionIndex: number, value: string) => {
+    if (question.type !== QuizzerQuestionType.SELECTION) return;
+
+    const nextOptions = [...(question.options ?? [])];
+    nextOptions[optionIndex] = value.replace(/\n+/g, " ").trim();
+    onChange({
+      ...question,
+      options: nextOptions,
+    });
+  };
+
+  return (
+    <div className="rounded-[1.8rem] border border-white/12 bg-[linear-gradient(180deg,rgba(255,255,255,0.12),rgba(255,255,255,0.04))] p-4 shadow-[0_30px_80px_rgba(0,0,0,0.2)]">
+      <div className="rounded-[1.6rem] bg-[#19110d] px-4 py-5 text-white">
+        <div className=" max-w-2xl mx-auto">
+          <div className="mb-5 flex items-center justify-between gap-3">
+            <span className="rounded-full bg-white/10 px-3 py-1 text-[10px] font-bold uppercase tracking-[0.22em] text-white/65">
+              {question.type === QuizzerQuestionType.SELECTION
+                ? "Multiple Choice"
+                : "True / False"}
+            </span>
+          </div>
+
+          <p
+            className="rounded-2xl px-2 py-1 text-2xl font-black text-center leading-9 text-white outline-none transition hover:bg-white/5 focus:bg-white/8"
+            contentEditable
+            suppressContentEditableWarning
+            onBlur={(event) => updateQuestion(event.currentTarget.innerText)}
+            onInput={(event) =>
+              updateQuestion(event.currentTarget.textContent || "")
+            }
+          >
+            {question.question.trim() || "Your question will appear here."}
+          </p>
+
+          <div className="mt-5 grid grid-cols-2 gap-3">
+            {previewOptions.map((option, optionIndex) => {
+              const isCorrect =
+                question.type === QuizzerQuestionType.SELECTION
+                  ? option === question.correctAnswer
+                  : (option === "True" && question.correctAnswer === true) ||
+                    (option === "False" && question.correctAnswer === false);
+
+              return (
+                <div
+                  key={`${option}-${optionIndex}`}
+                  className={cn(
+                    "flex items-center gap-3 rounded-2xl border px-4 py-3 transition",
+                    isCorrect
+                      ? "border-emerald-300/35 bg-emerald-400/18 text-emerald-50"
+                      : "border-white/10 bg-white/8 text-white/78 hover:bg-white/12",
+                  )}
+                  onClick={() => {
+                    if (question.type === QuizzerQuestionType.SELECTION) {
+                      onChange({
+                        ...question,
+                        correctAnswer: option,
+                      });
+                      return;
+                    }
+
+                    onChange({
+                      ...question,
+                      correctAnswer: option === "True",
+                    });
+                  }}
+                >
+                  <span className="inline-flex size-8 items-center justify-center rounded-full bg-white/10 text-xs font-black">
+                    {String.fromCharCode(65 + optionIndex)}
+                  </span>
+                  {question.type === QuizzerQuestionType.SELECTION ? (
+                    <span
+                      className="flex-1 rounded-xl px-2 py-1 text-lg font-semibold outline-none"
+                      contentEditable
+                      suppressContentEditableWarning
+                      onClick={(event) => event.stopPropagation()}
+                      onBlur={(event) =>
+                        updateOption(optionIndex, event.currentTarget.innerText)
+                      }
+                      onInput={(event) =>
+                        updateOption(
+                          optionIndex,
+                          event.currentTarget.textContent || "",
+                        )
+                      }
+                    >
+                      {option || `Option ${optionIndex + 1}`}
+                    </span>
+                  ) : (
+                    <span className="text-sm font-semibold">
+                      {option || `Option ${optionIndex + 1}`}
+                    </span>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function QuizzerSlideEditor({
+  index,
+  question,
+  total,
+  onChange,
+  onRemove,
+}: {
+  index: number;
+  question: QuizzerQuestionInput;
+  total: number;
+  onChange: (question: QuizzerQuestionInput) => void;
+  onRemove: () => void;
+}) {
+  const selectionOptions = question.options ?? ["", ""];
+
+  return (
+    <div className="grid gap-5 rounded-[2rem] border border-white/14 bg-black/18 p-5 backdrop-blur-sm">
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-white/50">
+            Slide {index + 1} of {total}
+          </p>
+        </div>
+
+        <Fbutton
+          type="button"
+          variant="outline"
+          size="sm"
+          onClick={onRemove}
+          disabled={total <= 1}
+        >
+          <Trash2Icon className="size-4" />
+          Remove Slide
+        </Fbutton>
+      </div>
+
+      <div className="flex flex-wrap items-center gap-3 rounded-[1.5rem] border border-white/10 bg-white/8 px-4 py-3">
+        <label className="grid gap-2">
+          <span className="text-[11px] font-bold uppercase tracking-[0.18em] text-white/50">
+            Type
+          </span>
+          <select
+            value={question.type}
+            onChange={(event) => {
+              const nextType = event.target.value as QuizzerQuestionType;
+              if (nextType === QuizzerQuestionType.TRUE_FALSE) {
+                onChange({
+                  question: question.question,
+                  type: nextType,
+                  correctAnswer: true,
+                });
+                return;
+              }
+
+              onChange({
+                question: question.question,
+                type: nextType,
+                options:
+                  question.type === QuizzerQuestionType.SELECTION
+                    ? selectionOptions
+                    : ["", ""],
+                correctAnswer:
+                  question.type === QuizzerQuestionType.SELECTION
+                    ? String(question.correctAnswer ?? "")
+                    : "",
+              });
+            }}
+            className="h-11 rounded-2xl border border-white/10 bg-white/95 px-4 text-sm font-semibold text-black outline-none transition focus:border-white/40"
+          >
+            <option value={QuizzerQuestionType.SELECTION}>
+              Multiple Choice
+            </option>
+            <option value={QuizzerQuestionType.TRUE_FALSE}>True / False</option>
+          </select>
+        </label>
+
+        {question.type === QuizzerQuestionType.SELECTION ? (
+          <Fbutton
+            type="button"
+            variant="outline"
+            size="sm"
+            disabled={selectionOptions.length >= 4}
+            onClick={() =>
+              onChange({
+                ...question,
+                options: [...selectionOptions, ""],
+              })
+            }
+          >
+            <PlusIcon className="size-4" />
+            Add Option
+          </Fbutton>
+        ) : null}
+
+        {question.type === QuizzerQuestionType.SELECTION ? (
+          <Fbutton
+            type="button"
+            variant="outline"
+            size="sm"
+            disabled={selectionOptions.length <= 2}
+            onClick={() => {
+              const nextOptions = selectionOptions.slice(0, -1);
+              const nextAnswer = nextOptions.includes(
+                String(question.correctAnswer),
+              )
+                ? question.correctAnswer
+                : (nextOptions[0] ?? "");
+              onChange({
+                ...question,
+                options: nextOptions,
+                correctAnswer: String(nextAnswer),
+              });
+            }}
+          >
+            Remove Option
+          </Fbutton>
+        ) : null}
+
+        <p className="ml-auto text-sm text-white/68">
+          Edit inside the preview. Click an answer to mark it correct.
+        </p>
+      </div>
+
+      <div className="grid gap-3">
+        <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-white/46">
+          Live Editing Stage
+        </p>
+        <QuizzerCompactStage question={question} onChange={onChange} />
+      </div>
+    </div>
+  );
+}
+
+export const QuizzerSetupHost = () => {
+  const { setup, startGame, syncQuizzerSetup } = useTriviaHost();
+  const [questions, setQuestions] = useState<QuizzerQuestionInput[]>(
+    setup?.questions?.length ? setup.questions : quizzerTemplate,
+  );
+  const [error, setError] = useState<string | null>(null);
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  useEffect(() => {
+    if (setup?.questions?.length) {
+      setQuestions(setup.questions);
+      return;
+    }
+
+    if (!setup?.questions) {
+      setQuestions(quizzerTemplate);
+    }
+  }, [setup]);
+
+  const commitQuestions = (nextQuestions: QuizzerQuestionInput[]) => {
+    setQuestions(nextQuestions);
+    setActiveIndex((current) =>
+      Math.min(current, Math.max(nextQuestions.length - 1, 0)),
+    );
+    const result = validateQuizzerQuestions(nextQuestions);
+    if (!result.ok) {
+      setError(result.error);
+      return;
+    }
+
+    setError(null);
+    syncQuizzerSetup(result.questions);
+  };
+
+  const canStart = !!setup?.canStart && !error;
+  const activeQuestion = questions[activeIndex] ?? emptyQuizzerQuestion();
+
+  return (
+    <div className="mx-auto flex h-full w-full max-w-screen-2xl flex-col gap-6 overflow-y-auto px-4 py-5 md:px-6 md:py-6">
+      <div className="grid gap-4 rounded-[2rem] border border-white/15 bg-[linear-gradient(135deg,rgba(31,15,8,0.42),rgba(0,0,0,0.16))] p-6 backdrop-blur-sm lg:grid-cols-[1.3fr_0.9fr]">
+        <div className="space-y-3">
+          <p className="text-sm font-bold uppercase tracking-[0.22em] text-white/55">
+            Quizzer Setup
+          </p>
+          <h1 className="max-w-3xl text-4xl font-black tracking-tight text-white md:text-5xl">
+            Build the quiz one slide at a time.
+          </h1>
+          <p className="max-w-2xl text-base text-white/75 md:text-lg">
+            Move through each question like a deck. Edit the current slide,
+            check the side preview, then continue when the flow feels right.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-3 gap-3 self-start">
+          <div className="rounded-[1.5rem] border border-white/10 bg-white/10 px-4 py-4">
+            <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-white/50">
+              Questions
+            </p>
+            <p className="mt-2 text-3xl font-black text-white">
+              {questions.length}
+            </p>
+          </div>
+          <div className="rounded-[1.5rem] border border-white/10 bg-white/10 px-4 py-4">
+            <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-white/50">
+              Status
+            </p>
+            <p className="mt-2 text-lg font-black text-white">
+              {canStart ? "Show-ready" : "Needs edits"}
+            </p>
+          </div>
+          <div className="rounded-[1.5rem] border border-white/10 bg-white/10 px-4 py-4">
+            <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-white/50">
+              Current
+            </p>
+            <p className="mt-2 text-lg font-black text-white">
+              Slide {activeIndex + 1}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <div className="flex flex-wrap items-center gap-3">
+        <Fbutton
+          type="button"
+          onClick={() => {
+            const nextQuestions = [...questions, emptyQuizzerQuestion()];
+            commitQuestions(nextQuestions);
+            setActiveIndex(nextQuestions.length - 1);
+          }}
+        >
+          <PlusIcon className="size-4" />
+          Add Slide
+        </Fbutton>
+        <Fbutton
+          type="button"
+          variant="outline"
+          onClick={() => {
+            commitQuestions(quizzerTemplate);
+            setActiveIndex(0);
+          }}
+        >
+          Load Template
+        </Fbutton>
+        <Fbutton
+          type="button"
+          variant="outline"
+          onClick={startGame}
+          disabled={!canStart}
+        >
+          Start Quizzer
+        </Fbutton>
+
+        <div className="ml-auto flex items-center gap-4">
+          <p className="text-sm font-semibold text-white/68">
+            Editing slide {activeIndex + 1} of {questions.length}
+          </p>
+          <div className="flex items-center gap-2">
+            <Fbutton
+              type="button"
+              variant="outline"
+              size="sm"
+              disabled={activeIndex === 0}
+              onClick={() => setActiveIndex((index) => Math.max(index - 1, 0))}
+            >
+              <ChevronLeftIcon className="size-4" />
+              Previous
+            </Fbutton>
+            <Fbutton
+              type="button"
+              variant="outline"
+              size="sm"
+              disabled={activeIndex >= questions.length - 1}
+              onClick={() =>
+                setActiveIndex((index) =>
+                  Math.min(index + 1, questions.length - 1),
+                )
+              }
+            >
+              Next
+              <ChevronRightIcon className="size-4" />
+            </Fbutton>
+          </div>
+        </div>
+      </div>
+
+      {error && (
+        <div className="rounded-[1.5rem] border border-red-300/30 bg-red-500/15 px-4 py-3 text-sm font-medium text-red-50">
+          {error}
+        </div>
+      )}
+
+      <div className="grid gap-5 pb-8 xl:grid-cols-[160px_minmax(0,1fr)]">
+        <div className="flex flex-col gap-3">
+          {questions.map((question, index) => (
+            <QuizzerSlidePreview
+              key={`${index}-${question.question}`}
+              index={index}
+              question={question}
+              active={index === activeIndex}
+              onSelect={() => setActiveIndex(index)}
+            />
+          ))}
+        </div>
+
+        <div className="grid gap-4">
+          <QuizzerSlideEditor
+            index={activeIndex}
+            total={questions.length}
+            question={activeQuestion}
+            onChange={(nextQuestion) => {
+              const nextQuestions = [...questions];
+              nextQuestions[activeIndex] = nextQuestion;
+              commitQuestions(nextQuestions);
+            }}
+            onRemove={() => {
+              const nextQuestions = questions.filter(
+                (_, currentIndex) => currentIndex !== activeIndex,
+              );
+              commitQuestions(nextQuestions);
+            }}
+          />
+        </div>
+      </div>
+    </div>
+  );
+};
+
+export const QuizzerSetupPlayer = () => {
+  const { setup } = useTriviaPlayer();
+
+  return (
+    <div className="mx-auto flex h-full w-full max-w-4xl flex-col items-center justify-center gap-8 px-6 text-center text-white">
+      <div className="space-y-4">
+        <p className="text-sm font-bold uppercase tracking-[0.22em] text-white/55">
+          Quizzer Setup In Progress
+        </p>
+        <h1 className="text-4xl font-black tracking-tight md:text-6xl">
+          The host is tuning the round list.
+        </h1>
+        <p className="mx-auto max-w-2xl text-base text-white/75 md:text-lg">
+          Sit tight while the game board gets polished. Once setup is locked,
+          questions and answer positions will be shuffled for the live round.
+        </p>
+      </div>
+
+      <div className="grid w-full max-w-xl grid-cols-2 gap-4">
+        <div className="rounded-[1.75rem] border border-white/10 bg-black/20 px-5 py-5 backdrop-blur-sm">
+          <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-white/50">
+            Questions Ready
+          </p>
+          <p className="mt-2 text-4xl font-black">
+            {setup?.totalQuestions ?? 0}
+          </p>
+        </div>
+        <div className="rounded-[1.75rem] border border-white/10 bg-black/20 px-5 py-5 backdrop-blur-sm">
+          <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-white/50">
+            Status
+          </p>
+          <p className="mt-2 text-xl font-black">
+            {setup?.canStart ? "Almost live" : "Still drafting"}
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 export const RoundHost = () => {
   const { lobby } = useLobbyHost();
   const { round, state, counts, nextRound, gameType } = useTriviaHost();
@@ -329,6 +868,7 @@ export const RoundHost = () => {
             {round?.choices.map((choice, index) => {
               return (
                 <Option
+                  key={index}
                   letter={letters[index]}
                   text={choice}
                   state={

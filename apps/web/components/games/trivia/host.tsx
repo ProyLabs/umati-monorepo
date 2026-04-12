@@ -1,13 +1,16 @@
 import { BeforeWeBegin } from "@/components/lobby/widgets";
 import { useTriviaHost } from "@/providers/games/trivia/trivia-host-provider";
-import { RoundHost } from "./widgets";
+import { QuizzerSetupHost, RoundHost } from "./widgets";
 import { Leaderboard, Podium } from "../shared";
+import { GameState, GameType } from "@umati/ws";
 
 export default function TriviaHost() {
-  const { state, scores, nextRound } = useTriviaHost();
+  const { gameType, state, scores, nextRound } = useTriviaHost();
 
   if (state === "BEFORE") {
     return <BeforeWeBegin />;
+  } else if (gameType === GameType.QUIZZER && state === GameState.ROUND_SETUP) {
+    return <QuizzerSetupHost />;
   } else if (state === "ROUND" || state === "ROUND_END") {
     return <RoundHost />;
   } else if (state === "LEADERBOARD") {

@@ -34,11 +34,12 @@ export const Games: Game[] = [
     min: 1,
     instructions: `
   <ul>
-    <li>Upload your own JSON question set before starting.</li>
+    <li>Start the game, then set up the quiz live from the host screen.</li>
+    <li>Download the template first if you want sample question structure.</li>
     <li>Make sure this screen is being shared on Zoom (or others) or a TV.</li>
     <li>Questions will appear on this screen.</li>
     <li>Players answer on their own device.</li>
-    <li>Supports both selection questions and true/false.</li>
+    <li>Supports both selection questions and true/false, with answer positions shuffled during play.</li>
   </ul>
 `,
 playable: true,

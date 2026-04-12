@@ -36,6 +36,7 @@ const targetPlayerSetupState = (
 
 export class FriendFactsGame extends BaseGame {
   static maxNumberOfRounds = 20;
+  static maxFactsPerPlayer = 3;
   static basePoints = 200;
   static timeBonusFactor = 0.5;
 
@@ -231,7 +232,7 @@ export class FriendFactsGame extends BaseGame {
     const sanitized = facts
       .map((fact) => fact.text.trim())
       .filter(Boolean)
-      .slice(0, this.noOfRounds)
+      .slice(0, FriendFactsGame.maxFactsPerPlayer)
       .map((text) => ({ id: nanoid(), text }));
 
     this.factsByPlayer.set(playerId, sanitized);

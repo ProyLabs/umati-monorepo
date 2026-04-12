@@ -97,12 +97,7 @@ const GameCarousel: React.FC<GameCarouselProps> = ({ games = Games }) => {
                       }}
                     />
                   ),
-                  containerClass: cn(
-                    "bg-gradient-to-b h-fit",
-                    game.className,
-                    game.id === GameType.QUIZZER &&
-                      "sm:max-w-6xl max-h-[85vh] h-full",
-                  ),
+                  containerClass: cn("bg-gradient-to-b h-fit", game.className),
                 });
               }}
             />

@@ -2,7 +2,15 @@
 import { PlayerLeaveButton, Reactions } from "@/components/lobby/widgets";
 import UmatiLogo from "@/components/ui/logo";
 import { useLobbyPlayer } from "@/providers/lobby-player-provider"; // Player context provides wsClient
-import { GameState, GameType, Scores, TriviaOptions, TriviaRound, WSEvent } from "@umati/ws";
+import {
+  GameState,
+  GameType,
+  type QuizzerSetupState,
+  Scores,
+  TriviaOptions,
+  TriviaRound,
+  WSEvent,
+} from "@umati/ws";
 import React, { createContext, useContext, useEffect, useState } from "react";
 
 interface TriviaPlayerContextType {
@@ -10,6 +18,7 @@ interface TriviaPlayerContextType {
   gameType: string | null;
   state: GameState; // BEFORE, ROUND, ROUND_END, etc.
   round?: TriviaRound;
+  setup?: QuizzerSetupState;
   scores: Scores;
   submitAnswer: (option: TriviaOptions) => void;
 }
@@ -23,6 +32,7 @@ export const TriviaPlayerProvider = ({ children }: { children: React.ReactNode }
   const [gameType, setGameType] = useState<string | null>(lobby?.game?.type ?? null);
   const [state, setState] = useState<GameState>("BEFORE");
   const [round, setRound] = useState<TriviaRound | undefined>(undefined);
+  const [setup, setSetup] = useState<QuizzerSetupState | undefined>(undefined);
   const [scores, setScores] = useState<Scores>([]);
 
   // --- WS Event Handlers ---
@@ -34,6 +44,7 @@ export const TriviaPlayerProvider = ({ children }: { children: React.ReactNode }
       setGameType(payload.type);
       setState(payload.state);
       if (payload.round) setRound(payload.round as TriviaRound);
+      setSetup(payload.setup as QuizzerSetupState | undefined);
       if (payload.scores) setScores(payload.scores);
     };
 
@@ -78,6 +89,7 @@ export const TriviaPlayerProvider = ({ children }: { children: React.ReactNode }
         gameType,
         state,
         round,
+        setup,
         scores,
         submitAnswer,
       }}
@@ -89,13 +101,13 @@ export const TriviaPlayerProvider = ({ children }: { children: React.ReactNode }
             : "bg-gradient-to-br from-[#FE566B] to-[var(--umati-red)] h-dvh w-dvw flex flex-col"
         }
       >
-      {children}
+        {children}
 
-       <div className="flex items-center justify-center gap-4 w-full relative max-w-md mt-auto mx-auto px-4 pb-4">
-        <UmatiLogo className="w-8 text-foreground block md:hidden" />
-       <PlayerLeaveButton/>
-        <Reactions />
-      </div>
+        <div className="flex items-center justify-center gap-4 w-full relative max-w-md mt-auto mx-auto px-4 pb-4">
+          <UmatiLogo className="w-8 text-foreground block md:hidden" />
+          <PlayerLeaveButton />
+          <Reactions />
+        </div>
       </div>
     </TriviaPlayerContext.Provider>
   );

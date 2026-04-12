@@ -65,6 +65,7 @@ export const GameManager = {
       type: game.type,
       state: game.state,
       round: (game as TriviaGame | HerdMentality | Chameleon | QuizzerGame | FriendFactsGame | CodenamesGame | DrawItGame).round,
+      setup: (game as QuizzerGame & { setup?: unknown }).setup ?? undefined,
       scores: game.scores,
     };
   },

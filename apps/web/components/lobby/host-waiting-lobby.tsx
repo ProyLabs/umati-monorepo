@@ -1,9 +1,11 @@
 import { JoinLobbyCode, WaitingForPlayers } from "./widgets";
 import { Fbutton } from "../ui/fancy-button";
 import { useLobbyHost } from "../../providers/lobby-host-provider";
+import { useAlert } from "../../providers/modal-provider";
 
 export default function HostWaitingLobby() {
   const { lobby, changeUiState, closeLobby } = useLobbyHost();
+  const { showAlert } = useAlert();
 
   return (
     <div className="max-w-screen-2xl mx-auto w-full py-4 flex flex-col gap-6 md:gap-8 px-4 items-center justify-center min-h-full pb-28 md:pb-16">
@@ -26,7 +28,15 @@ export default function HostWaitingLobby() {
         <Fbutton
           variant="outline"
           className="w-full md:w-60"
-          onClick={closeLobby}
+          onClick={() =>
+            showAlert({
+              title: "Close lobby?",
+              description: `Everyone in ${lobby?.name ?? "this lobby"} will be disconnected immediately.`,
+              confirmText: "Close Lobby",
+              closeText: "Keep Lobby Open",
+              onConfirm: closeLobby,
+            })
+          }
         >
           Close Lobby
         </Fbutton>

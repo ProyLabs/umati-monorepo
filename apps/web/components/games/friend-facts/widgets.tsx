@@ -156,6 +156,8 @@ export const FriendFactsPlayerSetup = () => {
   const submittedCount = setup?.readyPlayerIds.length ?? 0;
   const allSubmitted = playerCount > 0 && submittedCount === playerCount;
   const canSubmit = facts.some((fact) => fact.trim().length > 0);
+  const maxFacts = 3;
+  const canAddFact = facts.length < maxFacts;
 
   if (allSubmitted) {
     return (
@@ -230,9 +232,10 @@ export const FriendFactsPlayerSetup = () => {
           <Fbutton
             type="button"
             variant="outline"
+            disabled={!canAddFact}
             onClick={() => setFacts((current) => [...current, ""])}
           >
-            Add Fact
+            {canAddFact ? "Add Fact" : "3 Facts Max"}
           </Fbutton>
           <Fbutton
             type="button"

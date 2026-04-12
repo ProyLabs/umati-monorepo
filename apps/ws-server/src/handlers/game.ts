@@ -6,6 +6,7 @@ import { GameManager } from "../lib/game-manager";
 import { FriendFactsGame } from "../lib/games/friend-facts";
 import { CodenamesGame } from "../lib/games/codenames";
 import { DrawItGame } from "../lib/games/drawit";
+import { QuizzerGame } from "../lib/games/quizzer-game";
 
 /** When host setup a new game */
 export async function handleInitGame(
@@ -146,6 +147,30 @@ export async function handleFriendFactsSetupSubmit(
   if (!game || game.type !== GameType.FF) return;
 
   (game as FriendFactsGame).submitFacts(playerId, facts);
+}
+
+export async function handleQuizzerSetupSync(
+  ws: WebSocket,
+  payload: WSPayloads[WSEvent.QZ_SETUP_SYNC],
+) {
+  const { roomId, questions } = payload;
+  const room = RoomManager.get(roomId);
+  if (!room?.game) return;
+
+  if (!RoomManager.isHostSocket(roomId, ws)) {
+    ws.send(
+      JSON.stringify({
+        event: WSEvent.ERROR,
+        payload: { message: "Only the host can edit Quizzer setup." },
+      }),
+    );
+    return;
+  }
+
+  const game = GameManager.get(room.game.id);
+  if (!game || game.type !== GameType.QUIZZER) return;
+
+  (game as QuizzerGame).syncSetup(questions);
 }
 
 export async function handleCodenamesSetSpymaster(

@@ -18,6 +18,7 @@ interface ChameleonPlayerContextType {
   round?: ChameleonRound;
   role?: ChameleonRoundRole;
   myVote: string | null;
+  scores: Scores;
   startGame: () => void;
   nextRound: () => void;
   submitVote: (id: string) => void;
@@ -134,11 +135,10 @@ export const ChameleonPlayerProvider = ({
         round,
         role,
         myVote,
-        // scores,
-        // counts,
+        scores,
         startGame,
         nextRound,
-        submitVote
+        submitVote,
       }}
     >
       <div className="bg-gradient-to-br from-lime-500 to-green-600 text-white h-dvh w-dvw flex flex-col">

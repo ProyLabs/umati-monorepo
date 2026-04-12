@@ -29,6 +29,7 @@ import { useClipboard } from "../../hooks/use-clipboard";
 import { cn, getRandomAvatarUrl } from "../../lib/utils";
 import { useLobbyHost } from "../../providers/lobby-host-provider";
 import { useLobbyPlayer } from "../../providers/lobby-player-provider";
+import { useAlert } from "../../providers/modal-provider";
 import { useSettings } from "../../providers/settings-provider";
 import {
   Dialog,
@@ -1288,6 +1289,7 @@ export const HostLobbyFooter = () => {
 
 export const LobbyTitle = () => {
   const { lobby, joinUrl, closeLobby } = useLobbyHost();
+  const { showAlert } = useAlert();
   const [scanExpanded, setScanExpanded] = useState(false);
   return (
     <>
@@ -1305,16 +1307,24 @@ export const LobbyTitle = () => {
               <LobbyPollControl />
               <Fbutton
                 size="sm"
-                variant="outline"
+                variant="destructive"
                 className="w-full sm:w-auto"
-                onClick={closeLobby}
+                onClick={() =>
+                  showAlert({
+                    title: "Close lobby?",
+                    description: `Everyone in ${lobby?.name ?? "this lobby"} will be disconnected immediately.`,
+                    confirmText: "Close Lobby",
+                    closeText: "Keep Lobby Open",
+                    onConfirm: closeLobby,
+                  })
+                }
               >
                 Close Lobby
               </Fbutton>
             </div>
           </div>
 
-          <div className="flex flex-col gap-3 sm:flex-row sm:items-stretch">
+          <div className="flex gap-3 flex-row sm:items-stretch">
             <div className="rounded-[1.5rem] border border-white/12 bg-black/20 px-4 py-4 backdrop-blur-md">
               <p className="text-[11px] font-bold uppercase tracking-[0.2em] text-white/60">
                 Join by code
@@ -1463,18 +1473,14 @@ export const WaitingForPlayers = ({ className }: { className?: string }) => {
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(77,199,255,0.14),transparent_26%),radial-gradient(circle_at_top_right,rgba(255,202,40,0.14),transparent_28%),radial-gradient(circle_at_bottom,rgba(106,59,255,0.14),transparent_34%)]" />
 
         <motion.div
-          className="relative z-10 mb-4 flex flex-col gap-3 md:flex-row md:items-end md:justify-between"
+          className="relative z-10 mb-4 flex gap-3 flex-row items-end justify-between"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2, duration: 0.4 }}
         >
-          <div className="space-y-2">
-            <div>
-              <h3 className="text-lg font-black tracking-tight text-white md:text-xl">
-                Players
-              </h3>
-            </div>
-          </div>
+          <h3 className="text-lg font-black tracking-tight text-white md:text-xl">
+            Players
+          </h3>
 
           <motion.div
             className="flex items-center gap-3 self-start rounded-[1.25rem] border border-white/12 bg-white/6 px-3 py-2 md:self-auto"
@@ -1501,7 +1507,7 @@ export const WaitingForPlayers = ({ className }: { className?: string }) => {
           </motion.div>
         </motion.div>
 
-        <div className="relative z-10 flex-1 overflow-hidden rounded-[1.5rem] border border-white/10 bg-black/15 p-4">
+        <div className="relative z-10 flex-1 overflow-y-visible rounded-[1.5rem] border border-white/10 bg-black/15 p-4">
           <div className="relative flex h-full w-full flex-wrap content-start justify-center gap-3 overflow-y-auto rounded-xl scrollbar-hide">
             <AnimatePresence mode="popLayout">
               {players.slice(0, 24).map((player, idx) => (
@@ -1577,21 +1583,26 @@ export const WaitingForPlayers = ({ className }: { className?: string }) => {
               </motion.div>
             )}
 
-           
+            {players.length === 0 && (
+              <motion.div
+                className="px-4 py-3 text-center"
+                animate={{ opacity: [0.5, 1, 0.5] }}
+                transition={{
+                  duration: 2,
+                  repeat: Infinity,
+                  ease: "easeInOut",
+                }}
+              >
+                <p className="font-semibold text-white/75">
+                  Waiting for more{" "}
+                  {Math.max((lobby?.maxPlayers ?? 0) - players.length, 0) === 1
+                    ? "player"
+                    : "players"}
+                  ...
+                </p>
+              </motion.div>
+            )}
           </div>
-           <motion.div
-              className="px-4 py-3 text-center"
-              animate={{ opacity: [0.5, 1, 0.5] }}
-              transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-            >
-              <p className="font-semibold text-white/75">
-                Waiting for more{" "}
-                {Math.max((lobby?.maxPlayers ?? 0) - players.length, 0) === 1
-                  ? "player"
-                  : "players"}
-                ...
-              </p>
-            </motion.div>
         </div>
       </motion.div>
       <Dialog
@@ -1946,7 +1957,7 @@ export const Reactions = () => {
   return (
     <div className="relative" ref={trayRef}>
       <Fbutton
-        variant={showTray ? "secondary" : "outline"}
+        variant="outline"
         className="min-w-12"
         onClick={() => setShowTray(!showTray)}
       >

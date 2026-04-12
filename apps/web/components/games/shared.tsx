@@ -314,14 +314,10 @@ export const Rankings = () => {
     <>
       <div className="relative flex h-full w-full flex-col overflow-clip rounded-[1.75rem] border border-white/12 bg-[linear-gradient(180deg,rgba(255,255,255,0.08),rgba(255,255,255,0.03))] p-4 shadow-[0_24px_80px_rgba(0,0,0,0.24)] lg:w-3/5 min-h-72">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,200,39,0.14),transparent_24%),radial-gradient(circle_at_top_right,rgba(77,199,255,0.14),transparent_30%),radial-gradient(circle_at_bottom,rgba(239,62,70,0.12),transparent_34%)]" />
-        <div className="relative z-10 mb-4 flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
-          <div className="space-y-2">
-            <div>
+        <div className="relative z-10 mb-4 flex gap-3 flex-row items-end justify-between">
               <h2 className="text-xl font-black tracking-tight text-white md:text-2xl">
                 Leaderboard
               </h2>
-            </div>
-          </div>
           <motion.button
             type="button"
             whileHover={{ scale: 1.03 }}

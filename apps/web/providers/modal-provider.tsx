@@ -9,7 +9,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { fbuttonVariants } from "@/components/ui/fancy-button";
+import { fbuttonVariants, Fbutton } from "@/components/ui/fancy-button";
 
 type ModalConfig = {
   type?: "default" | "success";
@@ -144,25 +144,21 @@ export function AlertDialogProvider({ children }: { children: React.ReactNode })
             </AlertDialogHeader>
 
             <AlertDialogFooter>
-              <AlertDialogCancel
-                className={fbuttonVariants({ variant: "outline" })}
+              <Fbutton
+                variant="outline"
                 onClick={() => handleClose(dialog)}
               >
                 {dialog.closeText ?? "Cancel"}
-              </AlertDialogCancel>
+              </Fbutton>
 
-              <AlertDialogAction
-                className={fbuttonVariants({
-                  variant: "secondary",
-                  className: "text-foreground",
-                })}
+              <Fbutton
                 onClick={async () => {
                   await dialog.onConfirm?.();
                   closeDialogById(dialog.id);
                 }}
               >
                 {dialog.confirmText ?? "OK"}
-              </AlertDialogAction>
+              </Fbutton>
             </AlertDialogFooter>
           </AlertDialogContent>
         </AlertDialog>

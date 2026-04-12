@@ -1,7 +1,16 @@
 "use client";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { useLobbyHost } from "@/providers/lobby-host-provider"; // Host context provides wsClient
-import { GameState, GameType, Scores, TriviaOptions, TriviaRound, WSEvent } from "@umati/ws";
+import {
+  GameState,
+  GameType,
+  type QuizzerQuestionInput,
+  type QuizzerSetupState,
+  Scores,
+  TriviaOptions,
+  TriviaRound,
+  WSEvent,
+} from "@umati/ws";
 
 
 interface TriviaHostContextType {
@@ -9,10 +18,12 @@ interface TriviaHostContextType {
   gameType: string | null;
   state: GameState; // BEFORE, ROUND, ROUND_END, etc.
   round?: TriviaRound;
+  setup?: QuizzerSetupState;
   scores: Scores;
   counts?: Record<TriviaOptions, number>;
   startGame: () => void;
   nextRound: () => void;
+  syncQuizzerSetup: (questions: QuizzerQuestionInput[]) => void;
 }
 
 const TriviaHostContext = createContext<TriviaHostContextType | null>(null);
@@ -24,6 +35,7 @@ export const TriviaHostProvider = ({ children }: { children: React.ReactNode }) 
   const [gameType, setGameType] = useState<string | null>(lobby?.game?.type ?? null);
   const [state, setState] = useState<GameState>("BEFORE");
   const [round, setRound] = useState<TriviaRound | undefined>(undefined);
+  const [setup, setSetup] = useState<QuizzerSetupState | undefined>(undefined);
   const [counts, setCounts] = useState<Record<TriviaOptions, number> | undefined>(undefined);
   const [scores, setScores] = useState<Scores>([]);
 
@@ -37,6 +49,7 @@ export const TriviaHostProvider = ({ children }: { children: React.ReactNode }) 
       setGameType(payload.type);
       setState(payload.state);
       if (payload.round) setRound(payload.round as TriviaRound);
+      setSetup(payload.setup as QuizzerSetupState | undefined);
       if (payload.counts) setCounts(payload.counts);
       if (payload.scores) setScores(payload.scores ?? []);
     };
@@ -98,6 +111,14 @@ export const TriviaHostProvider = ({ children }: { children: React.ReactNode }) 
     });
   };
 
+  const syncQuizzerSetup = (questions: QuizzerQuestionInput[]) => {
+    if (!wsClient || !lobby || gameType !== GameType.QUIZZER) return;
+    wsClient.send(WSEvent.QZ_SETUP_SYNC, {
+      roomId: lobby.id,
+      questions,
+    });
+  };
+
   return (
     <TriviaHostContext.Provider
       value={{
@@ -105,10 +126,12 @@ export const TriviaHostProvider = ({ children }: { children: React.ReactNode }) 
         gameType,
         state,
         round,
+        setup,
         scores,
         counts,
         startGame,
         nextRound,
+        syncQuizzerSetup,
       }}
     >
       <div

@@ -3,7 +3,7 @@ import type { WebSocket } from "ws";
 import { handlePlayerConnect, handlePlayerJoin, handlePlayerKicked, handlePlayerLeft, handlePlayerReaction, handlePollVote } from "../handlers/player";
 import { handlePollEnd, handlePollStart, handleRoomClose, handleRoomInit, handleRoomStateChange } from "../handlers/room";
 import { logInfo } from "../utils/logger";
-import { handleCancelGame, handleCodenamesPassTurn, handleCodenamesSetSpymaster, handleDrawItCanvasClear, handleDrawItSegment, handleDrawItWordPick, handleFriendFactsSetupSubmit, handleGameAnswer, handleGameStateChange, handleInitGame, handleStartGame } from "../handlers/game";
+import { handleCancelGame, handleCodenamesPassTurn, handleCodenamesSetSpymaster, handleDrawItCanvasClear, handleDrawItSegment, handleDrawItWordPick, handleFriendFactsSetupSubmit, handleGameAnswer, handleGameStateChange, handleInitGame, handleQuizzerSetupSync, handleStartGame } from "../handlers/game";
 
 export async function handleMessage(ws: WebSocket, msg: WSMessage, sid: string) {
   logInfo("🔻", msg.event, msg.payload)
@@ -74,6 +74,13 @@ export async function handleMessage(ws: WebSocket, msg: WSMessage, sid: string) 
       await handleFriendFactsSetupSubmit(
         ws,
         msg.payload as WSPayloads[WSEvent.FF_SETUP_SUBMIT],
+      );
+      break;
+
+    case WSEvent.QZ_SETUP_SYNC:
+      await handleQuizzerSetupSync(
+        ws,
+        msg.payload as WSPayloads[WSEvent.QZ_SETUP_SYNC],
       );
       break;
 
