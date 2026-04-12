@@ -139,7 +139,7 @@ export const DrawItPlayerProvider = ({
     <DrawItPlayerContext.Provider
       value={{ state, setup, round, scores, pickWord, submitSegment, clearCanvas, submitGuess }}
     >
-      <div className="flex h-dvh w-dvw flex-col bg-gradient-to-br from-[var(--umati-sky)] to-[#3A6EE4] text-white">
+      <div className="flex min-h-dvh w-full flex-col overflow-x-hidden bg-gradient-to-br from-[var(--umati-sky)] to-[#3A6EE4] text-white">
         {children}
         <div className="relative mx-auto mt-auto flex w-full max-w-md items-center justify-center gap-4 px-4 pb-4">
           <UmatiLogo className="block w-8 text-foreground md:hidden" />

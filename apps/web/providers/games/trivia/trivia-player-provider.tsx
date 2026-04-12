@@ -97,8 +97,8 @@ export const TriviaPlayerProvider = ({ children }: { children: React.ReactNode }
       <div
         className={
           gameType === GameType.QUIZZER
-            ? "bg-gradient-to-br from-orange-400 to-orange-600 h-dvh w-dvw flex flex-col"
-            : "bg-gradient-to-br from-[#FE566B] to-[var(--umati-red)] h-dvh w-dvw flex flex-col"
+            ? "flex min-h-dvh w-full flex-col overflow-x-hidden bg-gradient-to-br from-orange-400 to-orange-600"
+            : "flex min-h-dvh w-full flex-col overflow-x-hidden bg-gradient-to-br from-[#FE566B] to-[var(--umati-red)]"
         }
       >
         {children}

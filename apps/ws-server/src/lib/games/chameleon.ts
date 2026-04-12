@@ -241,6 +241,7 @@ export class Chameleon extends BaseGame {
   public startSpeaking() {
     if (this.state !== GameState.ROUND_SETUP) return;
     this.state = GameState.SPEAKING;
+    this.clearPhaseTimer();
 
     const room = RoomManager.get(this.roomId);
     if (!room) return;
@@ -256,15 +257,8 @@ export class Chameleon extends BaseGame {
       direction,
     };
 
-    const SPEAKING_TIME_PER_PLAYER = 15 * 1000 * 2; // 15 seconds per player per 2 rounds
-
-    this.roundSpeakingDuration = (SPEAKING_TIME_PER_PLAYER * room.players.length) || 15000;
-
     this.roundStartTime = Date.now();
-    this.roundDuration = this.roundSpeakingDuration;
-    this.schedulePhaseTransition(this.roundDuration, () => {
-      this.startVoting();
-    });
+    this.roundDuration = 0;
 
     this.emitState();
   }

@@ -126,7 +126,7 @@ export const FriendFactsPlayerProvider = ({
         submitAnswer,
       }}
     >
-      <div className="bg-gradient-to-br from-[var(--umati-sky)] to-[#3A6EE4] h-dvh w-dvw flex flex-col text-white">
+      <div className="flex min-h-dvh w-full flex-col overflow-x-hidden bg-gradient-to-br from-[var(--umati-sky)] to-[#3A6EE4] text-white">
         {children}
         <div className="flex items-center justify-center gap-4 w-full relative max-w-md mt-auto mx-auto px-4 pb-4">
           <UmatiLogo className="w-8 text-foreground block md:hidden" />

@@ -418,18 +418,22 @@ export const CountdownCard = ({ round }: { round?: ChameleonRound }) => {
   return (
     <>
       <div className="max-w-136.25  bg-white w-full mx-auto p-4 flex flex-col items-center justify-center gap-6 rounded-2xl text-black">
-        Start the speaking round from:
+        <p className="text-sm font-bold uppercase tracking-[0.18em] text-black/50">
+          Speaking Round
+        </p>
+        <p className="text-center text-lg font-semibold">
+          Start the speaking round from:
+        </p>
         <PlayerAvatar
           displayName={starter?.displayName!}
           avatar={starter?.avatar!}
           className="size-20"
         />
-        <Timer
-          duration={round?.timer.duration!}
-          startTime={round?.timer?.startedAt!}
-        />
-        <p className="text-2xl font-semibold animate-bounce mt-4">
-          Speaking Round
+        <p className="max-w-md text-center text-base font-medium text-black/70">
+          Go around the room in order and give one clue each. When everyone has spoken, the host can start voting.
+        </p>
+        <p className="text-2xl font-semibold animate-bounce mt-2">
+          Host advances when ready
         </p>
       </div>
     </>

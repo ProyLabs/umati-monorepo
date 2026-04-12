@@ -110,7 +110,7 @@ export const CodenamesPlayerProvider = ({
         passTurn,
       }}
     >
-      <div className="flex h-dvh w-dvw flex-col bg-gradient-to-br from-yellow-300 to-yellow-400 text-black">
+      <div className="flex min-h-dvh w-full flex-col overflow-x-hidden bg-gradient-to-br from-yellow-300 to-yellow-400 text-black">
         {children}
         <div className="relative mx-auto mt-auto flex w-full max-w-md items-center justify-center gap-4 px-4 pb-4">
           <UmatiLogo className="block w-8 text-foreground md:hidden" />

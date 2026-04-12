@@ -1,5 +1,6 @@
 "use client";
 import React, { createContext, useContext, useEffect, useState } from "react";
+import { useHostNextShortcut } from "@/hooks/use-host-next-shortcut";
 import { useLobbyHost } from "@/providers/lobby-host-provider"; // Host context provides wsClient
 import {
   GameState,
@@ -119,6 +120,13 @@ export const TriviaHostProvider = ({ children }: { children: React.ReactNode }) 
     });
   };
 
+  useHostNextShortcut(
+    nextRound,
+    state === GameState.ROUND_END ||
+      state === GameState.LEADERBOARD ||
+      state === GameState.RANKING,
+  );
+
   return (
     <TriviaHostContext.Provider
       value={{
@@ -137,8 +145,8 @@ export const TriviaHostProvider = ({ children }: { children: React.ReactNode }) 
       <div
         className={
           gameType === GameType.QUIZZER
-            ? "relative bg-gradient-to-br from-orange-400 to-orange-600 h-dvh w-dvw"
-            : "relative bg-gradient-to-br from-[#FE566B] to-[var(--umati-red)] h-dvh w-dvw"
+            ? "relative min-h-dvh w-full overflow-x-hidden bg-gradient-to-br from-orange-400 to-orange-600"
+            : "relative min-h-dvh w-full overflow-x-hidden bg-gradient-to-br from-[#FE566B] to-[var(--umati-red)]"
         }
       >
         {children}

@@ -148,8 +148,24 @@ export const FriendFactsPlayerSetup = () => {
   useEffect(() => {
     const submittedFacts =
       setup?.submittedFacts?.map((fact) => fact.text) ?? [];
-    setFacts(submittedFacts.length ? submittedFacts : [""]);
-    if (submittedFacts.length > 0) setSubmitted(true);
+    const normalizedIncoming = submittedFacts.length ? submittedFacts : [""];
+
+    setFacts((current) => {
+      if (
+        current.length === normalizedIncoming.length &&
+        current.every((fact, index) => fact === normalizedIncoming[index])
+      ) {
+        return current;
+      }
+
+      if (!submittedFacts.length && current.some((fact) => fact.trim().length > 0)) {
+        return current;
+      }
+
+      return normalizedIncoming;
+    });
+
+    setSubmitted(submittedFacts.length > 0);
   }, [setup?.submittedFacts]);
 
   const playerCount = players.length;

@@ -1,5 +1,6 @@
 "use client";
 import React, { createContext, useContext, useEffect, useState } from "react";
+import { useHostNextShortcut } from "@/hooks/use-host-next-shortcut";
 import { useLobbyHost } from "@/providers/lobby-host-provider"; // Host context provides wsClient
 import { ChameleonRound, GameState, Scores, WSEvent } from "@umati/ws";
 
@@ -113,6 +114,8 @@ export const ChameleonHostProvider = ({ children }: { children: React.ReactNode 
     }
   };
 
+  useHostNextShortcut(nextRound, state === GameState.RANKING);
+
   return (
     <ChameleonHostContext.Provider
       value={{
@@ -130,7 +133,7 @@ export const ChameleonHostProvider = ({ children }: { children: React.ReactNode 
         startVotingRound,
       }}
     >
-      <div className="relative bg-gradient-to-br from-lime-500 to-green-600 text-white h-dvh w-dvw">
+      <div className="relative min-h-dvh w-full overflow-x-hidden bg-gradient-to-br from-lime-500 to-green-600 text-white">
         {children}
       </div>
     </ChameleonHostContext.Provider>

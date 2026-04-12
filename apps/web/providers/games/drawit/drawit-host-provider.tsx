@@ -1,6 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useEffect, useState } from "react";
+import { useHostNextShortcut } from "@/hooks/use-host-next-shortcut";
 import {
   DrawItRound,
   DrawItSegment,
@@ -118,9 +119,16 @@ export const DrawItHostProvider = ({
     });
   };
 
+  useHostNextShortcut(
+    nextRound,
+    state === GameState.ROUND_END ||
+      state === GameState.LEADERBOARD ||
+      state === GameState.RANKING,
+  );
+
   return (
     <DrawItHostContext.Provider value={{ state, setup, round, scores, nextRound }}>
-      <div className="relative h-dvh w-dvw bg-gradient-to-br from-[var(--umati-sky)] to-[#3A6EE4] text-white">
+      <div className="relative min-h-dvh w-full overflow-x-hidden bg-gradient-to-br from-[var(--umati-sky)] to-[#3A6EE4] text-white">
         {children}
       </div>
     </DrawItHostContext.Provider>

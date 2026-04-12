@@ -26,16 +26,19 @@ export const Leaderboard = ({
   nextRound: () => void;
 }) => {
   return (
-    <div className="flex flex-col items-center justify-center h-full gap-16">
-      <h2 className="text-5xl font-bold mb-4 text-center max-w-4xl mx-auto w-full">
+    <div className="relative flex min-h-dvh flex-col items-center gap-8 overflow-y-auto px-4 py-6">
+      <div className="absolute right-4 top-4 z-50">
+        <EndGameButton />
+      </div>
+
+      <h2 className="mt-16 text-5xl font-bold text-center max-w-4xl mx-auto w-full">
         Leaderboard
       </h2>
 
-      <div className="grid gap-2 max-w-4xl w-full px-4">
+      <div className="grid max-h-[min(56dvh,36rem)] w-full max-w-4xl gap-2 overflow-y-auto px-1 pb-1">
         <AnimatePresence>
           {scores
             .sort((a, b) => b.score - a.score)
-            .slice(0, 7)
             .map((player, index) => (
               <LeaderboardItem
                 key={player.id}
@@ -47,11 +50,11 @@ export const Leaderboard = ({
         </AnimatePresence>
       </div>
 
-      <span className="text-lg font-semibold flex mb-4">
+      <span className="text-lg font-semibold flex mb-2">
         <LightbulbIcon />
         <span>Tip: the faster you answer, the more points you score!</span>
       </span>
-      <Fbutton className="max-w-xs mx-auto w-full" onClick={nextRound}>
+      <Fbutton className="relative z-[999] max-w-xs mx-auto w-full" onClick={nextRound}>
         Next
       </Fbutton>
     </div>
@@ -169,6 +172,10 @@ export const Podium = ({
 
   return (
     <div className="relative flex h-full flex-col items-center justify-center gap-10 overflow-hidden px-4 py-6">
+      <div className="absolute right-4 top-4 z-50">
+        <EndGameButton />
+      </div>
+
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,202,40,0.16),transparent_24%),radial-gradient(circle_at_left,rgba(77,199,255,0.14),transparent_28%),radial-gradient(circle_at_right,rgba(106,59,255,0.14),transparent_30%)]" />
       <div className="pointer-events-none absolute left-1/2 top-10 h-40 w-72 -translate-x-1/2 rounded-full bg-[var(--umati-yellow)]/10 blur-3xl" />
 
@@ -205,7 +212,7 @@ export const Podium = ({
         ))}
       </motion.div>
       <Fbutton
-        className="relative z-10 mx-auto w-full max-w-xs"
+        className="relative z-[999] mx-auto w-full max-w-xs"
         onClick={nextRound}
       >
         Next
@@ -312,7 +319,7 @@ export const Rankings = () => {
 
   return (
     <>
-      <div className="relative flex h-full w-full flex-col overflow-clip rounded-[1.75rem] border border-white/12 bg-[linear-gradient(180deg,rgba(255,255,255,0.08),rgba(255,255,255,0.03))] p-4 shadow-[0_24px_80px_rgba(0,0,0,0.24)] lg:w-3/5 min-h-72">
+      <div className="relative flex h-full w-full flex-col overflow-hidden rounded-[1.75rem] border border-white/12 bg-[linear-gradient(180deg,rgba(255,255,255,0.08),rgba(255,255,255,0.03))] p-4 shadow-[0_24px_80px_rgba(0,0,0,0.24)] lg:w-3/5 min-h-72">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,200,39,0.14),transparent_24%),radial-gradient(circle_at_top_right,rgba(77,199,255,0.14),transparent_30%),radial-gradient(circle_at_bottom,rgba(239,62,70,0.12),transparent_34%)]" />
         <div className="relative z-10 mb-4 flex gap-3 flex-row items-end justify-between">
               <h2 className="text-xl font-black tracking-tight text-white md:text-2xl">
@@ -331,7 +338,7 @@ export const Rankings = () => {
         </div>
 
         {rankings.length > 0 ? (
-          <div className="relative z-10 w-full overflow-x-auto scrollbar-hide">
+          <div className="relative z-10 w-full flex-1 overflow-auto scrollbar-hide">
             <RankingHeader />
 
             <div className="flex flex-col gap-2 pb-1">
@@ -364,7 +371,7 @@ export const Rankings = () => {
 
       <Dialog open={expanded} onOpenChange={setExpanded}>
         <DialogContent className="max-h-[80vh] max-w-5xl overflow-hidden border-white/12 bg-[linear-gradient(180deg,rgba(14,25,53,0.98),rgba(10,18,38,0.98))] p-0 text-white shadow-[0_32px_120px_rgba(0,0,0,0.5)] sm:max-w-5xl">
-          <div className="relative overflow-hidden rounded-[inherit] p-6 md:p-8">
+          <div className="relative flex max-h-[80vh] flex-col overflow-hidden rounded-[inherit] p-6 md:p-8">
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(255,200,39,0.16),transparent_24%),radial-gradient(circle_at_top_right,rgba(77,199,255,0.16),transparent_30%),radial-gradient(circle_at_bottom,rgba(239,62,70,0.12),transparent_36%)]" />
             <DialogHeader className="relative z-10 border-b border-white/10 pb-5">
               <DialogTitle className="text-2xl font-black tracking-tight text-white md:text-3xl">
@@ -376,7 +383,7 @@ export const Rankings = () => {
               </DialogDescription>
             </DialogHeader>
 
-            <div className="relative z-10 mt-6 max-h-[60vh] overflow-y-auto pr-1">
+            <div className="relative z-10 mt-6 flex-1 overflow-auto pr-1">
               {sortedRankings.length > 0 ? (
                 <>
                   <RankingHeader className="grid-cols-[0.8fr_2.4fr_1.2fr_repeat(3,0.9fr)]" />

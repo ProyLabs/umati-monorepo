@@ -8,6 +8,7 @@ import {
   Scores,
   WSEvent,
 } from "@umati/ws";
+import { useHostNextShortcut } from "@/hooks/use-host-next-shortcut";
 import { useLobbyHost } from "@/providers/lobby-host-provider";
 
 
@@ -118,6 +119,13 @@ export const FriendFactsHostProvider = ({
     });
   };
 
+  useHostNextShortcut(
+    nextRound,
+    state === GameState.ROUND_END ||
+      state === GameState.LEADERBOARD ||
+      state === GameState.RANKING,
+  );
+
   return (
     <FriendFactsHostContext.Provider
       value={{
@@ -132,7 +140,7 @@ export const FriendFactsHostProvider = ({
         nextRound,
       }}
     >
-      <div className="relative bg-gradient-to-br from-[var(--umati-sky)] to-[#3A6EE4] h-dvh w-dvw text-white">
+      <div className="relative min-h-dvh w-full overflow-x-hidden bg-gradient-to-br from-[var(--umati-sky)] to-[#3A6EE4] text-white">
         {children}
       </div>
     </FriendFactsHostContext.Provider>

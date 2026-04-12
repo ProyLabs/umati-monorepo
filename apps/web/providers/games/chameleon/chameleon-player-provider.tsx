@@ -141,7 +141,7 @@ export const ChameleonPlayerProvider = ({
         submitVote,
       }}
     >
-      <div className="bg-gradient-to-br from-lime-500 to-green-600 text-white h-dvh w-dvw flex flex-col">
+      <div className="flex min-h-dvh w-full flex-col overflow-x-hidden bg-gradient-to-br from-lime-500 to-green-600 text-white">
         {children}
 
         <div className="flex items-center justify-center gap-4 w-full relative max-w-md mt-auto mx-auto px-4 pb-4">

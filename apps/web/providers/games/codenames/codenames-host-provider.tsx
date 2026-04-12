@@ -10,6 +10,7 @@ import {
 } from "@umati/ws";
 import { useLobbyHost } from "@/providers/lobby-host-provider";
 import { EndGameButton } from "@/components/games/shared";
+import { useHostNextShortcut } from "@/hooks/use-host-next-shortcut";
 
 interface CodenamesHostContextType {
   state: GameState;
@@ -81,11 +82,13 @@ export const CodenamesHostProvider = ({
     cancelGame();
   };
 
+  useHostNextShortcut(nextRound, state === GameState.RANKING);
+
   return (
     <CodenamesHostContext.Provider
       value={{ state, setup, round, scores, startMatch, nextRound }}
     >
-      <div className="relative h-dvh w-dvw bg-gradient-to-br from-yellow-300 to-yellow-400 text-black">
+      <div className="relative min-h-dvh w-full overflow-x-hidden bg-gradient-to-br from-yellow-300 to-yellow-400 text-black">
         <div className="absolute right-4 top-4 z-50">
           <EndGameButton />
         </div>

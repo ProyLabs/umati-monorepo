@@ -858,7 +858,7 @@ export const DrawItPlayerSetup = () => {
 
   if (setup.isDrawer) {
     return (
-      <div className="mx-auto flex h-full w-full max-w-2xl flex-col items-center justify-center gap-5 px-4 text-center">
+      <div className="mx-auto flex min-h-dvh w-full max-w-2xl flex-col items-center justify-center gap-5 px-4 py-6 text-center">
         <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-white/55">
           Your Turn
         </p>
@@ -882,7 +882,7 @@ export const DrawItPlayerSetup = () => {
   }
 
   return (
-    <div className="mx-auto flex h-full w-full max-w-3xl flex-col items-center justify-center gap-4 px-4 text-center">
+    <div className="mx-auto flex min-h-dvh w-full max-w-3xl flex-col items-center justify-center gap-4 px-4 py-6 text-center">
       <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-white/55">
         Draw It!
       </p>
@@ -916,7 +916,7 @@ export const DrawItPlayerRound = () => {
     !!player && round.guessedCorrectlyIds.includes(player.id);
 
   return (
-    <div className="mx-auto flex h-full w-full max-w-6xl flex-col gap-4 px-4 py-5 md:px-8">
+    <div className="mx-auto flex min-h-dvh w-full max-w-6xl flex-col gap-4 px-4 py-5 md:px-8">
       {isDrawer ? (
         <div className="grid flex-1 gap-4 lg:grid-cols-[minmax(0,1fr)_min(100%,360px)]">
           <div className="flex min-h-0 flex-col gap-3">
@@ -973,7 +973,7 @@ export const DrawItPlayerRound = () => {
           </div>
         </div>
       ) : (
-        <div className="mx-auto flex h-full w-full max-w-md flex-1 flex-col justify-center">
+        <div className="mx-auto flex w-full max-w-md flex-1 flex-col justify-center pb-6">
           {guessedCorrectly ? (
             <div className="rounded-[1.5rem] border border-white/14 bg-black/12 p-4 text-center animate-in fade-in zoom-in duration-300">
               <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-white/55">
@@ -1014,7 +1014,7 @@ export const DrawItPlayerTurnEnd = () => {
   if (!round) return null;
 
   return (
-    <div className="mx-auto flex h-full w-full max-w-4xl flex-col items-center justify-center gap-5 px-4 text-center">
+    <div className="mx-auto flex min-h-dvh w-full max-w-4xl flex-col items-center justify-center gap-5 px-4 py-6 text-center">
       <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-white/55">
         Turn Over
       </p>

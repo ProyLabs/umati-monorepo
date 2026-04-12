@@ -120,7 +120,7 @@ function SetupShell({
   teams?: readonly CodenamesTeam[];
 }) {
   return (
-    <div className="relative z-10 mx-auto flex h-full w-full max-w-6xl flex-col gap-6 px-4 py-6 md:px-8 items-center">
+    <div className="relative z-10 mx-auto flex min-h-dvh w-full max-w-6xl flex-col gap-6 px-4 py-6 md:px-8 items-center">
       <div className="rounded-[2rem] border border-black/10 bg-white/55 p-5 shadow-[0_24px_80px_rgba(0,0,0,0.14)] w-full">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div>
@@ -289,7 +289,7 @@ function MatchShell({
   showHeader?: boolean;
 }) {
   return (
-    <div className="mx-auto flex h-full w-full max-w-6xl flex-col gap-5 px-4 py-5 md:px-8">
+    <div className="mx-auto flex min-h-dvh w-full max-w-6xl flex-col gap-5 px-4 py-5 md:px-8">
       {showHeader ? (
         <div className="grid gap-4 rounded-[2rem] border border-black/10 bg-white/60 p-5 shadow-[0_24px_80px_rgba(0,0,0,0.14)] md:grid-cols-[1fr_auto_1fr] md:items-center">
           <div className="rounded-[1.4rem] border border-rose-900/15 bg-rose-500 px-4 py-4">
@@ -384,11 +384,11 @@ export const CodenamesHostResult = () => {
   );
 
   return (
-    <div className="relative h-full w-full">
+    <div className="relative min-h-dvh w-full">
       <div className="absolute right-4 top-4 z-50">
         <EndGameButton />
       </div>
-      <div className="flex h-full flex-col items-center justify-center gap-8 px-4 text-center">
+      <div className="flex min-h-dvh flex-col items-center justify-center gap-8 px-4 py-6 text-center">
         <div className="animate-in fade-in zoom-in duration-700">
           <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-black/50 mb-3">
             Match Over
@@ -451,7 +451,7 @@ export const CodenamesPlayerResult = () => {
   );
 
   return (
-    <div className="flex h-full flex-col items-center justify-center gap-8 px-4 text-center">
+    <div className="flex min-h-dvh flex-col items-center justify-center gap-8 px-4 py-6 text-center">
       <div className="animate-in fade-in zoom-in duration-700">
         <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-black/50 mb-3">
           Match Over

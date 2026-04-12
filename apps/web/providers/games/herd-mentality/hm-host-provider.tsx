@@ -1,5 +1,6 @@
 "use client";
 import React, { createContext, useContext, useEffect, useState } from "react";
+import { useHostNextShortcut } from "@/hooks/use-host-next-shortcut";
 import { useLobbyHost } from "@/providers/lobby-host-provider"; // Host context provides wsClient
 import { GameState, Scores, HerdMentalityOptions, HerdMentalityRound, WSEvent } from "@umati/ws";
 
@@ -98,6 +99,13 @@ export const HerdMentalityHostProvider = ({ children }: { children: React.ReactN
     });
   };
 
+  useHostNextShortcut(
+    nextRound,
+    state === GameState.ROUND_END ||
+      state === GameState.LEADERBOARD ||
+      state === GameState.RANKING,
+  );
+
   return (
     <HerdMentalityHostContext.Provider
       value={{
@@ -111,7 +119,7 @@ export const HerdMentalityHostProvider = ({ children }: { children: React.ReactN
         nextRound,
       }}
     >
-      <div className="relative bg-gradient-to-br from-(--umati-aqua) to-[#00D9D5] text-white h-dvh w-dvw">
+      <div className="relative min-h-dvh w-full overflow-x-hidden bg-gradient-to-br from-(--umati-aqua) to-[#00D9D5] text-white">
         {children}
       </div>
     </HerdMentalityHostContext.Provider>
